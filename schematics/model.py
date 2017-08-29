@@ -4,7 +4,7 @@ class Model:
     def __init__(self):
         self.polygons = []
         self.pins = []
-        self. description = ''
+        self.description = ''
         self.name = ''
         self.referenceprefix = '?'
         self.path = ''
