@@ -64,7 +64,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
 
         self.gl.glMatrixMode(self.gl.GL_PROJECTION)
         self.gl.glLoadIdentity()
-        self.gl.glOrtho(-0.5, +0.5, +0.5, -0.5, 4.0, 15.0)
+        self.gl.glOrtho(-0.5*width, +0.5*width, +0.5*height, -0.5*height, 4.0, 15.0)
         self.gl.glMatrixMode(self.gl.GL_MODELVIEW)
 
     def makeTriangle(self):
@@ -78,8 +78,8 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         
         for i in range(3):
             angle = 80.0 - i*120.0
-            x = 0.3 * math.cos(math.radians(angle))
-            y = 0.3 * math.sin(math.radians(angle))
+            x = 200 * math.cos(math.radians(angle))
+            y = 200 * math.sin(math.radians(angle))
             self.gl.glVertex3d(x, y, -0.05)
 
         self.gl.glEnd()
