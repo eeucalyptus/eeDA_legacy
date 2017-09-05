@@ -1,4 +1,4 @@
-from point2D import *
+from .vector2 import Vector2i
 
 class PointArray(list):
     def __init__(self):
@@ -22,19 +22,18 @@ class PointArray(list):
                 maxY = point.y
                 
         ary = PointArray()
-        ary.append(Point2D(minX, minY))
-        ary.append(Point2D(maxX, maxY))
+        ary.append(Vector2i(minX, minY))
+        ary.append(Vector2i(maxX, maxY))
         return ary
     
 class Polygon():
-    
     def __init__(self, pointAry):
         self.points = pointAry
     
     def fromArray(ary):
         pAry = PointArray()
         for elem in ary:
-            elem = Point2D(elem[0], elem[1])
+            elem = Vector2i(elem[0], elem[1])
             pAry.append(elem)
         return Polygon(pAry)
     
@@ -49,12 +48,17 @@ class Polygon():
         
     def boundingBox(self):
         minMax = self.points.minMaxXY()
-        topLeft = Point2D(minMax[0].x, minMax[0].y)
-        topRight = Point2D(minMax[1].x, minMax[0].y)
-        botLeft = Point2D(minMax[0].x, minMax[1].y)
-        botRight = Point2D(minMax[1].x, minMax[1].y)
+        topLeft = Vector2i(minMax[0].x, minMax[0].y)
+        topRight = Vector2i(minMax[1].x, minMax[0].y)
+        botLeft = Vector2i(minMax[0].x, minMax[1].y)
+        botRight = Vector2i(minMax[1].x, minMax[1].y)
         box = Polygon.fromPoints(topLeft, topRight, botLeft, botRight)
         return box
+        
+    def triangles(self):
+        # TODO - implement monotone polygons algorithm
+        # returns triangle list like [[vertex, vertex, vertex], {vertex, vertex, vertex]]
+        return []
         
     def __repr__(self):
         string = "Polygon:"
@@ -64,9 +68,9 @@ class Polygon():
         
 
 if __name__=="__main__":
-    p1 = Point2D(-1, 2)
-    p2 = Point2D(4, 3)
-    p3 = Point2D(2, 10)
+    p1 = Vector2i(-1, 2)
+    p2 = Vector2i(4, 3)
+    p3 = Vector2i(2, 10)
     polly = Polygon.fromPoints(p1, p2, p3)
     boxy = polly.boundingBox()
     
