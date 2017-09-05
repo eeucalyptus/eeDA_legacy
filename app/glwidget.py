@@ -1,13 +1,31 @@
 import math
-from PyQt5 import QtWidgets, QtGui
+from data.common import Vector2d
+from PyQt5 import QtWidgets, QtGui, QtCore
 
 class GLWidget(QtWidgets.QOpenGLWidget):
     def __init__(self, parent=None):
         super(GLWidget, self).__init__(parent)
         self.setMouseTracking(True)
+        self.cameraposition = Vector2d()
+        self.lastScreenPos = None
 
     def mouseMoveEvent(self, event):
         self.parent().positionWidget.setText("x={}, y={}".format(event.x(), event.y()))
+        currentScreenPos = event.screenPos()
+        lastExists = self.lastScreenPos != None
+        leftPressed = event.buttons() == QtCore.Qt.LeftButton
+        if(lastExists and leftPressed):
+            dx = self.lastScreenPos.x() - currentScreenPos.x()
+            dy = self.lastScreenPos.y() - currentScreenPos.y()
+            
+            self.cameraposition += Vector2d(-dx, -dy)
+            self.repaint()
+            
+        self.lastScreenPos = currentScreenPos
+            
+        
+        if(event.buttons() == QtCore.Qt.LeftButton):
+            print("Left!")
         
 
     def initializeGL(self):
@@ -28,7 +46,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glClear(
                 self.gl.GL_COLOR_BUFFER_BIT | self.gl.GL_DEPTH_BUFFER_BIT)
         self.gl.glLoadIdentity()
-        self.gl.glTranslated(0.0, 0.0, -10.0)
+        self.gl.glTranslated(self.cameraposition.x, self.cameraposition.y, -10.0)
         self.gl.glCallList(self.object1)
         self.gl.glCallList(self.object2)
 
@@ -72,8 +90,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
 
         self.gl.glMatrixMode(self.gl.GL_MODELVIEW)
         self.gl.glPushMatrix()
-        self.gl.glLoadIdentity()
-        self.gl.glTranslated(400.0, 0.0, -10.0)
+        self.gl.glTranslated(400.0, 400.0, 0)
         
         self.gl.glColor4f(0.5, 0.5, 0.196, 1.0)
         
