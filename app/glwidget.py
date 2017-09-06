@@ -8,6 +8,13 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.setMouseTracking(True)
         self.cameraposition = Vector2d()
         self.lastScreenPos = None
+        
+        self.contextMenu = QtWidgets.QMenu()
+        self.contextMenu.addAction('Check baby!')
+        
+    def mousePressEvent(self, event):
+        if(event.buttons() == QtCore.Qt.RightButton):
+            self.contextMenu.popup(event.globalPos())
 
     def mouseMoveEvent(self, event):
         self.parent().positionWidget.setText("x={}, y={}".format(event.x(), event.y()))
