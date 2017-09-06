@@ -18,7 +18,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.statusBar().addPermanentWidget(self.positionWidget)
         
         self.glWidget = GLWidget(self)
-        self.txtWidget = QtWidgets.QTextEdit(self)
+        #self.txtWidget = QtWidgets.QTextEdit(self)
         self.setCentralWidget(self.glWidget)
         
         screen = QtWidgets.QDesktopWidget().screenGeometry()
@@ -26,6 +26,11 @@ class MyWindow(QtWidgets.QMainWindow):
         
         self.setWindowTitle("eeDA 2017 Unprofessional Edition")
         self.statusBar().showMessage("Welcome!")
+        
+        self.toolbar = self.addToolBar('File')
+        iconNew = QtGui.QIcon('resources/icons/Test.png')
+        self.toolbarActionNew = QtWidgets.QAction(iconNew, 'New')
+        self.toolbar.addAction(self.toolbarActionNew) 
         
     def initTreeView(self):
         treeview = TreeViewDock()
