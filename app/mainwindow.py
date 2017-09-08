@@ -9,7 +9,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.initMenu()
         self.initTreeView()
         
-    def initUI(self):    
+    def initUI(self):
         fmt = QtGui.QSurfaceFormat.defaultFormat()
         fmt.setSamples(4)
         QtGui.QSurfaceFormat.setDefaultFormat(fmt)
@@ -30,7 +30,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.toolbar = self.addToolBar('File')
         iconNew = QtGui.QIcon('resources/icons/Test.png')
         self.toolbarActionNew = QtWidgets.QAction(iconNew, 'New')
-        self.toolbar.addAction(self.toolbarActionNew) 
+        self.toolbar.addAction(self.toolbarActionNew)
         
     def initTreeView(self):
         treeview = TreeViewDock()
@@ -55,12 +55,28 @@ class MyWindow(QtWidgets.QMainWindow):
         filemenu.addAction(exitAct)
         filemenu.addAction(mysteryAct)
         
-        moremenu = QtWidgets.QMenu("More", self)
+        moremenu = QtWidgets.QMenu("&More", self)
         aboutAct = QtWidgets.QAction("About", self)
         aboutAct.setStatusTip("About this software.")
         moremenu.addAction(aboutAct)
         
         filemenu.addMenu(moremenu)
+        
+        viewMenu = mbar.addMenu('&View')
+        zoomMenu = QtWidgets.QMenu('&Zoom', viewMenu)
+        viewMenu.addMenu(zoomMenu)
+        
+        zoomLow = QtWidgets.QAction('50%', zoomMenu)
+        zoomLow.triggered.connect(lambda: self.glWidget.changeZoom('low'))
+        zoomMenu.addAction(zoomLow)
+        
+        zoomMid = QtWidgets.QAction('100%', zoomMenu)
+        zoomMid.triggered.connect(lambda: self.glWidget.changeZoom('mid'))
+        zoomMenu.addAction(zoomMid)
+        
+        zoomHi = QtWidgets.QAction('150%', zoomMenu)
+        zoomHi.triggered.connect(lambda: self.glWidget.changeZoom('hi'))
+        zoomMenu.addAction(zoomHi)
         
     def toggleCentralWidget(self):
         pass
