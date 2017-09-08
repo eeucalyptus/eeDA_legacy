@@ -9,8 +9,10 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.cameraposition = Vector2d()
         self.lastScreenPos = None
         
-        self.contextMenu = QtWidgets.QMenu()
-        self.contextMenu.addAction('Check baby!')
+        self.zoomLevel = 1.0
+        self.initContextMenu()
+        
+        
         
     def mousePressEvent(self, event):
         if(event.buttons() == QtCore.Qt.RightButton):
@@ -25,7 +27,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
             dx = self.lastScreenPos.x() - currentScreenPos.x()
             dy = self.lastScreenPos.y() - currentScreenPos.y()
             
-            self.cameraposition += Vector2d(-dx, -dy)
+            self.cameraposition += Vector2d(-dx/self.zoomLevel, -dy/self.zoomLevel)
             self.repaint()
             
         self.lastScreenPos = currentScreenPos
@@ -33,6 +35,20 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         
         if(event.buttons() == QtCore.Qt.LeftButton):
             print("Left!")
+            
+    def wheelEvent(self, event):
+        direction = event.angleDelta().y()/120
+        mousePos = event.pos()
+        mouseX = mousePos.x()
+        mouseY = mousePos.y()
+        ctrX = self.frameGeometry().width()/2
+        ctrY = self.frameGeometry().height()/2
+        deltaX = ctrX - mouseX
+        deltaY = ctrY - mouseY
+        if direction > 0:
+            self.cameraposition += Vector2d(deltaX * 0.1, deltaY * 0.1)
+        self.multZoom(1.0 + direction * 0.1)
+        
         
 
     def initializeGL(self):
@@ -54,6 +70,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
                 self.gl.GL_COLOR_BUFFER_BIT | self.gl.GL_DEPTH_BUFFER_BIT)
         self.gl.glLoadIdentity()
         self.gl.glTranslated(self.cameraposition.x, self.cameraposition.y, -10.0)
+        self.zoomGL()
         self.gl.glCallList(self.object1)
         self.gl.glCallList(self.object2)
 
@@ -64,6 +81,15 @@ class GLWidget(QtWidgets.QOpenGLWidget):
 
         self.gl.glViewport((width - side) // 2, (height - side) // 2, side, side)
 
+        self.gl.glMatrixMode(self.gl.GL_PROJECTION)
+        self.gl.glLoadIdentity()
+        self.gl.glOrtho(-0.5*width, +0.5*width, +0.5*height, -0.5*height, 4.0, 15.0)
+        self.gl.glMatrixMode(self.gl.GL_MODELVIEW)
+
+    def zoomGL(self):
+        width = self.frameGeometry().width() * (1.0/self.zoomLevel)
+        height = self.frameGeometry().height() * (1.0/self.zoomLevel)
+        
         self.gl.glMatrixMode(self.gl.GL_PROJECTION)
         self.gl.glLoadIdentity()
         self.gl.glOrtho(-0.5*width, +0.5*width, +0.5*height, -0.5*height, 4.0, 15.0)
@@ -113,3 +139,35 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glEndList()
 
         return genList
+        
+    def initContextMenu(self):
+        self.contextMenu = QtWidgets.QMenu()
+        self.contextMenu.addAction('Check baby!')
+        zoomMenu = self.contextMenu.addMenu('Zoom')
+        
+        zoomLow = QtWidgets.QAction('50%', zoomMenu)
+        zoomLow.triggered.connect(lambda: self.changeZoom('low'))
+        zoomMenu.addAction(zoomLow)
+        
+        zoomMid = QtWidgets.QAction('100%', zoomMenu)
+        zoomMid.triggered.connect(lambda: self.changeZoom('mid'))
+        zoomMenu.addAction(zoomMid)
+        
+        zoomHi = QtWidgets.QAction('150%', zoomMenu)
+        zoomHi.triggered.connect(lambda: self.changeZoom('hi'))
+        zoomMenu.addAction(zoomHi)
+        
+    def changeZoom(self, key):
+        zoomFactor = {'low': 0.5,
+                      'mid': 1.0,
+                      'hi': 1.5}.get(key, 1.0)
+        print('Changing zoom level to ' + str(zoomFactor))
+        self.zoomLevel = zoomFactor
+        self.repaint()
+        
+    def multZoom(self, factor):
+        self.zoomLevel *= factor
+        self.repaint()
+        
+        
+        
