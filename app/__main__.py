@@ -8,7 +8,7 @@ if __name__=='__main__':
     
     app = QtWidgets.QApplication(sys.argv)
     app.setStyleSheet("QAbstractButton{background: #ffffff} QAbstractButton:hover{background: #cce6ff;border: none}")
-    app.setWindowIcon(QtGui.QIcon('resources\icons\logo.png'))
+    app.setWindowIcon(QtGui.QIcon('resources\icons\logo64.png'))
     w = MyWindow()
     w.setGeometry(300, 300, 300, 300)
     w.showMaximized()
