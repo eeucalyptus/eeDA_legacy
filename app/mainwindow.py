@@ -10,27 +10,62 @@ class MyWindow(QtWidgets.QMainWindow):
         self.initTreeView()
         
     def initUI(self):
+        # ----- Display format ----- #
         fmt = QtGui.QSurfaceFormat.defaultFormat()
         fmt.setSamples(4)
         QtGui.QSurfaceFormat.setDefaultFormat(fmt)
         
+        # ----- Position widget ----- #
         self.positionWidget = QtWidgets.QLabel()
         self.statusBar().addPermanentWidget(self.positionWidget)
         
+        # ----- OpenGL widget ----- #
         self.glWidget = GLWidget(self)
         #self.txtWidget = QtWidgets.QTextEdit(self)
         self.setCentralWidget(self.glWidget)
         
+        # ----- Window geometry ----- #
         screen = QtWidgets.QDesktopWidget().screenGeometry()
         self.setGeometry(0, 0, screen.width(), screen.height())
         
+        # ----- Window title bar ----- #
         self.setWindowTitle("eeDA 2017 Unprofessional Edition")
         self.statusBar().showMessage("Welcome!")
         
+        # ----- Toolbar ----- #
         self.toolbar = self.addToolBar('File')
-        iconNew = QtGui.QIcon('resources/icons/Test.png')
-        self.toolbarActionNew = QtWidgets.QAction(iconNew, 'New')
+        
+        iconNew = QtGui.QIcon('resources/icons/new.png')
+        self.toolbarActionNew = QtWidgets.QAction(iconNew, 'New...')
         self.toolbar.addAction(self.toolbarActionNew)
+        
+        iconDelete = QtGui.QIcon('resources/icons/delete.png')
+        self.toolbarActionDelete = QtWidgets.QAction(iconDelete, 'Delete')
+        self.toolbar.addAction(self.toolbarActionDelete)
+        
+        iconOpen = QtGui.QIcon('resources/icons/open.png')
+        self.toolbarActionOpen = QtWidgets.QAction(iconOpen, 'Open...')
+        self.toolbar.addAction(self.toolbarActionOpen)
+        
+        self.toolbar.addSeparator()
+        
+        iconUndo = QtGui.QIcon('resources/icons/undo.png')
+        self.toolbarActionUndo = QtWidgets.QAction(iconUndo, 'Undo')
+        self.toolbar.addAction(self.toolbarActionUndo)
+        
+        iconRedo = QtGui.QIcon('resources/icons/redo.png')
+        self.toolbarActionRedo = QtWidgets.QAction(iconRedo, 'Redo')
+        self.toolbar.addAction(self.toolbarActionRedo)
+        
+        self.toolbar.addSeparator()
+        
+        iconLeft = QtGui.QIcon('resources/icons/leftarrow.png')
+        self.toolbarActionLeft = QtWidgets.QAction(iconLeft, 'Left')
+        self.toolbar.addAction(self.toolbarActionLeft)
+        
+        iconRight = QtGui.QIcon('resources/icons/rightarrow.png')
+        self.toolbarActionRight = QtWidgets.QAction(iconRight, 'Right')
+        self.toolbar.addAction(self.toolbarActionRight)
         
     def initTreeView(self):
         treeview = TreeViewDock()
@@ -62,12 +97,27 @@ class MyWindow(QtWidgets.QMainWindow):
         
         filemenu.addMenu(moremenu)
         
+        # ----- View menu ----- #
         viewMenu = mbar.addMenu('&View')
+        
+        # --- Zoom options --- #
         zoomMenu = QtWidgets.QMenu('&Zoom', viewMenu)
         viewMenu.addMenu(zoomMenu)
         
+        zoomPlus = QtWidgets.QAction('+', zoomMenu)
+        zoomPlus.setShortcut("Ctrl++")
+        zoomPlus.triggered.connect(lambda: self.glWidget.multZoom(1.1))
+        zoomMenu.addAction(zoomPlus)
+        
+        zoomMinus = QtWidgets.QAction('-', zoomMenu)
+        zoomMinus.setShortcut("Ctrl+-")
+        zoomMinus.triggered.connect(lambda: self.glWidget.multZoom(0.9))
+        zoomMenu.addAction(zoomMinus)
+        
+        zoomMenu.addSeparator()
         zoomLow = QtWidgets.QAction('50%', zoomMenu)
-        zoomLow.triggered.connect(lambda: self.glWidget.changeZoom('low'))
+        zoomLow.triggered.connect(lambda: self.glWidget.changeZoom('low')) # as far as I understand the matter, :connect() doesn't pass arguments, hence the
+                                                                           # lambda -- Musicted (WTF is functional programming?)
         zoomMenu.addAction(zoomLow)
         
         zoomMid = QtWidgets.QAction('100%', zoomMenu)

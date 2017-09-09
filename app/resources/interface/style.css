@@ -1,0 +1,8 @@
+/*
+=== This will contain the stylesheet used by the entire application ===
+*/
+
+
+/* ----- Buttons ----- */
+QAbstractButton {background: #ffffff}
+QAbstractButton:hover {background: #cce6ff; border: none}

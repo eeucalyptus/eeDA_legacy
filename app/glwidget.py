@@ -1,5 +1,5 @@
 import math
-from data.common import Vector2d
+from data.common import Vector2d, Shortcut
 from PyQt5 import QtWidgets, QtGui, QtCore
 
 class GLWidget(QtWidgets.QOpenGLWidget):
@@ -11,7 +11,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         
         self.zoomLevel = 1.0
         self.initContextMenu()
-        
+        self.initShortcuts()
         
         
     def mousePressEvent(self, event):
@@ -36,7 +36,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         if(event.buttons() == QtCore.Qt.LeftButton):
             print("Left!")
             
-    def wheelEvent(self, event):
+    def wheelEvent(self, event): # feel free to re-implement. I know this sucks :)
         direction = event.angleDelta().y()/120
         mousePos = event.pos()
         mouseX = mousePos.x()
@@ -87,13 +87,18 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glMatrixMode(self.gl.GL_MODELVIEW)
 
     def zoomGL(self):
-        width = self.frameGeometry().width() * (1.0/self.zoomLevel)
-        height = self.frameGeometry().height() * (1.0/self.zoomLevel)
+        width = self.frameGeometry().width() / self.zoomLevel
+        height = self.frameGeometry().height() / self.zoomLevel
         
         self.gl.glMatrixMode(self.gl.GL_PROJECTION)
         self.gl.glLoadIdentity()
         self.gl.glOrtho(-0.5*width, +0.5*width, +0.5*height, -0.5*height, 4.0, 15.0)
         self.gl.glMatrixMode(self.gl.GL_MODELVIEW)
+        
+    def nudgeView(self, delta):
+        self.cameraposition += delta/self.zoomLevel
+        print("Nudge, nudge.")
+        self.repaint()
 
     def makeTriangle(self):
     
@@ -157,6 +162,17 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         zoomHi.triggered.connect(lambda: self.changeZoom('hi'))
         zoomMenu.addAction(zoomHi)
         
+    def initShortcuts(self):
+        self.addAction(Shortcut(self, "Ctrl+S", lambda: print("Success!")).act)
+        # nudge left
+        self.addAction(Shortcut(self, "Ctrl+Left", lambda: self.nudgeView(Vector2d(50.0, 0))).act)
+        # nudge right
+        self.addAction(Shortcut(self, "Ctrl+Right", lambda: self.nudgeView(Vector2d(-50.0,0))).act)
+        # nudge up
+        self.addAction(Shortcut(self, "Ctrl+Up", lambda: self.nudgeView(Vector2d(0,50.0))).act)
+        # nudge down
+        self.addAction(Shortcut(self, "Ctrl+Down", lambda: self.nudgeView(Vector2d(0,-50.0))).act)
+        
     def changeZoom(self, key):
         zoomFactor = {'low': 0.5,
                       'mid': 1.0,
@@ -168,6 +184,4 @@ class GLWidget(QtWidgets.QOpenGLWidget):
     def multZoom(self, factor):
         self.zoomLevel *= factor
         self.repaint()
-        
-        
         
