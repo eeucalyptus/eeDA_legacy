@@ -20,6 +20,7 @@ class TreeViewDock(QtWidgets.QDockWidget):
     def __init__(self):
         super().__init__()
         self.tree = self.initTV
+        self.setFeatures(QtWidgets.QDockWidget.DockWidgetMovable | QtWidgets.QDockWidget.DockWidgetFloatable | QtWidgets.QDockWidget.DockWidgetClosable)
         
     def initTV(self):
         
