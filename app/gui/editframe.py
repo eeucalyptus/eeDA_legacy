@@ -9,7 +9,7 @@ class EditFrame(QtWidgets.QWidget):
         self.glWidget = GLWidget(self)
         self.initBox()
         self.initToolArea()
-        
+    
     def initBox(self):
         layout = QtWidgets.QHBoxLayout()
         layout.addWidget(self.glWidget, 1)
@@ -20,23 +20,29 @@ class EditFrame(QtWidgets.QWidget):
         self.tbBox.toolArea = QtWidgets.QGroupBox(self.tbBox)
         layout2.addWidget(self.tbBox.toolArea)
         layout.addWidget(self.tbBox, 0, QtCore.Qt.AlignRight)
-        
+        layout2.addStretch()
         self.setLayout(layout)
-        
         
     def initToolArea(self):
         self.toolArea = self.tbBox.toolArea
-        layout = QtWidgets.QVBoxLayout()
-        
+        layout = QtWidgets.QGridLayout()
+        layout.setVerticalSpacing(0)
         
         #dummies
         icon = QtGui.QIcon('resources/icons/mystery.png')
-        for i in range(0, 10):
+        for i in range(0, 20):
             button = QtWidgets.QToolButton()
             button.setIcon(icon)
             button.setToolTip("Dummy")
-            button.setIconSize(QtCore.QSize(32, 32))
-            layout.addWidget(button)
+            button.setIconSize(QtCore.QSize(16, 16))
+            layout.addWidget(button, i, 0) # adds button at row i, column 0
             
-        layout.addStretch()
+        for i in range(0, 20):
+            button = QtWidgets.QToolButton()
+            button.setIcon(icon)
+            button.setToolTip("Dummy")
+            button.setIconSize(QtCore.QSize(16, 16))
+            layout.addWidget(button, i, 1)
+            
         self.toolArea.setLayout(layout)
+        self.parent().setMinimumSize(100, 100) # some layout object constrains the window size to be >= the height of the QGroupBox, this is a workaround.
