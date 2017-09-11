@@ -4,5 +4,5 @@
 
 
 /* ----- Buttons ----- */
-QAbstractButton {background: #ffffff}
+QAbstractButton {background: #ffffff; border: none}
 QAbstractButton:hover {background: #cce6ff; border: none}

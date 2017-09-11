@@ -1,5 +1,6 @@
 from PyQt5 import QtCore, QtWidgets, QtGui
 from .glwidget import GLWidget
+from .editframe import EditFrame
 from .treeview import TreeViewDock
 
 class MyWindow(QtWidgets.QMainWindow):
@@ -20,9 +21,14 @@ class MyWindow(QtWidgets.QMainWindow):
         self.statusBar().addPermanentWidget(self.positionWidget)
         
         # ----- OpenGL widget ----- #
-        self.glWidget = GLWidget(self)
+        #self.glWidget = GLWidget(self)
         #self.txtWidget = QtWidgets.QTextEdit(self)
-        self.setCentralWidget(self.glWidget)
+        #self.setCentralWidget(self.glWidget)
+        
+        # ----- Edit frame, containing OpenGL widget and edit toolbar ----- #
+        self.editFrame = EditFrame(self)
+        self.glWidget = self.editFrame.glWidget
+        self.setCentralWidget(self.editFrame)
         
         # ----- Window geometry ----- #
         screen = QtWidgets.QDesktopWidget().screenGeometry()

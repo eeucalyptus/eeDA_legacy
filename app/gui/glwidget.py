@@ -2,6 +2,8 @@ import math
 from data.util import Vector2d, Shortcut
 from PyQt5 import QtWidgets, QtGui, QtCore
 
+# Be aware that calls to parent() may fail because the parent is now an EditFrame, not the main window -- M
+
 class GLWidget(QtWidgets.QOpenGLWidget):
     def __init__(self, parent=None):
         super(GLWidget, self).__init__(parent)
@@ -16,7 +18,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         
     def mousePressEvent(self, event):
         if(event.buttons() == QtCore.Qt.RightButton):
-            self.contextMenu.popup(event.globalPos)
+            self.contextMenu.popup(event.globalPos())
             
         if(event.buttons() == QtCore.Qt.LeftButton):
             currentScreenPos = event.globalPos()
