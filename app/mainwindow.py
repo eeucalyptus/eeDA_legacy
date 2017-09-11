@@ -35,6 +35,10 @@ class MyWindow(QtWidgets.QMainWindow):
         # ----- Toolbar ----- #
         self.toolbar = self.addToolBar('File')
         
+        iconSave = QtGui.QIcon('resources/icons/save.png')
+        self.toolbarActionSave = QtWidgets.QAction(iconSave, 'Save')
+        self.toolbar.addAction(self.toolbarActionSave)
+        
         iconNew = QtGui.QIcon('resources/icons/new.png')
         self.toolbarActionNew = QtWidgets.QAction(iconNew, 'New...')
         self.toolbar.addAction(self.toolbarActionNew)
@@ -78,24 +82,37 @@ class MyWindow(QtWidgets.QMainWindow):
         exitAct = QtWidgets.QAction("Exit", self)
         exitAct.setShortcut("Ctrl+Q")
         exitAct.setStatusTip("Exit the application.")
+        exitAct.setIcon(QtGui.QIcon('resources\icons\exit.png'))
         exitAct.triggered.connect(self.close)
         
         mysteryAct = QtWidgets.QAction("Mystery option", self, checkable = True)
         mysteryAct.setStatusTip("Not even I know what this does.")
         mysteryAct.setShortcut("Ctrl+Tab")
+        mysteryAct.setIcon(QtGui.QIcon('resources\icons\mystery.png'))
         mysteryAct.triggered.connect(self.toggleCentralWidget)
         
         mbar = self.menuBar()
-        filemenu = mbar.addMenu("&File")
-        filemenu.addAction(exitAct)
-        filemenu.addAction(mysteryAct)
+        fileMenu = mbar.addMenu("&File")
+        fileMenu.addAction(exitAct)
+        
+        # add some of the toolbar actions to the file menu
+        fileMenu.addAction (self.toolbarActionOpen)
+        fileMenu.addAction (self.toolbarActionNew)
+        fileMenu.addAction (self.toolbarActionSave)
+        
+        fileMenu.addAction(mysteryAct)
         
         moremenu = QtWidgets.QMenu("&More", self)
         aboutAct = QtWidgets.QAction("About", self)
         aboutAct.setStatusTip("About this software.")
         moremenu.addAction(aboutAct)
         
-        filemenu.addMenu(moremenu)
+        fileMenu.addMenu(moremenu)
+        
+        # ----- Edit menu ----- #
+        editMenu = mbar.addMenu('&Edit')
+        editMenu.addAction(self.toolbarActionUndo)
+        editMenu.addAction(self.toolbarActionRedo)
         
         # ----- View menu ----- #
         viewMenu = mbar.addMenu('&View')
