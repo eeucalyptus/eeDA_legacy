@@ -1,20 +1,20 @@
 from data import schematics
 
 def RenderSchematicsContext(glWidget, schmaticsContext):
-    renderSchematicsDecorations(glWidget, schematicsContext)
-    renderSchematicsNets(glWidget, schematicsContext)
-    renderSchematicsSymbols(glWidget, schematicsContext)
+    gl = glWidget.gl
+        
+    for(symbol in schematicsContext.page[schematicsContext].symbols):
+        gl.glCallList(symbol.renderer.callList)
+        
+    for(decoration in schematicsContext.page[schematicsContext].decorations):
+        gl.glCallList(decoration.renderer.callList)
     
-    
-def renderSchematicsDecorations(glWidget, schematicsContext):
-    pass
-    
-    
-def renderSchematicsNets(glWidget, schematicsContext):
-    pass
-    
-    
-def renderSchematicsSymbols(glWidget, schematicsContext):
-    pass
-    
-    
+    for(joint in schematicsContext.page[schematicsContext].joints):
+        gl.glCallList(joint.renderer.callList)
+        
+    for(label in schematicsContext.page[schematicsContext].labels):
+        gl.glCallList(label.renderer.callList)
+        
+    for(wire in schematicsContext.page[schematicsContext].wires):
+        gl.glCallList(wire.renderer.callList)
+        

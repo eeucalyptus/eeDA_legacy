@@ -1,5 +1,6 @@
 from .schematicsconnector import SchematicsConnector
 
 class Wire:
-    connectors = []
-    pass
+    def __init__(self):
+        self.renderer = None
+        self.connectors = []
