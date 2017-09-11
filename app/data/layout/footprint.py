@@ -1,2 +1,4 @@
-class Footprint():
-    pass
+class Footprint:
+    def __init__(self):
+        self.pins = []
+        self.parts = []
