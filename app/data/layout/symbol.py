@@ -1,4 +1,4 @@
-class Footprint:
+class Symbol:
     def __init__(self):
-        self.pins = []
+        self.connectors = []
         self.parts = []

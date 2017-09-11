@@ -1,6 +1,5 @@
-class Symbol():
-    polygons = []
-    pins = []
-    unit = ""
+class Symbol:
     def __init__(self):
-        pass
+        self.renderer = None
+        self.connectors = []
+        self.parts = []

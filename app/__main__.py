@@ -1,7 +1,7 @@
 import sys
 
-from mainwindow import MyWindow
 from PyQt5 import QtWidgets, QtGui
+from gui import MyWindow
 
 if __name__=='__main__':
     print('''Running eeDA!''')

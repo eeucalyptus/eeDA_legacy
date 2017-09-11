@@ -1,5 +1,5 @@
 import math
-from data.common import Vector2d, Shortcut
+from data.util import Vector2d, Shortcut
 from PyQt5 import QtWidgets, QtGui, QtCore
 
 class GLWidget(QtWidgets.QOpenGLWidget):
@@ -7,7 +7,8 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         super(GLWidget, self).__init__(parent)
         self.setMouseTracking(True)
         self.cameraposition = Vector2d()
-        self.lastScreenPos = None
+        self.buttonDownScreenPos = None
+        self.buttonDownCameraPos = None
         
         self.zoomLevel = 1.0
         self.initContextMenu()
@@ -16,13 +17,17 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         
     def mousePressEvent(self, event):
         if(event.buttons() == QtCore.Qt.RightButton):
-            self.contextMenu.popup(event.globalPos())
+            self.contextMenu.popup(event.globalPos)
+            
+        if(event.buttons() == QtCore.Qt.LeftButton):
+            currentScreenPos = event.globalPos()
+            self.buttonDownScreenPos = currentScreenPos
+            self.buttonDownCameraPos = self.cameraposition
 
     def mouseMoveEvent(self, event):
         self.parent().positionWidget.setText("x={}, y={}".format(event.x(), event.y()))
-        currentScreenPos = event.screenPos()
-        lastExists = self.lastScreenPos != None
         leftPressed = event.buttons() == QtCore.Qt.LeftButton
+        
         if(lastExists and leftPressed):
             dx = self.lastScreenPos.x() - currentScreenPos.x()
             dy = self.lastScreenPos.y() - currentScreenPos.y()
@@ -31,7 +36,6 @@ class GLWidget(QtWidgets.QOpenGLWidget):
             self.repaint()
             
         self.lastScreenPos = currentScreenPos
-            
         
         if(event.buttons() == QtCore.Qt.LeftButton):
             print("Left!")
