@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtWidgets, QtGui
-from glwidget import GLWidget
-from treeview import TreeViewDock
+from .glwidget import GLWidget
+from .treeview import TreeViewDock
 
 class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):

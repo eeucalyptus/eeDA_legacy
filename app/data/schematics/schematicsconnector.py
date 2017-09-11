@@ -1,0 +1,2 @@
+class SchematicsConnector:
+    pass

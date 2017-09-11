@@ -1,3 +1,3 @@
-from .polygon import *
-from .vector2 import *
-from .shortcut import *
+from .component import Component
+from .pin import Pin
+from .tabcontext import TabContext
