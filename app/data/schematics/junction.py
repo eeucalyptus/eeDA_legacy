@@ -1,4 +1,4 @@
 from .schematicsconnector import SchematicsConnector
 
-class Joint(SchematicsConnector):
+class Junction(SchematicsConnector):
     pass

@@ -1,7 +1,7 @@
-class JointRenderer(Renderer):
-    def __init__(self, joint, gl):
-        super(JointRenderer).__init__(self, gl)
-        self.joint = joint
+class JunctionRenderer(Renderer):
+    def __init__(self, junction, gl):
+        super(JunctionRenderer).__init__(self, gl)
+        self.junction = junction
         self.callList = genSymbolCallList(self)
         
     def genSymbolCallList(self):
@@ -9,7 +9,7 @@ class JointRenderer(Renderer):
         self.gl.glNewList(genList, self.gl.GL_COMPILE)
         self.gl.glColor4f(0.282, 0.235, 0.196, 1.0)
         
-        # TODO: Implement joint rendering
+        # TODO: Implement junction rendering
         
         self.gl.glEndList()
 
