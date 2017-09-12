@@ -1,3 +1,10 @@
+'''
+
+The JunctionRenderer holds the gl display list for a single junction
+and is able to update it, when the underlying junction changes.
+
+'''
+
 class JunctionRenderer(Renderer):
     def __init__(self, junction, gl):
         super(JunctionRenderer).__init__(self, gl)
