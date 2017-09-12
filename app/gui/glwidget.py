@@ -15,6 +15,8 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.initContextMenu()
         self.initShortcuts()
         
+        self.injectedList = None
+        
         
     def mousePressEvent(self, event):
         if(event.buttons() == QtCore.Qt.RightButton):
@@ -24,6 +26,9 @@ class GLWidget(QtWidgets.QOpenGLWidget):
             currentScreenPos = event.globalPos()
             self.buttonDownScreenPos = currentScreenPos
             self.buttonDownCameraPos = self.cameraposition
+            
+    def setInject(self, genList):
+        self.injectedList = genList
 
     def mouseMoveEvent(self, event):
         self.parent().positionWidget.setText("x={}, y={}".format(event.x(), event.y()))
@@ -80,6 +85,9 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.zoomGL()
         self.gl.glCallList(self.object1)
         self.gl.glCallList(self.object2)
+        if self.injectedList != None:
+            self.gl.glCallList(self.injectedList)
+        
 
     def resizeGL(self, width, height):
         side = min(width, height)

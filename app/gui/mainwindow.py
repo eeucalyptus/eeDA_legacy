@@ -3,12 +3,20 @@ from .glwidget import GLWidget
 from .editframe import EditFrame
 from .treeview import TreeViewDock
 
+#=====
+# debug only
+from data.schematics import Wire
+from data.util import *
+from graphics import WireRenderer
+#=====
 class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.initUI()
         self.initMenu()
         self.initTreeView()
+        
+        self.runDebug() # placeholder for misc debug scripts
         
     def initUI(self):
         # ----- Display format ----- #
@@ -153,3 +161,22 @@ class MyWindow(QtWidgets.QMainWindow):
         
     def toggleCentralWidget(self):
         pass
+    
+    def runDebug(self):
+        
+        testWire = Wire(None)
+        testWire.setPoints([\
+        Vector2i(-50, 0),\
+        Vector2i(0, 200),\
+        Vector2i(50, 100),\
+        Vector2i(100, 200),\
+        Vector2i(150, 0)])
+        debugAct = self.menuBar().addAction('debug')
+        debugAct.triggered.connect(lambda: self.debug2(testWire))
+        #testWire.setRenderer(WireRenderer(testWire, self.editFrame.glWidget.context()))
+        
+    def debug2(self, wire):
+        wire.setRenderer(WireRenderer(wire, self.glWidget.gl))
+        self.glWidget.setInject(wire.renderer.genSymbolCallList())
+        self.glWidget.repaint()
+        print("Success1")
