@@ -1,2 +1,9 @@
+import uuid
+
 class Schematic:
-    pass
+    def __init__(self):
+        self.uuid = uuid.uuid1();
+        
+        self.pages = []
+        self.fields = {}
+        

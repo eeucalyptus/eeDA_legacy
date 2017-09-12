@@ -1,4 +1,4 @@
-from .joint import Joint
+from .junction import Junction
 from .label import Label
 from .page import Page
 from .schematic import Schematic

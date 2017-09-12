@@ -9,8 +9,8 @@ def RenderSchematicsContext(glWidget, schmaticsContext):
     for(decoration in schematicsContext.page[schematicsContext].decorations):
         gl.glCallList(decoration.renderer.callList)
     
-    for(joint in schematicsContext.page[schematicsContext].joints):
-        gl.glCallList(joint.renderer.callList)
+    for(junction in schematicsContext.page[schematicsContext].junctions):
+        gl.glCallList(junction.renderer.callList)
         
     for(label in schematicsContext.page[schematicsContext].labels):
         gl.glCallList(label.renderer.callList)
