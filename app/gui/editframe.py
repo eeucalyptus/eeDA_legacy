@@ -18,6 +18,7 @@ class EditFrame(QtWidgets.QWidget):
         layout2 = QtWidgets.QVBoxLayout()
         self.tbBox.setLayout(layout2)
         self.tbBox.toolArea = QtWidgets.QGroupBox(self.tbBox)
+        self.tbBox.toolArea.setTitle('Edit tools')
         layout2.addWidget(self.tbBox.toolArea)
         layout.addWidget(self.tbBox, 0, QtCore.Qt.AlignRight)
         layout2.addStretch()
