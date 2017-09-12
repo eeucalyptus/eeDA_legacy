@@ -34,8 +34,8 @@ class Vector2d():
 
 class Vector2i():
     def __init__(self, x = 0, y = 0):
-        self.x = integer(x)
-        self.y = integer(y)
+        self.x = int(x)
+        self.y = int(y)
     
     def __add__(self, other):
         xSum = self.x + other.x

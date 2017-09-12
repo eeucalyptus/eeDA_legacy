@@ -1,6 +1,6 @@
 from .junction import Junction
 from .label import Label
-from .page import Page
+#from .page import Page
 from .schematic import Schematic
 from .schematicsconnector import SchematicsConnector
 from .schematicscontext import SchematicsContext
