@@ -5,9 +5,9 @@ from .treeview import TreeViewDock
 
 #=====
 # debug only
-from data.schematics import Wire
+from data.schematics import Wire, Symbol
 from data.util import *
-from graphics import WireRenderer
+from graphics import WireRenderer, SymbolRenderer
 #=====
 class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -178,8 +178,25 @@ class MyWindow(QtWidgets.QMainWindow):
         debugAct.triggered.connect(lambda: self.debug2(testWire))
         #testWire.setRenderer(WireRenderer(testWire, self.editFrame.glWidget.context()))
         
+        testSymbol = Symbol(None)
+        testSymbol.addPolygon(Polygon.fromPoints(\
+        Vector2i(-100, -100),\
+        Vector2i(-100, 0),\
+        Vector2i(0, 0),\
+        Vector2i(0, -50),\
+        Vector2i(-75, -150),\
+        ))
+        debugAct2 = self.menuBar().addAction('debug2')
+        debugAct2.triggered.connect(lambda: self.debug3(testSymbol))
+        
     def debug2(self, wire):
         wire.setRenderer(WireRenderer(wire, self.glWidget.gl))
         self.glWidget.setInject(wire.renderer.genSymbolCallList())
         self.glWidget.repaint()
         print("Success1")
+        
+    def debug3(self, symbol):
+        symbol.setRenderer(SymbolRenderer(symbol, self.glWidget.gl))
+        self.glWidget.setInject(symbol.renderer.genSymbolCallList())
+        self.glWidget.repaint()
+        print("Success2")
