@@ -18,7 +18,7 @@ class EditFrame(QtWidgets.QWidget):
         layout.addWidget(self.glWidget, 1)
         
         # ----- big box ----- #
-        self.tbBox1 = QtWidgets.QWidget()
+        self.tbBox1 = QtWidgets.QWidget(self)
         self.tbBox1.setFixedWidth(32)
         
         layout2 = QtWidgets.QVBoxLayout()
@@ -39,7 +39,7 @@ class EditFrame(QtWidgets.QWidget):
         self.tbBox1.setLayout(layout2)
         
         # ----- small box ----- #
-        self.tbBox2 = QtWidgets.QWidget()
+        self.tbBox2 = QtWidgets.QWidget(self)
         
         
         layout3 = QtWidgets.QGridLayout()
