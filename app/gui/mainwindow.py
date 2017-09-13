@@ -159,6 +159,9 @@ class MyWindow(QtWidgets.QMainWindow):
         zoomHi.triggered.connect(lambda: self.glWidget.changeZoom('hi'))
         zoomMenu.addAction(zoomHi)
         
+    def resizeEvent(self, event):
+        self.editFrame.decideStack()
+        
     def toggleCentralWidget(self):
         pass
     
