@@ -24,5 +24,5 @@ Just run `__main__.py` - and you're in!
 
 ## Authors
 The project is being developed by
-* **Eike Schwarzwald** - Initiator, backend logic - [eeucalyptus] (https://github.com/eeucalyptus) 
-* **Gavin Lüdemann** - OpenGL, Qt - [Musicted] (https://github.com/Musicted)
+* **Eike Schwarzwald** - Initiator, backend logic - [eeucalyptus](https://github.com/eeucalyptus) 
+* **Gavin Lüdemann** - OpenGL, Qt - [Musicted](https://github.com/Musicted)
