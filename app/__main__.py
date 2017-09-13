@@ -17,7 +17,6 @@ if __name__=='__main__':
     
     app.setWindowIcon(QtGui.QIcon('resources\icons\logo64.png'))
     w = MyWindow()
-    w.setGeometry(300, 300, 300, 300)
     w.showMaximized()
     
     if (sys.flags.interactive == False):

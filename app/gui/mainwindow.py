@@ -40,7 +40,7 @@ class MyWindow(QtWidgets.QMainWindow):
         
         # ----- Window geometry ----- #
         screen = QtWidgets.QDesktopWidget().screenGeometry()
-        self.setGeometry(0, 0, screen.width(), screen.height())
+        self.setGeometry(screen.width()/4, screen.height()/4, screen.width()/2, screen.height()/2)
         
         # ----- Window title bar ----- #
         self.setWindowTitle("eeDA 2017 Unprofessional Edition")
