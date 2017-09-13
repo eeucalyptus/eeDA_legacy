@@ -1,3 +1,11 @@
+'''
+
+A symbolconnector is the schematics representation for a pin of a 
+component. It is connected to other connectors using connections. 
+It can be attached to one connection.
+
+'''
+
 import uuid
 
 from .schematicsconnector import SchematicsConnector
@@ -10,5 +18,5 @@ class SymbolConnector(SchematicsConnector):
         self.pinnumber = 0
         self.pinname = ''
         
-        self.position = Vector2i()
+        self.pos = Vector2i()
         self.parts = []

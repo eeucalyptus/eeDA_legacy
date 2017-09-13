@@ -22,3 +22,5 @@ class Label(SchematicsConnector):
         self.schematicspage = schematicspage
         self.text = ''
         self.globalLabel = False
+        
+        self.pos = Vector2i()

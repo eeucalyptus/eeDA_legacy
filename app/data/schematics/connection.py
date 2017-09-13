@@ -17,7 +17,12 @@ class Connection:
         self.connector1 = connector1
         
     def CheckConnection(self):
-        pos0 = connector0.pos
-        pos1 = connector1.pos
-        
-        return (pos0 == pos1)
+        if (connector0.pos == connector1.pos):
+            return False
+            
+        if (!connector0.isConnected(self)):
+            return False
+        if (!connector1.isConnected(self)):
+            return False
+            
+        return True

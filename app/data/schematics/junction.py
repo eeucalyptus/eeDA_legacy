@@ -20,3 +20,9 @@ class Junction(SchematicsConnector):
         self.connections = []
         self.pos = Vector2i()
         
+        
+    def isConnected(self, connection):
+        if connection in connections:
+            return True
+        else:
+            return False
