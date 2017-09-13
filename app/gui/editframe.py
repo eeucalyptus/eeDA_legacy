@@ -77,6 +77,7 @@ class EditFrame(QtWidgets.QWidget):
         self.stack.addWidget(self.tbBox2)
         
         self.tbBox.setLayout(self.stack)
+        self.tbBox.setSizePolicy(QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Ignored))
         
         # ----- #
         layout.addWidget(self.tbBox, 0, QtCore.Qt.AlignRight)
