@@ -177,7 +177,6 @@ class MyWindow(QtWidgets.QMainWindow):
         testWire.setConnectors(WireConnector(None, Vector2i(-100, 0)), WireConnector(None, Vector2i(200, 0)))
         debugAct = self.menuBar().addAction('debug')
         debugAct.triggered.connect(lambda: self.debug2(testWire))
-        #testWire.setRenderer(WireRenderer(testWire, self.editFrame.glWidget.context()))
         
         testSymbol = Symbol(None)
         testSymbol.addPolygon(Polygon.fromPoints(\
