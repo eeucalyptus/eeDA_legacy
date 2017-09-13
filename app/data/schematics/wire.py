@@ -20,7 +20,7 @@ class Wire:
         self.schematicspage = schematicspage
         
         self.renderer = None
-        self.connectors = []
+        self.connectors = [None, None]
         self.points = []
         
     def setPoints(self, ary):
@@ -28,6 +28,9 @@ class Wire:
             if not type(point) == Vector2i:
                 raise TypeError('We done fucked up')
         self.points = ary
+        
+    def setConnectors(self, con1, con2):
+        self.connectors = [con1, con2]
         
     def setRenderer(self, renderer):
         self.renderer = renderer

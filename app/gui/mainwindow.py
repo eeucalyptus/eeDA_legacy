@@ -5,7 +5,7 @@ from .treeview import TreeViewDock
 
 #=====
 # debug only
-from data.schematics import Wire, Symbol
+from data.schematics import Wire, Symbol, WireConnector
 from data.util import *
 from graphics import WireRenderer, SymbolRenderer
 #=====
@@ -174,6 +174,7 @@ class MyWindow(QtWidgets.QMainWindow):
         Vector2i(50, 100),\
         Vector2i(100, 200),\
         Vector2i(150, 0)])
+        testWire.setConnectors(WireConnector(None, Vector2i(-100, 0)), WireConnector(None, Vector2i(200, 0)))
         debugAct = self.menuBar().addAction('debug')
         debugAct.triggered.connect(lambda: self.debug2(testWire))
         #testWire.setRenderer(WireRenderer(testWire, self.editFrame.glWidget.context()))
