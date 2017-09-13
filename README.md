@@ -4,7 +4,7 @@ eeDA is intended to be an industry-suited electrical design aid for circuit desi
 
 ## Purpose
 
-There are a lot of open source circuit design and layout tools out there in the internet. The software that outshines all of them is [KiCad](http://kicad-pcb.org/). Dispite its enormous scope, it is often really counter-intuitive (library system, split feature set for different render modes, bad 3D model handling, to name just a few points). eeDA is intended to be more intuitive, while competing with the feature set and prividing better compatibility for external tools, like mechanical construction, etc.
+There are a lot of open source circuit design and layout tools out there in the internet. The software that outshines all of them is [KiCad](http://kicad-pcb.org/). Dispite its enormous scope, it is often really counter-intuitive (library system, split feature set for different render modes, bad 3D model handling, to name just a few points). eeDA is intended to be more intuitive, while competing with the feature set and providing better compatibility for external tools, like mechanical construction, etc.
 
 ## Goals
 
