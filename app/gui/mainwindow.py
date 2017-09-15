@@ -7,7 +7,7 @@ from .treeview import TreeViewDock
 # debug only
 from data.schematics import Wire, Symbol, WireConnector, Junction
 from data.util import *
-from graphics import WireRenderer, SymbolRenderer, JunctionRenderer
+from graphics import WireRenderer, SymbolRenderer, JunctionRenderer, RhinocerosRenderer
 #=====
 class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -198,6 +198,10 @@ class MyWindow(QtWidgets.QMainWindow):
         
         debugAct3 = self.menuBar().addAction('Junction')
         debugAct3.triggered.connect(lambda: self.debugJunction(testJunction))
+        
+        debugAct4 = self.menuBar().addAction('Rhino?')
+        debugAct4.triggered.connect(lambda: self.debugRhino())
+        
     def debugWire(self, wire):
         wire.setRenderer(WireRenderer(wire, self.glWidget.gl))
         self.glWidget.setInject(wire.renderer.genSymbolCallList())
@@ -215,3 +219,8 @@ class MyWindow(QtWidgets.QMainWindow):
         self.glWidget.setInject(junction.renderer.genSymbolCallList())
         self.glWidget.repaint()
         print("Success: junction rendering")
+        
+    def debugRhino(self):
+        renderer = RhinocerosRenderer(self.glWidget.gl)
+        self.glWidget.setInject(renderer.genSymbolCallList())
+        self.glWidget.repaint()
