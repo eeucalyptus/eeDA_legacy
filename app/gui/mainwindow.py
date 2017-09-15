@@ -5,9 +5,9 @@ from .treeview import TreeViewDock
 
 #=====
 # debug only
-from data.schematics import Wire, Symbol, WireConnector
+from data.schematics import Wire, Symbol, WireConnector, Junction
 from data.util import *
-from graphics import WireRenderer, SymbolRenderer
+from graphics import WireRenderer, SymbolRenderer, JunctionRenderer
 #=====
 class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -166,7 +166,7 @@ class MyWindow(QtWidgets.QMainWindow):
         pass
     
     def runDebug(self):
-        
+        # -- wire
         testWire = Wire(None)
         testWire.setPoints([\
         Vector2i(-50, 0),\
@@ -176,9 +176,11 @@ class MyWindow(QtWidgets.QMainWindow):
         Vector2i(150, 0)])
         testWire.setConnectors(WireConnector(None, Vector2i(-100, 0)), None)
         
-        debugAct = self.menuBar().addAction('debug')
-        debugAct.triggered.connect(lambda: self.debug2(testWire))
+        debugAct = self.menuBar().addAction('Wire')
+        debugAct.triggered.connect(lambda: self.debugWire(testWire))
         
+        
+        # -- symbol
         testSymbol = Symbol(None)
         testSymbol.addPolygon(Polygon.fromPoints(\
         Vector2i(-100, -100),\
@@ -187,17 +189,29 @@ class MyWindow(QtWidgets.QMainWindow):
         Vector2i(0, -50),\
         Vector2i(-75, -150),\
         ))
-        debugAct2 = self.menuBar().addAction('debug2')
-        debugAct2.triggered.connect(lambda: self.debug3(testSymbol))
+        debugAct2 = self.menuBar().addAction('Symbol')
+        debugAct2.triggered.connect(lambda: self.debugSymbol(testSymbol))
         
-    def debug2(self, wire):
+        # -- junction
+        testJunction = Junction(None)
+        testJunction.setPos(Vector2i(500, 500))
+        
+        debugAct3 = self.menuBar().addAction('Junction')
+        debugAct3.triggered.connect(lambda: self.debugJunction(testJunction))
+    def debugWire(self, wire):
         wire.setRenderer(WireRenderer(wire, self.glWidget.gl))
         self.glWidget.setInject(wire.renderer.genSymbolCallList())
         self.glWidget.repaint()
-        print("Success1")
+        print("Success: wire rendering")
         
-    def debug3(self, symbol):
+    def debugSymbol(self, symbol):
         symbol.setRenderer(SymbolRenderer(symbol, self.glWidget.gl))
         self.glWidget.setInject(symbol.renderer.genSymbolCallList())
         self.glWidget.repaint()
-        print("Success2")
+        print("Success: symbol rendering")
+        
+    def debugJunction(self, junction):
+        junction.setRenderer(JunctionRenderer(junction, self.glWidget.gl))
+        self.glWidget.setInject(junction.renderer.genSymbolCallList())
+        self.glWidget.repaint()
+        print("Success: junction rendering")
