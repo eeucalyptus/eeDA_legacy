@@ -74,6 +74,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.object2 = self.makeQuad()
         self.gl.glShadeModel(self.gl.GL_FLAT)
         self.gl.glEnable(self.gl.GL_DEPTH_TEST)
+        self.gl.glCullFace(self.gl.GL_BACK)
         self.gl.glEnable(self.gl.GL_CULL_FACE)
         self.gl.glEnable(self.gl.GL_MULTISAMPLE)
 

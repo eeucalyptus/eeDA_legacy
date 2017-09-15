@@ -22,9 +22,9 @@ class WireRenderer(Renderer):
         # ----- begin drawing
         if self.wire.connectors[0] != None:                 # check whether there is a connector 1
             point1 = self.wire.connectors[0].pos            # true: set it as point 1
-            print("Bingo 1")
+            #print("Bingo 1")
             if len(self.wire.points) > 0:                       # check whether there are additional points
-                print("Bingo 2")
+                #print("Bingo 2")
                 point2 = self.wire.points[0]                    # true: set the first one as point 2
             elif self.wire.connectors[1] != None:               # else check whether there is a second connector
                 point2 = self.wire.connectors[1].pos            # true: draw the connection and return the genList
