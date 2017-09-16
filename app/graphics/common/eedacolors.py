@@ -7,7 +7,7 @@ Serves as a namespace for quick configuration of rendering colors -- maybe even 
 class eeDAcolor:
     
     # ----- Schematics ----- #
-    SCM_BACKGROUND = (0.1, 0.1, 0.12, 1.0)
+    SCM_BACKGROUND = (0.05, 0.38, 0.66, 1.0)
     
     WIRE = (0.9, 0.9, 0.9, 1.0)
     WIRE_UNCONNECTED = (1.0, 0.2, 0.2, 1.0)
