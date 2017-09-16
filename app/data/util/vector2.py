@@ -17,6 +17,11 @@ class Vector2d():
         x = self.x / scalar
         y = self.y / scalar
         return Vector2d(x, y)
+    
+    def __div__(self, scalar):
+        x = self.x / scalar
+        y = self.y / scalar
+        return Vector2d(x, y)
         
     def __mul__(self, scalar):
         x = self.x * scalar
@@ -46,6 +51,16 @@ class Vector2i():
         xSum = self.x - other.x
         ySum = self.y - other.y
         return Vector2i(xSum, ySum)
+    
+    def __truediv__(self, scalar):
+        x = self.x / scalar
+        y = self.y / scalar
+        return Vector2i(x, y)
+    
+    def __div__(self, scalar):
+        x = self.x / scalar
+        y = self.y / scalar
+        return Vector2i(x, y)
         
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y

@@ -1,5 +1,6 @@
 from . import Renderer
-
+from .common import pRenderCircle, pRenderConvexPoly
+from data.util import Vector2i, Polygon
 '''
 
 The RhinocerosRenderer holds the gl display list for a single rhinoceros
@@ -40,12 +41,20 @@ class RhinocerosRenderer(Renderer):
         self.gl.glVertex3d(23, 146, 1.1) #1
         
         
-        
-        
         self.gl.glEnd()
         
-        
-        
+        # -- some additional testing of the new primitive renderers
+        self.gl.glColor4f(0.0, 1.0, 0.0, 1.0)
+        pRenderCircle(self, Vector2i(-200, -200), 25)
+        self.gl.glColor4f(0.0, 0.0, 1.0, 1.0)
+        polly = Polygon.fromPoints(\
+        Vector2i(0, 0),\
+        Vector2i(25, 0),\
+        Vector2i(35, 12),\
+        Vector2i(25, 25),\
+        Vector2i(0, 25))
+        pRenderConvexPoly(self, polly, Vector2i(-400, -400))
+        # --
         self.gl.glEndList()
 
         return genList
