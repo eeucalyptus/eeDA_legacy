@@ -1,6 +1,7 @@
 import math
 from data.util import Vector2d, Shortcut
 from PyQt5 import QtWidgets, QtGui, QtCore
+from graphics.common import eeDAcolor
 
 # Be aware that calls to parent() may fail because the parent is now an EditFrame, not the main window -- M
 
@@ -69,7 +70,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl = self.context().versionFunctions(version)
         self.gl.initializeOpenGLFunctions()
 
-        self.gl.glClearColor(0.0, 0.0, 0.0, 1.0)
+        self.gl.glClearColor(*eeDAcolor.SCM_BACKGROUND)
         self.object1 = self.makeTriangle()
         self.object2 = self.makeQuad()
         self.gl.glShadeModel(self.gl.GL_FLAT)

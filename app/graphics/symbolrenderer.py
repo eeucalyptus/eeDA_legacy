@@ -1,5 +1,6 @@
 from PyQt5 import QtWidgets, QtGui
 from .renderer import Renderer
+from .common import eeDAcolor
 
 class SymbolRenderer(Renderer):
     def __init__(self, symbol, gl):
@@ -11,7 +12,7 @@ class SymbolRenderer(Renderer):
         genList = self.gl.glGenLists(1)
         self.gl.glNewList(genList, self.gl.GL_COMPILE)
         
-        self.gl.glColor4f(0.9, 0.1, 0.1, 1.0)
+        self.setColor(eeDAcolor.SYMBOL)
         
         # TODO: Replace dummy renderer
         

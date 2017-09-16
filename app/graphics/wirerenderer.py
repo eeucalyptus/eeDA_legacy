@@ -1,5 +1,6 @@
 from . import Renderer
 from data.util import Vector2i
+from .common import eeDAcolor
 
 class WireRenderer(Renderer):
     def __init__(self, wire, gl):
@@ -10,7 +11,7 @@ class WireRenderer(Renderer):
     def genSymbolCallList(self):
         genList = self.gl.glGenLists(1)
         self.gl.glNewList(genList, self.gl.GL_COMPILE)
-        self.gl.glColor4f(0.5, 0.5, 0.5, 1.0)
+        self.setColor(eeDAcolor.WIRE)
         
         # TODO: Implement wire rendering
         # Let's try and do this, shall we?
@@ -75,9 +76,9 @@ class WireRenderer(Renderer):
         return genList
     
     def renderUnconnected(self, pos):
-        self.gl.glColor4f(1.0, 0.0, 0.0, 1.0)
+        self.setColor(eeDAcolor.WIRE_UNCONNECTED)
         self.gl.glVertex3i(pos.x - 10, pos.y - 10, 1.5)
         self.gl.glVertex3i(pos.x + 10, pos.y + 10, 1.5)
         self.gl.glVertex3i(pos.x + 10, pos.y - 10, 1.5)
         self.gl.glVertex3i(pos.x - 10, pos.y + 10, 1.5)
-        self.gl.glColor4f(0.5, 0.5, 0.5, 1.0)
+        self.setColor(eeDAcolor.WIRE)
