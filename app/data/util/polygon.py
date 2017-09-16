@@ -36,7 +36,7 @@ class Polygon():
             elem = Vector2i(elem[0], elem[1])
             pAry.append(elem)
         return Polygon(pAry)
-    
+        
     def fromPoints(*args):
         ary = PointArray()
         for i in args:
@@ -45,6 +45,27 @@ class Polygon():
         
     def containsPoint(self, point):
         pass
+        
+    def centroid(self):
+        if len(self.points) == 0:
+            return Vector2i()
+        
+        sum = Vector2i()
+        
+        for point in self.points:
+            sum = sum + point       # maybe implement in-place calculations for vectors later on
+        
+        return sum / len(self.points)
+        
+    def translated(self, vector):   # non-mutating
+        newPoints = PointArray()
+        for point in self.points:
+            newPoints.append(point + vector)
+        return Polygon(newPoints)
+        
+    def translate(self, vector):    # mutating
+        for point in self.points:
+            point = point + vector
         
     def boundingBox(self):
         minMax = self.points.minMaxXY()
