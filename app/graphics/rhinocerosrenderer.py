@@ -1,5 +1,5 @@
 from . import Renderer
-from .common import pRenderCircle, pRenderConvexPoly
+from .common import pRenderCircle, pRenderConvexPoly, eeDAcolor
 from data.util import Vector2i, Polygon
 '''
 
@@ -17,7 +17,8 @@ class RhinocerosRenderer(Renderer):
     def genSymbolCallList(self):
         genList = self.gl.glGenLists(1)
         self.gl.glNewList(genList, self.gl.GL_COMPILE)
-        self.gl.glColor4f(0.75, 1.0, 0.93, 1.0) # the best color in the world
+        #self.gl.glColor4f(0.75, 1.0, 0.93, 1.0) # the best color in the world
+        self.setColor(eeDAcolor.RHINO)
         
         self.gl.glLineWidth(4.0)
         self.gl.glBegin(self.gl.GL_LINE_LOOP)
