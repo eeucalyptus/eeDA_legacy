@@ -1,5 +1,5 @@
 from . import Renderer
-from .common import pRenderCircle, pRenderConvexPoly, eeDAcolor
+from .common import pRenderCircle, pRenderPolygon, eeDAcolor
 from data.util import Vector2i, Polygon
 '''
 
@@ -20,30 +20,28 @@ class RhinocerosRenderer(Renderer):
         #self.gl.glColor4f(0.75, 1.0, 0.93, 1.0) # the best color in the world
         self.setColor(eeDAcolor.RHINO)
         
-        self.gl.glLineWidth(4.0)
-        self.gl.glBegin(self.gl.GL_LINE_LOOP)
-        self.gl.glVertex3d(23, 146, 1.1) #1
-        self.gl.glVertex3d(68, 183, 1.1) #2
-        self.gl.glVertex3d(66, 163, 1.1) #3
-        self.gl.glVertex3d(88, 168, 1.1) #4
-        self.gl.glVertex3d(112, 134, 1.1) #5
-        self.gl.glVertex3d(100, 132, 1.1) #6
-        self.gl.glVertex3d(96, 103, 1.1) #7
-        self.gl.glVertex3d(125, 122, 1.1) #8
-        self.gl.glVertex3d(116, 115, 1.1) #9
-        self.gl.glVertex3d(119, 92, 1.1) #10
-        self.gl.glVertex3d(134, 111, 1.1) #11
-        self.gl.glVertex3d(157, 92, 1.1) #12
-        self.gl.glVertex3d(144, 204, 1.1) #13
-        self.gl.glVertex3d(88, 237, 1.1) #14
-        self.gl.glVertex3d(72, 240, 1.1) #15
-        self.gl.glVertex3d(62, 211, 1.1) #16
-        self.gl.glVertex3d(35, 188, 1.1) #17
-        self.gl.glVertex3d(23, 146, 1.1) #1
         
+        rhinopoly = Polygon.fromPoints(\
+        Vector2i(23, 146), #1\
+        Vector2i(68, 183), #2\
+        Vector2i(66, 163), #3\
+        Vector2i(88, 168), #4\
+        Vector2i(112, 134), #5\
+        Vector2i(100, 132), #6\
+        Vector2i(96, 103), #7\
+        Vector2i(125, 122), #8\
+        Vector2i(116, 115), #9\
+        Vector2i(119, 92), #10\
+        Vector2i(134, 111), #11\
+        Vector2i(157, 92), #12\
+        Vector2i(144, 204), #13\
+        Vector2i(88, 237), #14\
+        Vector2i(72, 240), #15\
+        Vector2i(62, 211), #16\
+        Vector2i(35, 188)) #17
+        pRenderPolygon(self, rhinopoly, Vector2i())
         
-        self.gl.glEnd()
-        
+
         # -- some additional testing of the new primitive renderers
         self.gl.glColor4f(0.0, 1.0, 0.0, 1.0)
         pRenderCircle(self, Vector2i(-200, -200), 25)
@@ -54,7 +52,7 @@ class RhinocerosRenderer(Renderer):
         Vector2i(35, 12),\
         Vector2i(25, 25),\
         Vector2i(0, 25))
-        pRenderConvexPoly(self, polly, Vector2i(-400, -400))
+        pRenderPolygon(self, polly, Vector2i(-400, -400))
         # --
         self.gl.glEndList()
 

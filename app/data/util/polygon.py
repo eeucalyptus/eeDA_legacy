@@ -1,4 +1,5 @@
 from .vector2 import Vector2i
+from dependencies.polytri import *
 
 class PointArray(list):
     def __init__(self):
@@ -46,7 +47,7 @@ class Polygon():
     def containsPoint(self, point):
         pass
         
-    def centroid(self):
+    def centroid(self): # this isn't really a centroid. But if the polygon is convex, the point is inside the polygon.
         if len(self.points) == 0:
             return Vector2i()
         
@@ -76,23 +77,20 @@ class Polygon():
         box = Polygon.fromPoints(topLeft, topRight, botLeft, botRight)
         return box
         
-    def triangles(self):
-        # TODO - implement monotone polygons algorithm
-        # returns triangle list like [[vertex, vertex, vertex], {vertex, vertex, vertex]]
-        return []
-        
     def __repr__(self):
         string = "Polygon:"
         for i in self.points:
             string += "\n"+i.__repr__()
         return string
         
-
-if __name__=="__main__":
-    p1 = Vector2i(-1, 2)
-    p2 = Vector2i(4, 3)
-    p3 = Vector2i(2, 10)
-    polly = Polygon.fromPoints(p1, p2, p3)
-    boxy = polly.boundingBox()
-    
-    print(boxy)
+    def triangles(self):
+        '''
+        returns an array of triangles using polytri
+        '''
+        ary = [[point.x, point.y] for point in self.points]
+        triangles = triangulate(ary)
+        returnAry = []
+        for tri in triangles:
+            returnAry.append(Polygon.fromPoints(Vector2i(tri[0][0], tri[0][1]), Vector2i(tri[1][0], tri[1][1]), Vector2i(tri[2][0], tri[2][1])))
+        
+        return returnAry
