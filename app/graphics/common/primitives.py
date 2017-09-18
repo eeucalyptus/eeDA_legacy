@@ -20,18 +20,25 @@ def pRenderCircle(renderer, center = Vector2i(), radius = 10, depth = 1.0, resol
     renderer.gl.glVertex3d(center.x, center.y, depth) # centroid again
     renderer.gl.glEnd()
     
-def pRenderConvexPoly(renderer, polygon, pos, depth = 1.0):
-    renderer.gl.glBegin(renderer.gl.GL_TRIANGLE_FAN)
-    adjPolygon = polygon.translated(pos)
-    centroid = adjPolygon.centroid()
-    renderer.gl.glVertex3d(centroid.x, centroid.y, depth)
-    last = adjPolygon.points[-1]
-    renderer.gl.glVertex3d(last.x, last.y, depth)
-    for point in adjPolygon.points:
+# def pRenderConvexPoly(renderer, polygon, pos, depth = 1.0):
+#     renderer.gl.glBegin(renderer.gl.GL_TRIANGLE_FAN)
+#     adjPolygon = polygon.translated(pos)
+#     centroid = adjPolygon.centroid()
+#     renderer.gl.glVertex3d(centroid.x, centroid.y, depth)
+#     last = adjPolygon.points[-1]
+#     renderer.gl.glVertex3d(last.x, last.y, depth)
+#     for point in adjPolygon.points:
+#         renderer.gl.glVertex3d(point.x, point.y, depth)
+#     renderer.gl.glEnd()
+
+def pRenderTriangle(renderer, triangle, pos, depth = 1.0):
+    renderer.gl.glBegin(renderer.gl.GL_TRIANGLES)
+    adjTri = triangle.translated(pos)
+    for point in adjTri.points:
         renderer.gl.glVertex3d(point.x, point.y, depth)
     renderer.gl.glEnd()
     
 def pRenderPolygon(renderer, polygon, pos, depth = 1.0):
-    pass
-    # find convex polygons
-    # render each one of them
+    triAry = polygon.triangles()
+    for tri in triAry:
+        pRenderTriangle(renderer, tri, pos)
