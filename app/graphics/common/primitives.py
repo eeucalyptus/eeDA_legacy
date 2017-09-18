@@ -30,3 +30,8 @@ def pRenderConvexPoly(renderer, polygon, pos, depth = 1.0):
     for point in adjPolygon.points:
         renderer.gl.glVertex3d(point.x, point.y, depth)
     renderer.gl.glEnd()
+    
+def pRenderPolygon(renderer, polygon, pos, depth = 1.0):
+    pass
+    # find convex polygons
+    # render each one of them
