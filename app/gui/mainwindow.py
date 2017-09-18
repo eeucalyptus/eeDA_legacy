@@ -7,6 +7,7 @@ from .treeview import TreeViewDock
 # debug only
 from data.schematics import Wire, Symbol, WireConnector, Junction
 from data.util import *
+from .shortcut import Shortcut
 from graphics import WireRenderer, SymbolRenderer, JunctionRenderer, RhinocerosRenderer
 #=====
 class MyWindow(QtWidgets.QMainWindow):

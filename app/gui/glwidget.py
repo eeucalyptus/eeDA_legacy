@@ -1,5 +1,6 @@
 import math
-from data.util import Vector2d, Shortcut
+from data.util import Vector2d
+from .shortcut import Shortcut
 from PyQt5 import QtWidgets, QtGui, QtCore
 from graphics.common import eeDAcolor
 
