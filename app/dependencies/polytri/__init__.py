@@ -1,1 +1,1 @@
-from polytri import *
+from .polytri import *
