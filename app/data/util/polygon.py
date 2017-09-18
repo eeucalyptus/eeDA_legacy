@@ -1,5 +1,5 @@
 from .vector2 import Vector2i
-from dependencies.polytri import *
+import dependencies.polytri as polytri
 
 class PointArray(list):
     def __init__(self):
@@ -88,7 +88,7 @@ class Polygon():
         returns an array of triangles using polytri
         '''
         ary = [[point.x, point.y] for point in self.points]
-        triangles = triangulate(ary)
+        triangles = polytri.triangulate(ary)
         returnAry = []
         for tri in triangles:
             returnAry.append(Polygon.fromPoints(Vector2i(tri[0][0], tri[0][1]), Vector2i(tri[1][0], tri[1][1]), Vector2i(tri[2][0], tri[2][1])))
