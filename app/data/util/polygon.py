@@ -94,12 +94,3 @@ class Polygon():
             returnAry.append(Polygon.fromPoints(Vector2i(tri[0][0], tri[0][1]), Vector2i(tri[1][0], tri[1][1]), Vector2i(tri[2][0], tri[2][1])))
         
         return returnAry
-
-poly = Polygon.fromPoints(\
-Vector2i(0, 0),\
-Vector2i(5, 0),\
-Vector2i(5, 5),\
-Vector2i(0, 5),
-Vector2i(-1, 2))
-for tri in poly.triangles():
-    print(tri)
