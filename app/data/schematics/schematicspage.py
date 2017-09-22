@@ -1,7 +1,7 @@
 '''
 
 A single page in a schematic. Contains symbols, decorations,
-junctions, labels and wires. Local labels are visible on their 
+junctions, labels and wires. Local labels are visible on their
 own page, but not on other pages.
 
 '''
