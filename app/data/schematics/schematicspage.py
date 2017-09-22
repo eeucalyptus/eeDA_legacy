@@ -14,8 +14,4 @@ class SchematicsPage:
         
         self.schematic = schematic
         
-        self.symbols = []
-        self.decorations = []
-        self.junctions = []
-        self.labels = []
-        self.wires = []
+        self.elements = []

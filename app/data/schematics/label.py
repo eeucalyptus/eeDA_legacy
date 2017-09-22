@@ -14,8 +14,9 @@ to read and understand.
 import uuid
 
 from .schematicsconnector import SchematicsConnector
+from .schematicselement import SchematicsElement
 
-class Label(SchematicsConnector):
+class Label(SchematicsElement, SchematicsConnector):
     def __init__(self, schematicspage):
         self.uuid = uuid.uuid1()
         

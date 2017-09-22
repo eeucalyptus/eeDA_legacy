@@ -11,8 +11,9 @@ more than two adjacent nodes has to be represented by a junction.
 
 from data.util import Vector2i
 from .schematicsconnector import SchematicsConnector
+from .schematicselement import SchematicsElement
 
-class Junction(SchematicsConnector):
+class Junction(SchematicsElement, SchematicsConnector):
     def __init__(self, schematicspage):
         self.uuid = uuid.uuid1()
         

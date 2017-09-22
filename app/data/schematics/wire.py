@@ -12,9 +12,10 @@ them, then ending in a junction.
 import uuid
 
 from .schematicsconnector import SchematicsConnector
+from .schematicselement import SchematicsElement
 from data.util import Vector2i
 
-class Wire:
+class Wire(SchematicsElement):
     def __init__(self, schematicspage):
         self.uuid = uuid.uuid1()
         self.schematicspage = schematicspage

@@ -11,8 +11,9 @@ be Polygons or texts or other graphical parts.
 import uuid
 
 from data.util import Vector2i, Polygon
+from .schematicselement import SchematicsElement
 
-class Symbol:
+class Symbol(SchematicsElement):
     def __init__(self, component):
         self.uuid = uuid.uuid1();
         self.component = component
