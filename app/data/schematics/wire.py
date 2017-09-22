@@ -13,6 +13,7 @@ import uuid
 
 from .schematicsconnector import SchematicsConnector
 from .schematicselement import SchematicsElement
+from .wireconnector import WireConnector
 from data.util import Vector2i
 
 class Wire(SchematicsElement):
@@ -21,7 +22,7 @@ class Wire(SchematicsElement):
         self.schematicspage = schematicspage
         
         self.renderer = None
-        self.connectors = [None, None]
+        self.connectors = [WireConnector(self), WireConnector(self)]
         self.points = []
         
     def setPoints(self, ary):
@@ -35,3 +36,6 @@ class Wire(SchematicsElement):
         
     def setRenderer(self, renderer):
         self.renderer = renderer
+        
+    def isConnected(self, connection):
+        return self.connectors[0].isConnected(connection) | self.connectors[1].isConnected(connection)
