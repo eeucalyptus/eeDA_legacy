@@ -1,10 +1,10 @@
-from copperstructure import CopperStructure
+from .copperstructure import CopperStructure
 from enum import Enum
 
 class PadShape(Enum):
-    self.ROUND = 1
-    self.RECTANGLE = 2
-    self.TRAPEZOID = 3
+    ROUND = 1
+    RECTANGLE = 2
+    TRAPEZOID = 3
 
 
 class Pad(CopperStructure):

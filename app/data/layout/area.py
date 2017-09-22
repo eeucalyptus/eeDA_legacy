@@ -1,4 +1,4 @@
-from copperstructure import CopperStructure
+from .copperstructure import CopperStructure
 
 class Area(CopperStructure):
     pass
