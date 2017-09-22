@@ -1,3 +1,3 @@
-from .component import Component
-from .pin import Pin
-from .tabcontext import TabContext
+from .component import *
+from .pin import *
+from .tabcontext import *
