@@ -26,9 +26,6 @@ class Wire(SchematicsElement):
         self.points = []
         
     def setPoints(self, ary):
-        for point in ary:
-            if not type(point) == Vector2i:
-                raise TypeError('We done fucked up')
         self.points = ary
         
     def setConnectors(self, con1, con2):
