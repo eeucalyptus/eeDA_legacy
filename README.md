@@ -18,9 +18,21 @@ eeDA is supposed to be used by hobbyists, makers, professionals and artists, no 
 ### Performance
 eeDA is optimized for performance. The speed of your machine should not limit your productivity.
 
+## Dependencies
+eeDA depends on the following libraries:
+
+- PyQt5
+- PyYAML
+
+You need to install them manually or using pip, in order to run eeDA.
+
 ## Installation
 We did not implement a proper installation routine, yet.
-Just run `__main__.py` - and you're in!
+Just run `python __main__.py` from the app directory - and you're in!
+
+## Tests
+
+To run the unit tests, simply run `python -m unittest tests` from the app directory.
 
 ## Authors
 The project is being developed by
