@@ -1,9 +1,11 @@
+import uuid
+
 class Component:
-    uuid = ''
-    
-    symbols = []
-    footprints = []
-    pins = []
-    reference = ''
-    
-    fields = {}
+    def __init__(self):
+        self.uuid = uuid.uuid1()
+
+        self.symbols = []
+        self.footprints = []
+        self.reference = ''
+
+        self.fields = {}
