@@ -14,11 +14,11 @@ from data.util import Vector2i, Polygon
 from .schematicselement import SchematicsElement
 
 class Symbol(SchematicsElement):
-    def __init__(self, component):
+    def __init__(self, page, component):
+        super().__init__(page)
+        
         self.uuid = uuid.uuid1();
         self.component = component
-        
-        self.renderer = None
         
         self.connectors = []
         self.parts = []

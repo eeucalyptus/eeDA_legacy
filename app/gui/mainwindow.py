@@ -182,7 +182,7 @@ class MyWindow(QtWidgets.QMainWindow):
         
         
         # -- symbol
-        testSymbol = Symbol(None)
+        testSymbol = Symbol(None, None)
         testSymbol.addPolygon(Polygon.fromPoints(\
         Vector2i(-100, -100),\
         Vector2i(-100, 0),\

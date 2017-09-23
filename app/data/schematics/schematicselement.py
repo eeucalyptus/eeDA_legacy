@@ -4,4 +4,4 @@ class SchematicsElement:
         self.renderer = self.createRenderer()
         
     def createRenderer(self):
-        pass # abstract, to be re-implemented in every subclass that has a renderer.
+        return None # abstract, to be re-implemented in every subclass that has a renderer.

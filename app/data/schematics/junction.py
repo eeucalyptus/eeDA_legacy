@@ -14,13 +14,13 @@ from .schematicsconnector import SchematicsConnector
 from .schematicselement import SchematicsElement
 
 class Junction(SchematicsElement, SchematicsConnector):
-    def __init__(self, schematicspage):
+    def __init__(self, page):
+        SchematicsElement.__init__(self, page)
         self.uuid = uuid.uuid1()
         
-        self.schematicspage = schematicspage
         self.connections = []
         self.pos = Vector2i()
-        self.renderer = None
+        
         
     @classmethod
     def fromConnector(connector):

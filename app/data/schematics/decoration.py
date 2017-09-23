@@ -8,10 +8,10 @@ import uuid
 from .schematicselement import SchematicsElement
 
 class Decoration(SchematicsElement):
-    def __init__(self):
+    def __init__(self, page):
+        super().__init__(page)
         self.uuid = uuid.uuid1()
         
-        self.renderer = None
         self.parts = []
         
         self.pos = Vector2i()
