@@ -1,10 +1,10 @@
 from data.common import TabContext
 
 class SchematicsContext(TabContext):
-    def __init__(self, schematics = None, page = None):
-        self.schematic = None
+    def __init__(self, schematic = None, page = None):
+        self.schematic = schematic
         self.nets = []
-        self.page = None
+        self.page = page
         
     def setSchematic(self, schematic):
         self.schematic = schematic

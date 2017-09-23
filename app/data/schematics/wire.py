@@ -17,11 +17,11 @@ from .wireconnector import WireConnector
 from data.util import Vector2i
 
 class Wire(SchematicsElement):
-    def __init__(self, schematicspage):
+    def __init__(self, page):
+        super().__init__(page)
         self.uuid = uuid.uuid1()
-        self.schematicspage = schematicspage
         
-        self.renderer = None
+        
         self.connectors = [WireConnector(self), WireConnector(self)]
         self.points = []
         

@@ -15,3 +15,6 @@ class SchematicsPage:
         self.schematic = schematic
         
         self.elements = []
+        
+    def addElem(self, elem):
+        self.elements.append(elem)

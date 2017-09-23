@@ -18,7 +18,8 @@ class Schematic:
         
     def addPage(self, page = None):
         if page == None:
-            self.pages.append(SchematicsPage(self))
+            page = SchematicsPage(self)
+            self.pages.append(page)
         else:
             self.pages.append(page)
-        
+        return page
