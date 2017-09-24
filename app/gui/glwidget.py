@@ -3,6 +3,8 @@ from data.util import Vector2d
 from .shortcut import Shortcut
 from PyQt5 import QtWidgets, QtGui, QtCore
 from graphics.common import eeDAcolor
+from graphics import GridRenderer # to be removed
+from data.util import Grid # to be removed
 
 # Be aware that calls to parent() may fail because the parent is now an EditFrame, not the main window -- M
 
@@ -79,6 +81,8 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glCullFace(self.gl.GL_BACK)
         #self.gl.glEnable(self.gl.GL_CULL_FACE)
         self.gl.glEnable(self.gl.GL_MULTISAMPLE)
+        
+        self.initGrid()
 
     def paintGL(self):
         self.gl.glClear(
@@ -90,6 +94,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glCallList(self.object2)
         if self.injectedList != None:
             self.gl.glCallList(self.injectedList)
+        self.gl.glCallList(self.gridRenderer.callList)
         
 
     def resizeGL(self, width, height):
@@ -203,3 +208,12 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.zoomLevel *= factor
         self.repaint()
         
+    def initGrid(self):
+        self.grid = self.makeGrid()
+        self.gridRenderer = self.makeGridRenderer(self.grid)
+        
+    def makeGrid(self):
+        return Grid()
+    
+    def makeGridRenderer(self, grid):
+        return GridRenderer(grid, self.gl)

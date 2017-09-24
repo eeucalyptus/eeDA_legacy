@@ -3,6 +3,9 @@ class Vector2d():
         self.x = float(x)
         self.y = float(y)
     
+    def fromVector2i(vector):
+        return Vector2d(vector.x, vector.y)
+    
     def __add__(self, other):
         xSum = self.x + other.x
         ySum = self.y + other.y
@@ -41,6 +44,9 @@ class Vector2i():
     def __init__(self, x = 0, y = 0):
         self.x = int(x)
         self.y = int(y)
+        
+    def fromVector2d(vector):
+        return Vector2i(vector.x, vector.y)
     
     def __add__(self, other):
         xSum = self.x + other.x

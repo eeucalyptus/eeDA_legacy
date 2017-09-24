@@ -17,4 +17,6 @@ class eeDAcolor:
     
     RHINO = (1.0, 0.0, 1.0, 1.0)
     
+    GRID = (0.0, 0.0, 0.0, 1.0)
+    
     # TODO: a method for loading a .css style sheet. That'd be sweet.
