@@ -22,15 +22,14 @@ class Junction(SchematicsElement, SchematicsConnector):
         self.pos = Vector2i()
         
         
-    @classmethod
     def fromConnector(connector):
-        newJunction = Junction(connector.schematicspage)
+        newJunction = Junction(connector.parent.page)
         newJunction.pos = connector.pos
         newJunction.connect(connector)
         return newJunction
         
     def isConnected(self, connection):
-        if connection in connections:
+        if connection in self.connections:
             return True
         else:
             return False
@@ -51,7 +50,7 @@ class Junction(SchematicsElement, SchematicsConnector):
         self.connections.append(connector)
         
     def disconnect(self, connector):
-        if isConnected(connector):
+        if self.isConnected(connector):
             self.connections.remove(connector)
         
     def __iadd__(self, connector):

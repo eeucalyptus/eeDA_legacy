@@ -6,6 +6,10 @@ connectors can be connected using a connection.
 '''
 
 class SchematicsConnector:
+    def __init__(self, parent = None):
+        self.connection = None
+        self.parent = parent
+    
     def isConnected(self, connection):
         if(self.connection == connection):
             return True
