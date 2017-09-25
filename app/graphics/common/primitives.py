@@ -1,5 +1,7 @@
 from data.util import Vector2i, Polygon
 import math
+from graphics import Renderer
+from .eedacolors import eeDAcolor
 '''
 
 A collection of auxiliary functions capable of rendering a few primitives. Note that face color etc. must be configured by the calling renderer.
@@ -42,3 +44,26 @@ def pRenderPolygon(renderer, polygon, pos, depth = 1.0):
     triAry = polygon.triangles()
     for tri in triAry:
         pRenderTriangle(renderer, tri, pos)
+
+
+class PointRenderer(Renderer):  # kludged together for debug
+    def __init__(self, gl, x, y):
+        super().__init__(gl)
+        self.x = x
+        self.y = y
+        self.callList = self.genSymbolCallList()
+        
+    def genSymbolCallList(self):
+        genList = self.gl.glGenLists(1)
+        self.gl.glNewList(genList, self.gl.GL_COMPILE)
+        self.setColor(eeDAcolor.RHINO)
+        
+        self.gl.glPointSize(20)
+        self.gl.glBegin(self.gl.GL_POINTS)
+        self.gl.glVertex3d(self.x, self.y, 1.0)
+        self.gl.glEnd()
+        
+        self.gl.glEndList()
+        
+        
+        return genList

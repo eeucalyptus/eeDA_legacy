@@ -1,10 +1,11 @@
 import math
-from data.util import Vector2d
+from data.util import Vector2d, Vector2i
 from .shortcut import Shortcut
 from PyQt5 import QtWidgets, QtGui, QtCore
 from graphics.common import eeDAcolor
 from graphics import GridRenderer # to be removed
 from data.util import Grid # to be removed
+from graphics.common.primitives import PointRenderer
 
 # Be aware that calls to parent() may fail because the parent is now an EditFrame, not the main window -- M
 
@@ -25,6 +26,8 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.initShortcuts()
         
         self.injectedList = None
+        
+        self.pointList = None # debug
         
         
     def mousePressEvent(self, event):
@@ -52,7 +55,8 @@ class GLWidget(QtWidgets.QOpenGLWidget):
             self.repaint()
             
         self.lastScreenPos = currentScreenPos
-            
+        
+        self.printMouseCoordinates(event.x(), event.y())
         
         if(event.buttons() == QtCore.Qt.LeftButton):
             print("Left!")
@@ -102,6 +106,8 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         if (self.zoomLevel * max(self.grid.xRes, self.grid.yRes)) > 10: # make grid invisible if it'd render too small.
                                                                         # 10 is an empiric value, may not apply to all resolutions.
             self.gl.glCallList(self.gridRenderer.callList)
+        if self.pointList != None:
+            self.gl.glCallList(self.pointList)
         self.gl.glDisable(self.gl.GL_BLEND)
         self.gl.glDisable(self.gl.GL_MULTISAMPLE)
         
@@ -225,3 +231,17 @@ class GLWidget(QtWidgets.QOpenGLWidget):
     
     def makeGridRenderer(self, grid):
         return GridRenderer(grid, self.gl)
+    
+    def printMouseCoordinates(self, x, y):
+        
+        xAdj = (x - self.frameGeometry().width() / 2 ) / self.zoomLevel - self.cameraposition.x
+        yAdj = (y - self.frameGeometry().height() / 2 ) / self.zoomLevel - self.cameraposition.y
+        
+        wsMouse = Vector2i(xAdj, yAdj)
+        wsSnap = self.grid.nearestSnap(wsMouse)
+        
+        #self.pointList = PointRenderer(self.gl, xAdj, yAdj).genSymbolCallList()
+        self.pointList = PointRenderer(self.gl, wsSnap.x, wsSnap.y).genSymbolCallList()
+
+        self.repaint()
+        
