@@ -11,6 +11,11 @@ from data.util import Grid # to be removed
 class GLWidget(QtWidgets.QOpenGLWidget):
     def __init__(self, parent=None):
         super(GLWidget, self).__init__(parent)
+        
+        surfFormat = QtGui.QSurfaceFormat()
+        surfFormat.setSamples(16)
+        self.setFormat(surfFormat)
+        
         self.setMouseTracking(True)
         self.cameraposition = Vector2d()
         self.lastScreenPos = None
@@ -78,10 +83,8 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.object2 = self.makeQuad()
         self.gl.glShadeModel(self.gl.GL_FLAT)
         self.gl.glEnable(self.gl.GL_DEPTH_TEST)
-        self.gl.glCullFace(self.gl.GL_BACK)
+        #self.gl.glCullFace(self.gl.GL_BACK)
         #self.gl.glEnable(self.gl.GL_CULL_FACE)
-        self.gl.glEnable(self.gl.GL_MULTISAMPLE)
-        
         self.initGrid()
 
     def paintGL(self):
@@ -90,13 +93,19 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glLoadIdentity()
         self.gl.glTranslated(self.cameraposition.x, self.cameraposition.y, -10.0)
         self.zoomGL()
+        self.gl.glEnable(self.gl.GL_MULTISAMPLE)
+        #self.gl.glEnable(self.gl.GL_BLEND)
         self.gl.glCallList(self.object1)
         self.gl.glCallList(self.object2)
         if self.injectedList != None:
             self.gl.glCallList(self.injectedList)
-        self.gl.glCallList(self.gridRenderer.callList)
+        if (self.zoomLevel * max(self.grid.xRes, self.grid.yRes)) > 10: # make grid invisible if it'd render too small.
+                                                                        # 10 is an empiric value, may not apply to all resolutions.
+            self.gl.glCallList(self.gridRenderer.callList)
+        self.gl.glDisable(self.gl.GL_BLEND)
+        self.gl.glDisable(self.gl.GL_MULTISAMPLE)
         
-
+        
     def resizeGL(self, width, height):
         side = min(width, height)
         if side < 0:
@@ -127,7 +136,6 @@ class GLWidget(QtWidgets.QOpenGLWidget):
     
         genList = self.gl.glGenLists(1)
         self.gl.glNewList(genList, self.gl.GL_COMPILE)
-
         self.gl.glBegin(self.gl.GL_TRIANGLES)
         
         self.gl.glColor4f(0.282, 0.235, 0.196, 1.0)

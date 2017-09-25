@@ -13,6 +13,7 @@ class GridRenderer(Renderer):
         genList = self.gl.glGenLists(1)
         self.gl.glNewList(genList, self.gl.GL_COMPILE)
         self.setColor(eeDAcolor.GRID)
+        self.gl.glDisable(self.gl.GL_MULTISAMPLE)
         
         self.gl.glLineWidth(1)
         
@@ -26,8 +27,9 @@ class GridRenderer(Renderer):
             self.renderVerticalLine(self.grid.origin.x - self.grid.xRes * i)
             self.renderHorizontalLine(self.grid.origin.y + self.grid.xRes * i)
             self.renderHorizontalLine(self.grid.origin.y - self.grid.xRes * i)
-        
+        self.gl.glEnable(self.gl.GL_MULTISAMPLE)
         self.gl.glEndList()
+        
         
         return genList
     
