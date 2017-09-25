@@ -43,7 +43,8 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.injectedList = genList
 
     def mouseMoveEvent(self, event):
-        self.parent().positionWidget.setText("x={}, y={}".format(event.x(), event.y()))
+        worldCoords = self.widgetCoordsToWorld(event.x(), event.y())
+        self.parent().positionWidget.setText("x={}, y={}".format(worldCoords.x, worldCoords.y))
         currentScreenPos = event.screenPos()
         lastExists = self.lastScreenPos != None
         leftPressed = event.buttons() == QtCore.Qt.LeftButton
@@ -52,14 +53,18 @@ class GLWidget(QtWidgets.QOpenGLWidget):
             dy = self.lastScreenPos.y() - currentScreenPos.y()
             
             self.cameraposition += Vector2d(-dx/self.zoomLevel, -dy/self.zoomLevel)
-            self.repaint()
             
         self.lastScreenPos = currentScreenPos
         
-        self.printMouseCoordinates(event.x(), event.y())
-        
+        self.renderMouseSnap(worldCoords)
+        self.repaint()
         if(event.buttons() == QtCore.Qt.LeftButton):
             print("Left!")
+            
+    def leaveEvent(self, event):
+            self.parent().positionWidget.setText("x= , y=")
+            self.pointList = None
+            self.repaint()
             
     def wheelEvent(self, event): # feel free to re-implement. I know this sucks :)
         direction = event.angleDelta().y()/120
@@ -231,17 +236,12 @@ class GLWidget(QtWidgets.QOpenGLWidget):
     
     def makeGridRenderer(self, grid):
         return GridRenderer(grid, self.gl)
-    
-    def printMouseCoordinates(self, x, y):
         
+    def widgetCoordsToWorld(self, x, y):
         xAdj = (x - self.frameGeometry().width() / 2 ) / self.zoomLevel - self.cameraposition.x
         yAdj = (y - self.frameGeometry().height() / 2 ) / self.zoomLevel - self.cameraposition.y
-        
-        wsMouse = Vector2i(xAdj, yAdj)
-        wsSnap = self.grid.nearestSnap(wsMouse)
-        
-        #self.pointList = PointRenderer(self.gl, xAdj, yAdj).genSymbolCallList()
-        self.pointList = PointRenderer(self.gl, wsSnap.x, wsSnap.y).genSymbolCallList()
-
-        self.repaint()
-        
+        return Vector2i(xAdj, yAdj)
+    
+    def renderMouseSnap(self, pos):
+        snapCoords = self.grid.nearestSnap(pos)
+        self.pointList = PointRenderer(self.gl, snapCoords.x, snapCoords.y).genSymbolCallList()
