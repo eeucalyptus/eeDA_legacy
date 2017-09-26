@@ -214,6 +214,8 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.addAction(Shortcut(self, "Ctrl+Up", lambda: self.nudgeView(Vector2d(0,50.0))).act)
         # nudge down
         self.addAction(Shortcut(self, "Ctrl+Down", lambda: self.nudgeView(Vector2d(0,-50.0))).act)
+        # recenter view
+        self.addAction(Shortcut(self, "Home", lambda: self.recenterView()).act)
         
     def changeZoom(self, key):
         zoomFactor = {'low': 0.5,
@@ -225,6 +227,12 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         
     def multZoom(self, factor):
         self.zoomLevel *= factor
+        self.repaint()
+        
+    def recenterView(self):
+        print('Recentering view.')
+        self.cameraposition = Vector2i()
+        self.zoomLevel = 1.0
         self.repaint()
         
     def initGrid(self):
