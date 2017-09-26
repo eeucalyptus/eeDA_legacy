@@ -1,4 +1,4 @@
-import math
+import math, time
 from data.util import Vector2d, Vector2i
 from .shortcut import Shortcut
 from PyQt5 import QtWidgets, QtGui, QtCore
@@ -29,6 +29,10 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         
         self.pointList = None # debug
         
+        self.lastTime = time.time()
+        self.lastFPS = 0
+        self.frames = 0
+        
         
     def mousePressEvent(self, event):
         if(event.buttons() == QtCore.Qt.RightButton):
@@ -44,7 +48,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
 
     def mouseMoveEvent(self, event):
         worldCoords = self.widgetCoordsToWorld(event.x(), event.y())
-        self.parent().positionWidget.setText("x={}, y={}".format(worldCoords.x, worldCoords.y))
+        #self.parent().positionWidget.setText("x={}, y={}".format(worldCoords.x, worldCoords.y))
         currentScreenPos = event.screenPos()
         lastExists = self.lastScreenPos != None
         leftPressed = event.buttons() == QtCore.Qt.LeftButton
@@ -58,11 +62,8 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         
         self.renderMouseSnap(worldCoords)
         self.repaint()
-        if(event.buttons() == QtCore.Qt.LeftButton):
-            print("Left!")
-            
     def leaveEvent(self, event):
-            self.parent().positionWidget.setText("x= , y=")
+            #self.parent().positionWidget.setText("x= , y=")
             self.pointList = None
             self.repaint()
             
@@ -115,6 +116,8 @@ class GLWidget(QtWidgets.QOpenGLWidget):
             self.gl.glCallList(self.pointList)
         self.gl.glDisable(self.gl.GL_BLEND)
         self.gl.glDisable(self.gl.GL_MULTISAMPLE)
+        fps = self.calculateFPS()
+        self.parent().positionWidget.setText(str(fps))
         
         
     def resizeGL(self, width, height):
@@ -128,7 +131,19 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glLoadIdentity()
         self.gl.glOrtho(-0.5*width, +0.5*width, +0.5*height, -0.5*height, 4.0, 15.0)
         self.gl.glMatrixMode(self.gl.GL_MODELVIEW)
-
+        
+    def calculateFPS(self):
+        if math.floor(self.lastTime) == math.floor(time.time()):
+            self.frames += 1
+        elif math.floor(time.time()) - math.floor(self.lastTime) == 1:
+            self.lastFPS = self.frames
+            self.frames = 0
+            self.lastTime = time.time()
+        else:
+            self.frames = 0
+            self.lastTime = time.time()
+        return self.lastFPS
+        
     def zoomGL(self):
         width = self.frameGeometry().width() / self.zoomLevel
         height = self.frameGeometry().height() / self.zoomLevel
@@ -140,7 +155,6 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         
     def nudgeView(self, delta):
         self.cameraposition += delta/self.zoomLevel
-        print("Nudge, nudge.")
         self.repaint()
 
     def makeTriangle(self):
