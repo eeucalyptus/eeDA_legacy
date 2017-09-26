@@ -1,10 +1,11 @@
 # Manually written schematics file for test purposes...
-schematics:
+schematic:
   uuid: asdf-123456-1
   pages:
     - uuid: adsf-123456-2
       elements:
         - type: symbol
+          uuid: asdf-123456-3
           pos: [0.0, 0.0]
           parts:
             - type: polygon
@@ -15,5 +16,5 @@ schematics:
               text: All animals are equal, but some animals are more equal than others
         - type: junction
         - type: wire
-    - uuid: asdf-123456-3
     - uuid: asdf-123456-4
+    - uuid: asdf-123456-5
