@@ -73,8 +73,8 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         mouseY = mousePos.y()
         ctrX = self.frameGeometry().width()/2
         ctrY = self.frameGeometry().height()/2
-        deltaX = ctrX - mouseX
-        deltaY = ctrY - mouseY
+        deltaX = (ctrX - mouseX) / self.zoomLevel
+        deltaY = (ctrY - mouseY) / self.zoomLevel
         if direction > 0:
             self.cameraposition += Vector2d(deltaX * 0.1, deltaY * 0.1)
         self.multZoom(1.0 + direction * 0.1)
