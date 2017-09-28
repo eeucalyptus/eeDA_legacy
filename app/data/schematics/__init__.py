@@ -6,5 +6,6 @@ from .schematicsconnector import *
 from .schematicscontext import *
 from .symbol import Symbol
 from .symbolconnector import *
+from .schematicstext import *
 from .wire import *
 from .wireconnector import *

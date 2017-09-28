@@ -67,20 +67,24 @@ def parseSymbolElement(node, page):
 
     for part in node.get('parts', []):
         parttype = part.get('type', '')
-        if parttype == 'polygon':
-            print("Poly")
-            ptary = util.PointArray()
 
-            for vertex in part.get('verticies', []):
-                vect = util.Vector2i()
-                vect.x = vertex[0]
-                vect.y = vertex[1]
-                ptary.append(vect)
-            polygon = util.Polygon(ptary)
+        if parttype == 'polygon':
+            polygon = parsePolygon(part)
             symbol.parts.append(polygon)
 
+        elif parttype == 'text':
+            text = parseText(part)
+            symbol.append(text)
+        elif parttype == 'connector':
+            connector = schematics.SymbolConnector(symbol)
+            coonnector.uuid = part.get('uuid', '')
+            connector.parent = symbol
+            connector.pinname = part.get('pinname', '')
+            connector.pinnumber = part.get('pinnumber', '')
+            connector. = part.get('pinname', '')
+            connector.pinname = part.get('pinname', '')
         else:
-            print("No poly")
+            print("Part type not implemented!")
 
     print("Symbol!")
     return symbol
@@ -104,3 +108,24 @@ def parseLabelElement(node, page):
 
 def parseUnknownElement(node, page):
     print("Unknown!")
+
+def parsePolygon(node):
+    ptary = util.PointArray()
+
+    for vertex in part.get('verticies', []):
+        vect = util.Vector2i()
+        vect.x = vertex[0]
+        vect.y = vertex[1]
+        ptary.append(vect)
+    polygon = util.Polygon(ptary)
+
+    return polygon
+
+def parseText(node):
+    text = schematics.SchematicsText()
+    text.text = part.get('text', '')
+    pos = part.get('pos', [])
+    text.pos = Vector2i(pos[0], pos[1])
+    text.uuid = part.get('uuid', '')
+    text.font = part.get('font', '')
+    text.fontsize = part.get('fontsize', '')

@@ -15,9 +15,9 @@ class SymbolConnector(SchematicsConnector):
         super().__init__(symbol)
         self.uuid = uuid.uuid1();
         self.symbol = symbol
-        
+
         self.pinnumber = 0
         self.pinname = ''
-        
+
         self.pos = Vector2i()
-        self.parts = []
+        self.polygons = []

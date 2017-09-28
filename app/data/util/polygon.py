@@ -5,7 +5,6 @@ class PointArray(list):
     def __init__(self):
         super().__init__()
 
-
     def minMaxXY(self):
         minX = self[0].x
         maxX = self[0].x

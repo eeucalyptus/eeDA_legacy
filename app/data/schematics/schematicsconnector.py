@@ -1,20 +1,28 @@
 '''
 
 Abstract class for every connector in the schematics. Two
-connectors can be connected using a connection.
+connectors can be connected to another connector.
 
 '''
 
+import uuid
+
 class SchematicsConnector:
-    def __init__(self, parent = None):
-        self.connection = None
+    def __init__(self, parent):
+        self.uuid = uuid.uuid1()
         self.parent = parent
-    
-    def isConnected(self, connection):
-        if(self.connection == connection):
+        self.connector = None
+
+    def isConnected(self, other):
+        if(self.connector == other):
             return True
         else:
             return False
-        
-    def connect(self, connection):
-        self.connection = connection
+
+    def connect(self, other):
+        # disconnect from current
+        if self.connector != None:
+            self.connector.connector = None
+        # connect to other
+        self.connector = other
+        other.connector = self
