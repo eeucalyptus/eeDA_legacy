@@ -44,8 +44,8 @@ class MyWindow(QtWidgets.QMainWindow):
         self.setGeometry(screen.width()/4, screen.height()/4, screen.width()/2, screen.height()/2)
         
         # ----- Window title bar ----- #
-        self.setWindowTitle(_("eeDA Electronic Design Automation"))
-        self.statusBar().showMessage(_("Welcome!"))
+        self.setWindowTitle(_('eeDA Electronic Design Automation'))
+        self.statusBar().showMessage(_('Welcome!'))
         
         # ----- Toolbar ----- #
         self.toolbar = self.addToolBar('File')
@@ -94,14 +94,14 @@ class MyWindow(QtWidgets.QMainWindow):
         
         
     def initMenu(self):
-        exitAct = QtWidgets.QAction("Exit", self)
+        exitAct = QtWidgets.QAction(_('Exit'), self)
         exitAct.setShortcut("Ctrl+Q")
         exitAct.setStatusTip(_('Exit the application.'))
         exitAct.setIcon(QtGui.QIcon('resources\icons\exit.png'))
         exitAct.triggered.connect(self.close)
         
-        mysteryAct = QtWidgets.QAction("Mystery option", self, checkable = True)
-        mysteryAct.setStatusTip("Not even I know what this does.")
+        mysteryAct = QtWidgets.QAction(_('Mystery Option'), self, checkable = True)
+        mysteryAct.setStatusTip(_('Not even I know what this does.'))
         mysteryAct.setShortcut("Ctrl+Tab")
         mysteryAct.setIcon(QtGui.QIcon('resources\icons\mystery.png'))
         mysteryAct.triggered.connect(self.toggleCentralWidget)

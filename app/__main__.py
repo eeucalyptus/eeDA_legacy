@@ -8,8 +8,8 @@ from gui import MyWindow
 
 if __name__=='__main__':
     
-    # language = gettext.translation('eeDA', 'resources/locale', ['es_ES'], fallback = True)
-    language = gettext.translation('eeDA', 'resources/locale', [locale.getdefaultlocale()[0]], fallback = True)
+    language = gettext.translation('eeDA', 'resources/locale', ['de_DE'], fallback = True)
+    # language = gettext.translation('eeDA', 'resources/locale', [locale.getdefaultlocale()[0]], fallback = True)
     language.install()
     
     print('''Running eeDA!''')

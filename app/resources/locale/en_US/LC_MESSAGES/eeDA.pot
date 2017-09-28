@@ -1,30 +1,122 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Localization files for eeDA
+#
+# This file is distributed under the same license as the eeDA package.
+#
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-27 20:02+0200\n"
+"Project-Id-Version: eeDA Pre-Alpha\n"
+"Report-Msgid-Bugs-To: https://github.com/eeucalyptus/eeDA/issues\n"
+"POT-Creation-Date: 2017-09-28 13:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: en_US\n"
+"Last-Translator: Gavin Lüdemann <NO@EMAIL>\n"
+"Language-Team: Gavin Lüdemann <NO@EMAIL>\n"
+"Language: English (United States)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: utf-8\n"
 
-#: gui/glwidget.py:195
+#: ../../gui/glwidget.py:192
 msgid "Check baby!"
 msgstr "Check, baby!"
 
-#: gui/mainwindow.py:49
+#: ../../gui/mainwindow.py:47
 msgid "eeDA Electronic Design Automation"
 msgstr "eeDA en_US"
 
-#: gui/mainwindow.py:50
+#: ../../gui/mainwindow.py:48
 msgid "Welcome!"
-msgstr "Howdy!"
+msgstr ""
+
+#: ../../gui/mainwindow.py:54
+msgid "Save"
+msgstr ""
+
+#: ../../gui/mainwindow.py:58
+msgid "New..."
+msgstr ""
+
+#: ../../gui/mainwindow.py:62
+msgid "Delete"
+msgstr ""
+
+#: ../../gui/mainwindow.py:66
+msgid "Open..."
+msgstr ""
+
+#: ../../gui/mainwindow.py:72
+msgid "Undo"
+msgstr ""
+
+#: ../../gui/mainwindow.py:76
+msgid "Redo"
+msgstr ""
+
+#: ../../gui/mainwindow.py:82
+msgid "Left"
+msgstr ""
+
+#: ../../gui/mainwindow.py:86
+msgid "Right"
+msgstr ""
+
+#: ../../gui/mainwindow.py:91 ../../gui/treeview.py:27 ../../gui/treeview.py:30
+msgid "Tree View"
+msgstr ""
+
+#: ../../gui/mainwindow.py:97
+msgid "Exit"
+msgstr ""
+
+#: ../../gui/mainwindow.py:99
+msgid "Exit the application."
+msgstr ""
+
+#: ../../gui/mainwindow.py:103
+msgid "Mystery Option"
+msgstr ""
+
+#: ../../gui/mainwindow.py:104
+msgid "Not even I know what this does."
+msgstr ""
+
+#: ../../gui/mainwindow.py:110
+msgid "&File"
+msgstr ""
+
+#: ../../gui/mainwindow.py:120
+msgid "&More"
+msgstr ""
+
+#: ../../gui/mainwindow.py:121
+msgid "About"
+msgstr ""
+
+#: ../../gui/mainwindow.py:122
+msgid "About this software."
+msgstr ""
+
+#: ../../gui/mainwindow.py:128
+msgid "&Edit"
+msgstr ""
+
+#: ../../gui/mainwindow.py:133
+msgid "&View"
+msgstr ""
+
+#: ../../gui/mainwindow.py:136
+msgid "&Zoom"
+msgstr ""
+
+#: ../../gui/treeview.py:10
+msgid "Tree"
+msgstr ""
+
+#: ../../gui/treeview.py:12
+msgid "Root"
+msgstr ""
+
+#: ../../gui/treeview.py:14
+msgid "Branch"
+msgstr ""
