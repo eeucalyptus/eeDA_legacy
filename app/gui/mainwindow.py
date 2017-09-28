@@ -44,70 +44,70 @@ class MyWindow(QtWidgets.QMainWindow):
         self.setGeometry(screen.width()/4, screen.height()/4, screen.width()/2, screen.height()/2)
         
         # ----- Window title bar ----- #
-        self.setWindowTitle("eeDA 2017 Unprofessional Edition")
-        self.statusBar().showMessage("Welcome!")
+        self.setWindowTitle(_('eeDA Electronic Design Automation'))
+        self.statusBar().showMessage(_('Welcome!'))
         
         # ----- Toolbar ----- #
         self.toolbar = self.addToolBar('File')
         
         iconSave = QtGui.QIcon('resources/icons/save.png')
-        self.toolbarActionSave = QtWidgets.QAction(iconSave, 'Save')
+        self.toolbarActionSave = QtWidgets.QAction(iconSave, _('Save'))
         self.toolbar.addAction(self.toolbarActionSave)
         
         iconNew = QtGui.QIcon('resources/icons/new.png')
-        self.toolbarActionNew = QtWidgets.QAction(iconNew, 'New...')
+        self.toolbarActionNew = QtWidgets.QAction(iconNew, _('New...'))
         self.toolbar.addAction(self.toolbarActionNew)
         
         iconDelete = QtGui.QIcon('resources/icons/delete.png')
-        self.toolbarActionDelete = QtWidgets.QAction(iconDelete, 'Delete')
+        self.toolbarActionDelete = QtWidgets.QAction(iconDelete, _('Delete'))
         self.toolbar.addAction(self.toolbarActionDelete)
         
         iconOpen = QtGui.QIcon('resources/icons/open.png')
-        self.toolbarActionOpen = QtWidgets.QAction(iconOpen, 'Open...')
+        self.toolbarActionOpen = QtWidgets.QAction(iconOpen, _('Open...'))
         self.toolbar.addAction(self.toolbarActionOpen)
         
         self.toolbar.addSeparator()
         
         iconUndo = QtGui.QIcon('resources/icons/undo.png')
-        self.toolbarActionUndo = QtWidgets.QAction(iconUndo, 'Undo')
+        self.toolbarActionUndo = QtWidgets.QAction(iconUndo, _('Undo'))
         self.toolbar.addAction(self.toolbarActionUndo)
         
         iconRedo = QtGui.QIcon('resources/icons/redo.png')
-        self.toolbarActionRedo = QtWidgets.QAction(iconRedo, 'Redo')
+        self.toolbarActionRedo = QtWidgets.QAction(iconRedo, _('Redo'))
         self.toolbar.addAction(self.toolbarActionRedo)
         
         self.toolbar.addSeparator()
         
         iconLeft = QtGui.QIcon('resources/icons/leftarrow.png')
-        self.toolbarActionLeft = QtWidgets.QAction(iconLeft, 'Left')
+        self.toolbarActionLeft = QtWidgets.QAction(iconLeft, _('Left'))
         self.toolbar.addAction(self.toolbarActionLeft)
         
         iconRight = QtGui.QIcon('resources/icons/rightarrow.png')
-        self.toolbarActionRight = QtWidgets.QAction(iconRight, 'Right')
+        self.toolbarActionRight = QtWidgets.QAction(iconRight, _('Right'))
         self.toolbar.addAction(self.toolbarActionRight)
         
     def initTreeView(self):
         treeview = TreeViewDock()
-        treeview.setWindowTitle("Tree View")
+        treeview.setWindowTitle(_('Tree View'))
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, treeview)
         treeview.tree().resize(200, 0)
         
         
     def initMenu(self):
-        exitAct = QtWidgets.QAction("Exit", self)
+        exitAct = QtWidgets.QAction(_('Exit'), self)
         exitAct.setShortcut("Ctrl+Q")
-        exitAct.setStatusTip("Exit the application.")
+        exitAct.setStatusTip(_('Exit the application.'))
         exitAct.setIcon(QtGui.QIcon('resources\icons\exit.png'))
         exitAct.triggered.connect(self.close)
         
-        mysteryAct = QtWidgets.QAction("Mystery option", self, checkable = True)
-        mysteryAct.setStatusTip("Not even I know what this does.")
+        mysteryAct = QtWidgets.QAction(_('Mystery Option'), self, checkable = True)
+        mysteryAct.setStatusTip(_('Not even I know what this does.'))
         mysteryAct.setShortcut("Ctrl+Tab")
         mysteryAct.setIcon(QtGui.QIcon('resources\icons\mystery.png'))
         mysteryAct.triggered.connect(self.toggleCentralWidget)
         
         mbar = self.menuBar()
-        fileMenu = mbar.addMenu("&File")
+        fileMenu = mbar.addMenu(_('&File'))
         fileMenu.addAction(exitAct)
         
         # add some of the toolbar actions to the file menu
@@ -117,23 +117,23 @@ class MyWindow(QtWidgets.QMainWindow):
         
         fileMenu.addAction(mysteryAct)
         
-        moremenu = QtWidgets.QMenu("&More", self)
-        aboutAct = QtWidgets.QAction("About", self)
-        aboutAct.setStatusTip("About this software.")
+        moremenu = QtWidgets.QMenu(_('&More'), self)
+        aboutAct = QtWidgets.QAction(_('About'), self)
+        aboutAct.setStatusTip(_('About this software.'))
         moremenu.addAction(aboutAct)
         
         fileMenu.addMenu(moremenu)
         
         # ----- Edit menu ----- #
-        editMenu = mbar.addMenu('&Edit')
+        editMenu = mbar.addMenu(_('&Edit'))
         editMenu.addAction(self.toolbarActionUndo)
         editMenu.addAction(self.toolbarActionRedo)
         
         # ----- View menu ----- #
-        viewMenu = mbar.addMenu('&View')
+        viewMenu = mbar.addMenu(_('&View'))
         
         # --- Zoom options --- #
-        zoomMenu = QtWidgets.QMenu('&Zoom', viewMenu)
+        zoomMenu = QtWidgets.QMenu(_('&Zoom'), viewMenu)
         viewMenu.addMenu(zoomMenu)
         
         zoomPlus = QtWidgets.QAction('+', zoomMenu)

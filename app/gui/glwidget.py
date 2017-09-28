@@ -189,7 +189,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         
     def initContextMenu(self):
         self.contextMenu = QtWidgets.QMenu()
-        self.contextMenu.addAction('Check baby!')
+        self.contextMenu.addAction(_('Check baby!'))
         zoomMenu = self.contextMenu.addMenu('Zoom')
         
         zoomLow = QtWidgets.QAction('50%', zoomMenu)
