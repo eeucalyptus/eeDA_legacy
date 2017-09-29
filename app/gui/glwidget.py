@@ -3,6 +3,7 @@ from data.util import Vector2d, Vector2i
 from .shortcut import Shortcut
 from PyQt5 import QtWidgets, QtGui, QtCore
 from graphics.common import eeDAcolor
+
 from graphics import GridRenderer # to be removed
 from data.util import Grid # to be removed
 from graphics.common.primitives import PointRenderer
@@ -164,7 +165,10 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         return genList
 
     def makeQuad(self):
-    
+        
+        
+        
+        
         genList = self.gl.glGenLists(1)
         self.gl.glNewList(genList, self.gl.GL_COMPILE)
 
@@ -174,14 +178,31 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         
         self.gl.glColor4f(0.5, 0.5, 0.196, 1.0)
         
+        texture = QtGui.QOpenGLTexture(QtGui.QImage('gui/laughing.png'))
+        self.gl.glGenTextures(1)
+        texture.bind(self.gl.GL_T)
+        #self.gl.glBindTexture(self.gl.GL_TEXTURE_2D, 1)
+        
+        self.gl.glEnable(self.gl.GL_TEXTURE_2D)
+        
         self.gl.glBegin(self.gl.GL_QUADS)
+        # self.gl.glTexCoord2i(0, 0)
+        self.gl.glTexCoord2i(0, 0)
         self.gl.glVertex3d(-50, -50, -0.05)
+        # self.gl.glTexCoord2i(0, 100)
+        self.gl.glTexCoord2i(0, 1)
         self.gl.glVertex3d(-50, +50, -0.05)
+        # self.gl.glTexCoord2i(100, 100)
+        self.gl.glTexCoord2i(1, 1)
         self.gl.glVertex3d(+50, +50, -0.05)
+        # self.gl.glTexCoord2i(100, 0)
+        self.gl.glTexCoord2i(1, 0)
         self.gl.glVertex3d(+50, -50, -0.05)
         self.gl.glEnd()
         
         self.gl.glPopMatrix()
+        
+        self.gl.glDisable(self.gl.GL_TEXTURE_2D)
         
         self.gl.glEndList()
 
