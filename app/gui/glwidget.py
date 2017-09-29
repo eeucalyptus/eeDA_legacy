@@ -180,7 +180,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         
         texture = QtGui.QOpenGLTexture(QtGui.QImage('gui/laughing.png'))
         self.gl.glGenTextures(1)
-        texture.bind(self.gl.GL_T)
+        texture.bind(self.gl.GL_TEXTURE_2D)
         #self.gl.glBindTexture(self.gl.GL_TEXTURE_2D, 1)
         
         self.gl.glEnable(self.gl.GL_TEXTURE_2D)
