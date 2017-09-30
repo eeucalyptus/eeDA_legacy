@@ -178,7 +178,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glPushMatrix()
         self.gl.glTranslated(400.0, 400.0, 0)
         
-        self.gl.glColor4f(1.0, 0.5, 0.8, 1.0)
+        self.gl.glColor4f(0.5, 0.5, 0.196, 1.0)
         
         self.gl.glBegin(self.gl.GL_QUADS)
         
@@ -190,11 +190,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glEnd()
         
         self.gl.glPopMatrix()
-        
-        
-        
-        # self.gl.glActiveTexture(self.gl.GL_TEXTURE1)
-        
+
         self.gl.glEndList()
 
         return genList
