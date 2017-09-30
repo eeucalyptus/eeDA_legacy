@@ -117,6 +117,12 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glDisable(self.gl.GL_BLEND)
         self.gl.glDisable(self.gl.GL_MULTISAMPLE)
         
+        p = QtGui.QPainter(self)
+        p.setPen(QtGui.QColor(210, 210, 210))
+        p.setFont(QtGui.QFont('Comic Sans MS', int(32*self.zoomLevel)))
+        p.setRenderHints(QtGui.QPainter.Antialiasing | QtGui.QPainter.TextAntialiasing)
+        textPos = self.worldCoordsToWidget(300, 300)
+        p.drawText(textPos.x, textPos.y, 'Who this reads is dumb')
         
     def resizeGL(self, width, height):
         side = min(width, height)
@@ -172,35 +178,22 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glPushMatrix()
         self.gl.glTranslated(400.0, 400.0, 0)
         
-        self.gl.glColor4f(0.5, 0.5, 0.196, 1.0)
+        self.gl.glColor4f(1.0, 0.5, 0.8, 1.0)
         
-        self.gl.glEnable(self.gl.GL_TEXTURE_2D)
+        self.gl.glBegin(self.gl.GL_QUADS)
         
-        texture = QtGui.QOpenGLTexture(QtGui.QImage('gui/laughing.png'))
-        # texture.setWrapMode(self.gl.GL_CLAMP_TO_EDGE)
-        # texture.generateMipMaps()
-        # texture.setMinMagFilters(self.gl.GL_NEAREST, self.gl.GL_NEAREST)
-        texture.bind()
-        
-        self.gl.glBegin(self.gl.GL_TRIANGLE_STRIP)
-        
-        self.gl.glTexCoord2d(0, 0)
-        self.gl.glVertex3d(-100, -100, -0.05)
-        
-        self.gl.glTexCoord2d(1, 0)
-        self.gl.glVertex3d(+100, -100, -0.05)
-        
-        self.gl.glTexCoord2d(0, 1)
-        self.gl.glVertex3d(-100, +100, -0.05)
-        
-        self.gl.glTexCoord2d(1, 1)
-        self.gl.glVertex3d(+100, +100, -0.05)
-        
+        self.gl.glVertex2d(0, 0)
+        self.gl.glVertex2d(0, 100)
+        self.gl.glVertex2d(100, 100)
+        self.gl.glVertex2d(100, 0)
+
         self.gl.glEnd()
         
         self.gl.glPopMatrix()
         
-        self.gl.glDisable(self.gl.GL_TEXTURE_2D)
+        
+        
+        # self.gl.glActiveTexture(self.gl.GL_TEXTURE1)
         
         self.gl.glEndList()
 
@@ -267,6 +260,11 @@ class GLWidget(QtWidgets.QOpenGLWidget):
     def widgetCoordsToWorld(self, x, y):
         xAdj = (x - self.frameGeometry().width() / 2 ) / self.zoomLevel - self.cameraposition.x
         yAdj = (y - self.frameGeometry().height() / 2 ) / self.zoomLevel - self.cameraposition.y
+        return Vector2i(xAdj, yAdj)
+    
+    def worldCoordsToWidget(self, x, y):
+        xAdj = (x + self.cameraposition.x) * self.zoomLevel + self.frameGeometry().width() / 2
+        yAdj = (y + self.cameraposition.y) * self.zoomLevel + self.frameGeometry().height() / 2
         return Vector2i(xAdj, yAdj)
     
     def renderMouseSnap(self, pos):
