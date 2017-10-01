@@ -4,7 +4,7 @@ from .shortcut import Shortcut
 from PyQt5 import QtWidgets, QtGui, QtCore
 from graphics.common import eeDAcolor
 
-from graphics import GridRenderer # to be removed
+from graphics import GridRenderer, TextRenderer # to be removed
 from data.util import Grid # to be removed
 from graphics.common.primitives import PointRenderer
 from PIL import Image, ImageFont, ImageQt, ImageDraw
@@ -100,6 +100,8 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         #self.gl.glCullFace(self.gl.GL_BACK)
         #self.gl.glEnable(self.gl.GL_CULL_FACE)
         self.initGrid()
+        self.exampleText = TextRenderer(self.gl, 'Example text.', Vector2i())
+        self.exampleTextList = self.exampleText.genSymbolCallList()
 
     def paintGL(self):
         self.gl.glClear(
@@ -113,6 +115,8 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glCallList(self.object1)
         self.gl.glCallList(self.object2)
         self.gl.glCallList(self.object3)
+        if self.exampleTextList != None:
+            self.gl.glCallList(self.exampleTextList)
         if self.injectedList != None:
             self.gl.glCallList(self.injectedList)
         if (self.zoomLevel * max(self.grid.xRes, self.grid.yRes)) > 10: # make grid invisible if it'd render too small.
@@ -215,7 +219,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glPopMatrix()
 
         self.gl.glEndList()
-
+        
         return genList
 
     def makeTestText(self):
@@ -230,12 +234,14 @@ class GLWidget(QtWidgets.QOpenGLWidget):
 
         self.gl.glColor4f(1.0, 1.0, 1.0, 0.0)
 
-        self.textureAry = []
-
         text = 'This is a very long string.'
         fSize = 512
         xPos = 0
-        font = ImageFont.truetype('resources/Roboto.ttf', fSize)
+        try:
+            font = ImageFont.truetype('resources/Roboto.ttf', fSize)
+        except OSError:
+            font = ImageFont.truetype('OpenSans-Regular.ttf', fSize)
+        
 
         textSize = font.getsize(text)
 
@@ -349,3 +355,4 @@ class GLWidget(QtWidgets.QOpenGLWidget):
     def renderMouseSnap(self, pos):
         snapCoords = self.grid.nearestSnap(pos)
         self.pointList = PointRenderer(self.gl, snapCoords.x, snapCoords.y).genSymbolCallList()
+        
