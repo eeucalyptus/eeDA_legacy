@@ -126,14 +126,10 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         p.setRenderHints(QtGui.QPainter.Antialiasing | QtGui.QPainter.TextAntialiasing)
         textPos = self.worldCoordsToWidget(300, 300)
         p.drawText(textPos.x, textPos.y, 'Who this reads is dumb')
-<<<<<<< HEAD
         
         # self.gl.glDeleteLists(self.object3, 1)
         # self.object3 = self.makeTestText()
         
-=======
-
->>>>>>> 0c9a944fc7b61e8e2363873f96662fd9a3da6d38
     def resizeGL(self, width, height):
         side = min(width, height)
         if side < 0:
@@ -218,7 +214,6 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glEndList()
 
         return genList
-<<<<<<< HEAD
         
     def makeTestText(self):
         
@@ -237,7 +232,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         text = 'This is a very long string.'
         fSize = 512
         xPos = 0
-        font = ImageFont.truetype('gui/Roboto.ttf', fSize)
+        font = ImageFont.truetype('resources/Roboto.ttf', fSize)
         for i, char in enumerate(text):
             if char == ' ':
                 xPos += 32
@@ -271,18 +266,12 @@ class GLWidget(QtWidgets.QOpenGLWidget):
             self.textureAry[i].release()
             
             xPos += imgWidth
-        
-        fSize = 64
-        font = ImageFont.truetype('gui/Roboto.ttf', fSize)
         self.gl.glPopMatrix()
 
         self.gl.glEndList()
 
         return genList
         
-=======
-
->>>>>>> 0c9a944fc7b61e8e2363873f96662fd9a3da6d38
     def initContextMenu(self):
         self.contextMenu = QtWidgets.QMenu()
         self.contextMenu.addAction(_('Check baby!'))
