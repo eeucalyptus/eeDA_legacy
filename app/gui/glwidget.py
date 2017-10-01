@@ -95,6 +95,8 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.object3 = self.makeTestText()
         self.gl.glShadeModel(self.gl.GL_FLAT)
         self.gl.glEnable(self.gl.GL_DEPTH_TEST)
+        self.gl.glEnable(self.gl.GL_BLEND)
+        self.gl.glBlendFunc(self.gl.GL_ZERO, self.gl.GL_ONE)
         #self.gl.glCullFace(self.gl.GL_BACK)
         #self.gl.glEnable(self.gl.GL_CULL_FACE)
         self.initGrid()
@@ -107,6 +109,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.zoomGL()
         self.gl.glEnable(self.gl.GL_MULTISAMPLE)
         self.gl.glEnable(self.gl.GL_BLEND)
+        self.gl.glBlendFunc(self.gl.GL_ONE,self.gl.GL_ONE_MINUS_SRC_ALPHA)
         self.gl.glCallList(self.object1)
         self.gl.glCallList(self.object2)
         self.gl.glCallList(self.object3)
@@ -185,7 +188,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glPushMatrix()
         self.gl.glTranslated(400.0, 400.0, 0)
 
-        self.gl.glColor4f(1.0, 1.0, 1.0, 0.0)
+        self.gl.glColor4f(1.0, 1.0, 1.0, 1.0)
 
         self.texture = QtGui.QOpenGLTexture(QtGui.QImage('resources/side1.png'), True)
         self.texture.setMinMagFilters(QtGui.QOpenGLTexture.LinearMipMapLinear, QtGui.QOpenGLTexture.Linear)
