@@ -7,6 +7,7 @@ from graphics.common import eeDAcolor
 from graphics import GridRenderer # to be removed
 from data.util import Grid # to be removed
 from graphics.common.primitives import PointRenderer
+from PIL import Image, ImageFont, ImageQt
 
 # Be aware that calls to parent() may fail because the parent is now an EditFrame, not the main window -- M
 
@@ -91,6 +92,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glClearColor(*eeDAcolor.SCM_BACKGROUND)
         self.object1 = self.makeTriangle()
         self.object2 = self.makeQuad()
+        self.object3 = self.makeTestText()
         self.gl.glShadeModel(self.gl.GL_FLAT)
         self.gl.glEnable(self.gl.GL_DEPTH_TEST)
         #self.gl.glCullFace(self.gl.GL_BACK)
@@ -104,9 +106,10 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glTranslated(self.cameraposition.x, self.cameraposition.y, -10.0)
         self.zoomGL()
         self.gl.glEnable(self.gl.GL_MULTISAMPLE)
-        # self.gl.glEnable(self.gl.GL_BLEND)
+        self.gl.glEnable(self.gl.GL_BLEND)
         self.gl.glCallList(self.object1)
         self.gl.glCallList(self.object2)
+        self.gl.glCallList(self.object3)
         if self.injectedList != None:
             self.gl.glCallList(self.injectedList)
         if (self.zoomLevel * max(self.grid.xRes, self.grid.yRes)) > 10: # make grid invisible if it'd render too small.
@@ -123,6 +126,9 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         p.setRenderHints(QtGui.QPainter.Antialiasing | QtGui.QPainter.TextAntialiasing)
         textPos = self.worldCoordsToWidget(300, 300)
         p.drawText(textPos.x, textPos.y, 'Who this reads is dumb')
+        
+        # self.gl.glDeleteLists(self.object3, 1)
+        # self.object3 = self.makeTestText()
         
     def resizeGL(self, width, height):
         side = min(width, height)
@@ -203,6 +209,66 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glEnd()
         self.gl.glDisable(self.gl.GL_TEXTURE_2D)
         self.texture.release()
+        self.gl.glPopMatrix()
+
+        self.gl.glEndList()
+
+        return genList
+        
+    def makeTestText(self):
+        
+        genList = self.gl.glGenLists(1)
+        self.gl.glNewList(genList, self.gl.GL_COMPILE)
+        
+
+        self.gl.glMatrixMode(self.gl.GL_MODELVIEW)
+        self.gl.glPushMatrix()
+        self.gl.glTranslated(200.0, 200.0, 0)
+        
+        self.gl.glColor4f(1.0, 1.0, 1.0, 0.0)
+        
+        self.textureAry = []
+        
+        text = 'This is a very long string.'
+        fSize = 512
+        xPos = 0
+        font = ImageFont.truetype('gui/Roboto.ttf', fSize)
+        for i, char in enumerate(text):
+            if char == ' ':
+                xPos += 32
+                self.textureAry.append(None)
+                continue
+            self.charImg = ImageQt.ImageQt(Image.Image()._new(font.getmask(char)))
+            
+            self.textureAry.append(QtGui.QOpenGLTexture(self.charImg))
+            self.textureAry[i].setMinMagFilters(self.gl.GL_NEAREST, self.gl.GL_NEAREST)
+            self.textureAry[i].bind()
+            
+            self.gl.glEnable(self.gl.GL_TEXTURE_2D)
+            self.gl.glBegin(self.gl.GL_QUADS)
+            
+            imgWidth = self.charImg.width() / 8
+            imgHeight = self.charImg.height() / 8
+            self.gl.glTexCoord3d(0, 0, -1)
+            self.gl.glVertex3d(xPos, 64 - imgHeight, -1)
+            
+            self.gl.glTexCoord3d(0, 1, -1)
+            self.gl.glVertex3d(xPos, 64, -1)
+            
+            self.gl.glTexCoord3d(1, 1, -1)
+            self.gl.glVertex3d(xPos + imgWidth, 64, -1)
+            
+            self.gl.glTexCoord3d(1, 0, -1)
+            self.gl.glVertex3d(xPos + imgWidth, 64 - imgHeight, -1)
+            
+            self.gl.glEnd()
+            self.gl.glDisable(self.gl.GL_TEXTURE_2D)
+            self.textureAry[i].release()
+            
+            xPos += imgWidth
+        
+        fSize = 64
+        font = ImageFont.truetype('gui/Roboto.ttf', fSize)
         self.gl.glPopMatrix()
 
         self.gl.glEndList()
