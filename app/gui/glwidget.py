@@ -13,33 +13,33 @@ from graphics.common.primitives import PointRenderer
 class GLWidget(QtWidgets.QOpenGLWidget):
     def __init__(self, parent=None):
         super(GLWidget, self).__init__(parent)
-        
+
         surfFormat = QtGui.QSurfaceFormat()
         surfFormat.setSamples(16)
         self.setFormat(surfFormat)
-        
+
         self.setMouseTracking(True)
         self.cameraposition = Vector2d()
         self.lastScreenPos = None
-        
+
         self.zoomLevel = 1.0
         self.initContextMenu()
         self.initShortcuts()
-        
+
         self.injectedList = None
-        
+
         self.pointList = None # debug
-        
-        
+
+
     def mousePressEvent(self, event):
         if(event.buttons() == QtCore.Qt.RightButton):
             self.contextMenu.popup(event.globalPos())
-            
+
         if(event.buttons() == QtCore.Qt.LeftButton):
             currentScreenPos = event.globalPos()
             self.buttonDownScreenPos = currentScreenPos
             self.buttonDownCameraPos = self.cameraposition
-            
+
     def setInject(self, genList):
         self.injectedList = genList
 
@@ -52,21 +52,21 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         if(lastExists and leftPressed):
             dx = self.lastScreenPos.x() - currentScreenPos.x()
             dy = self.lastScreenPos.y() - currentScreenPos.y()
-            
+
             self.cameraposition += Vector2d(-dx/self.zoomLevel, -dy/self.zoomLevel)
-            
+
         self.lastScreenPos = currentScreenPos
-        
+
         self.renderMouseSnap(worldCoords)
         self.repaint()
         if(event.buttons() == QtCore.Qt.LeftButton):
-            print("Left!")
-            
+            pass
+
     def leaveEvent(self, event):
             self.parent().positionWidget.setText("x= , y=")
             self.pointList = None
             self.repaint()
-            
+
     def wheelEvent(self, event): # feel free to re-implement. I know this sucks :)
         direction = event.angleDelta().y()/120
         mousePos = event.pos()
@@ -79,8 +79,8 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         if direction > 0:
             self.cameraposition += Vector2d(deltaX * 0.1, deltaY * 0.1)
         self.multZoom(1.0 + direction * 0.1)
-        
-        
+
+
 
     def initializeGL(self):
         version = QtGui.QOpenGLVersionProfile()
@@ -96,7 +96,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         #self.gl.glCullFace(self.gl.GL_BACK)
         #self.gl.glEnable(self.gl.GL_CULL_FACE)
         self.initGrid()
-        
+
     def paintGL(self):
         self.gl.glClear(
                 self.gl.GL_COLOR_BUFFER_BIT | self.gl.GL_DEPTH_BUFFER_BIT)
@@ -116,14 +116,14 @@ class GLWidget(QtWidgets.QOpenGLWidget):
             self.gl.glCallList(self.pointList)
         self.gl.glDisable(self.gl.GL_BLEND)
         self.gl.glDisable(self.gl.GL_MULTISAMPLE)
-        
+
         p = QtGui.QPainter(self)
         p.setPen(QtGui.QColor(210, 210, 210))
         p.setFont(QtGui.QFont('Comic Sans MS', int(32*self.zoomLevel)))
         p.setRenderHints(QtGui.QPainter.Antialiasing | QtGui.QPainter.TextAntialiasing)
         textPos = self.worldCoordsToWidget(300, 300)
         p.drawText(textPos.x, textPos.y, 'Who this reads is dumb')
-        
+
     def resizeGL(self, width, height):
         side = min(width, height)
         if side < 0:
@@ -139,25 +139,25 @@ class GLWidget(QtWidgets.QOpenGLWidget):
     def zoomGL(self):
         width = self.frameGeometry().width() / self.zoomLevel
         height = self.frameGeometry().height() / self.zoomLevel
-        
+
         self.gl.glMatrixMode(self.gl.GL_PROJECTION)
         self.gl.glLoadIdentity()
         self.gl.glOrtho(-0.5*width, +0.5*width, +0.5*height, -0.5*height, 4.0, 15.0)
         self.gl.glMatrixMode(self.gl.GL_MODELVIEW)
-        
+
     def nudgeView(self, delta):
         self.cameraposition += delta/self.zoomLevel
         print("Nudge, nudge.")
         self.repaint()
 
     def makeTriangle(self):
-    
+
         genList = self.gl.glGenLists(1)
         self.gl.glNewList(genList, self.gl.GL_COMPILE)
         self.gl.glBegin(self.gl.GL_TRIANGLES)
-        
+
         self.gl.glColor4f(0.282, 0.235, 0.196, 1.0)
-        
+
         for i in range(3):
             angle = 80.0 - i*120.0
             x = 200 * math.cos(math.radians(angle))
@@ -165,7 +165,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
             self.gl.glVertex3d(x, y, -0.05)
 
         self.gl.glEnd()
-        
+
         self.gl.glEndList()
 
         return genList
@@ -173,33 +173,33 @@ class GLWidget(QtWidgets.QOpenGLWidget):
     def makeQuad(self):
         genList = self.gl.glGenLists(1)
         self.gl.glNewList(genList, self.gl.GL_COMPILE)
-        
+
 
         self.gl.glMatrixMode(self.gl.GL_MODELVIEW)
         self.gl.glPushMatrix()
         self.gl.glTranslated(400.0, 400.0, 0)
-        
+
         self.gl.glColor4f(1.0, 1.0, 1.0, 0.0)
-        
-        self.texture = QtGui.QOpenGLTexture(QtGui.QImage('gui/side1.png'))
-        self.texture.setMinMagFilters(self.gl.GL_LINEAR, self.gl.GL_LINEAR)
+
+        self.texture = QtGui.QOpenGLTexture(QtGui.QImage('resources/side1.png'), True)
+        self.texture.setMinMagFilters(QtGui.QOpenGLTexture.LinearMipMapLinear, QtGui.QOpenGLTexture.Linear)
         self.texture.bind()
-        
+
         self.gl.glEnable(self.gl.GL_TEXTURE_2D)
         self.gl.glBegin(self.gl.GL_QUADS)
-        
+
         self.gl.glTexCoord3d(0, 0, -1)
         self.gl.glVertex3d(0, 0, -1)
-        
+
         self.gl.glTexCoord3d(0, 1, -1)
         self.gl.glVertex3d(0, 100, -1)
-        
+
         self.gl.glTexCoord3d(1, 1, -1)
         self.gl.glVertex3d(100, 100, -1)
-        
+
         self.gl.glTexCoord3d(1, 0, -1)
         self.gl.glVertex3d(100, 0, -1)
-        
+
         self.gl.glEnd()
         self.gl.glDisable(self.gl.GL_TEXTURE_2D)
         self.texture.release()
@@ -208,24 +208,24 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glEndList()
 
         return genList
-        
+
     def initContextMenu(self):
         self.contextMenu = QtWidgets.QMenu()
         self.contextMenu.addAction(_('Check baby!'))
         zoomMenu = self.contextMenu.addMenu('Zoom')
-        
+
         zoomLow = QtWidgets.QAction('50%', zoomMenu)
         zoomLow.triggered.connect(lambda: self.changeZoom('low'))
         zoomMenu.addAction(zoomLow)
-        
+
         zoomMid = QtWidgets.QAction('100%', zoomMenu)
         zoomMid.triggered.connect(lambda: self.changeZoom('mid'))
         zoomMenu.addAction(zoomMid)
-        
+
         zoomHi = QtWidgets.QAction('150%', zoomMenu)
         zoomHi.triggered.connect(lambda: self.changeZoom('hi'))
         zoomMenu.addAction(zoomHi)
-        
+
     def initShortcuts(self):
         self.addAction(Shortcut(self, "Ctrl+S", lambda: print("Success!")).act)
         # nudge left
@@ -238,7 +238,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.addAction(Shortcut(self, "Ctrl+Down", lambda: self.nudgeView(Vector2d(0,-50.0))).act)
         # recenter view
         self.addAction(Shortcut(self, "Home", lambda: self.recenterView()).act)
-        
+
     def changeZoom(self, key):
         zoomFactor = {'low': 0.5,
                       'mid': 1.0,
@@ -246,37 +246,37 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         print('Changing zoom level to ' + str(zoomFactor))
         self.zoomLevel = zoomFactor
         self.repaint()
-        
+
     def multZoom(self, factor):
         self.zoomLevel *= factor
         self.repaint()
-        
+
     def recenterView(self):
         print('Recentering view.')
         self.cameraposition = Vector2i()
         self.zoomLevel = 1.0
         self.repaint()
-        
+
     def initGrid(self):
         self.grid = self.makeGrid()
         self.gridRenderer = self.makeGridRenderer(self.grid)
-        
+
     def makeGrid(self):
         return Grid()
-    
+
     def makeGridRenderer(self, grid):
         return GridRenderer(grid, self.gl)
-        
+
     def widgetCoordsToWorld(self, x, y):
         xAdj = (x - self.frameGeometry().width() / 2 ) / self.zoomLevel - self.cameraposition.x
         yAdj = (y - self.frameGeometry().height() / 2 ) / self.zoomLevel - self.cameraposition.y
         return Vector2i(xAdj, yAdj)
-    
+
     def worldCoordsToWidget(self, x, y):
         xAdj = (x + self.cameraposition.x) * self.zoomLevel + self.frameGeometry().width() / 2
         yAdj = (y + self.cameraposition.y) * self.zoomLevel + self.frameGeometry().height() / 2
         return Vector2i(xAdj, yAdj)
-    
+
     def renderMouseSnap(self, pos):
         snapCoords = self.grid.nearestSnap(pos)
         self.pointList = PointRenderer(self.gl, snapCoords.x, snapCoords.y).genSymbolCallList()
