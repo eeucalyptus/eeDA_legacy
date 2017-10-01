@@ -7,7 +7,7 @@ from graphics.common import eeDAcolor
 from graphics import GridRenderer # to be removed
 from data.util import Grid # to be removed
 from graphics.common.primitives import PointRenderer
-from PIL import Image, ImageFont, ImageQt
+from PIL import Image, ImageFont, ImageQt, ImageDraw
 
 # Be aware that calls to parent() may fail because the parent is now an EditFrame, not the main window -- M
 
@@ -129,10 +129,10 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         p.setRenderHints(QtGui.QPainter.Antialiasing | QtGui.QPainter.TextAntialiasing)
         textPos = self.worldCoordsToWidget(300, 300)
         p.drawText(textPos.x, textPos.y, 'Who this reads is dumb')
-        
+
         # self.gl.glDeleteLists(self.object3, 1)
         # self.object3 = self.makeTestText()
-        
+
     def resizeGL(self, width, height):
         side = min(width, height)
         if side < 0:
@@ -217,64 +217,67 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glEndList()
 
         return genList
-        
+
     def makeTestText(self):
-        
+
         genList = self.gl.glGenLists(1)
         self.gl.glNewList(genList, self.gl.GL_COMPILE)
-        
+
 
         self.gl.glMatrixMode(self.gl.GL_MODELVIEW)
         self.gl.glPushMatrix()
         self.gl.glTranslated(200.0, 200.0, 0)
-        
+
         self.gl.glColor4f(1.0, 1.0, 1.0, 0.0)
-        
+
         self.textureAry = []
-        
+
         text = 'This is a very long string.'
         fSize = 512
         xPos = 0
         font = ImageFont.truetype('resources/Roboto.ttf', fSize)
-        for i, char in enumerate(text):
-            if char == ' ':
-                xPos += 32
-                self.textureAry.append(None)
-                continue
-            self.charImg = ImageQt.ImageQt(Image.Image()._new(font.getmask(char)))
-            
-            self.textureAry.append(QtGui.QOpenGLTexture(self.charImg))
-            self.textureAry[i].setMinMagFilters(self.gl.GL_NEAREST, self.gl.GL_NEAREST)
-            self.textureAry[i].bind()
-            
-            self.gl.glEnable(self.gl.GL_TEXTURE_2D)
-            self.gl.glBegin(self.gl.GL_QUADS)
-            
-            imgWidth = self.charImg.width() / 8
-            imgHeight = self.charImg.height() / 8
-            self.gl.glTexCoord3d(0, 0, -1)
-            self.gl.glVertex3d(xPos, 64 - imgHeight, -1)
-            
-            self.gl.glTexCoord3d(0, 1, -1)
-            self.gl.glVertex3d(xPos, 64, -1)
-            
-            self.gl.glTexCoord3d(1, 1, -1)
-            self.gl.glVertex3d(xPos + imgWidth, 64, -1)
-            
-            self.gl.glTexCoord3d(1, 0, -1)
-            self.gl.glVertex3d(xPos + imgWidth, 64 - imgHeight, -1)
-            
-            self.gl.glEnd()
-            self.gl.glDisable(self.gl.GL_TEXTURE_2D)
-            self.textureAry[i].release()
-            
-            xPos += imgWidth
+
+        textSize = font.getsize(text)
+
+        border = 5
+
+        image = Image.new("RGBA", (textSize[0] + 2*border, textSize[1] + 2*border), None)
+        draw = ImageDraw.Draw(image)
+        draw.text((border, border), text, font=font, fill="white")
+        del draw
+
+        self.text_texture = QtGui.QOpenGLTexture(ImageQt.ImageQt(image), True)
+        self.text_texture.setMinMagFilters(QtGui.QOpenGLTexture.LinearMipMapLinear, QtGui.QOpenGLTexture.Linear)
+
+        self.text_texture.bind()
+
+        self.gl.glEnable(self.gl.GL_TEXTURE_2D)
+        self.gl.glBegin(self.gl.GL_QUADS)
+
+        imgWidth = image.size[0] / 8
+        imgHeight = image.size[1] / 8
+        self.gl.glTexCoord3d(0, 0, -1)
+        self.gl.glVertex3d(xPos, 64 - imgHeight, -1)
+
+        self.gl.glTexCoord3d(0, 1, -1)
+        self.gl.glVertex3d(xPos, 64, -1)
+
+        self.gl.glTexCoord3d(1, 1, -1)
+        self.gl.glVertex3d(xPos + imgWidth, 64, -1)
+
+        self.gl.glTexCoord3d(1, 0, -1)
+        self.gl.glVertex3d(xPos + imgWidth, 64 - imgHeight, -1)
+
+        self.gl.glEnd()
+        self.gl.glDisable(self.gl.GL_TEXTURE_2D)
+        self.text_texture.release()
+
         self.gl.glPopMatrix()
 
         self.gl.glEndList()
 
         return genList
-        
+
     def initContextMenu(self):
         self.contextMenu = QtWidgets.QMenu()
         self.contextMenu.addAction(_('Check baby!'))
