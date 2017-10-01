@@ -182,6 +182,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glColor4f(1.0, 1.0, 1.0, 0.0)
         
         self.texture = QtGui.QOpenGLTexture(QtGui.QImage('gui/side1.png'))
+        self.texture.setMinMagFilters(self.gl.GL_LINEAR, self.gl.GL_LINEAR)
         self.texture.bind()
         
         self.gl.glEnable(self.gl.GL_TEXTURE_2D)
