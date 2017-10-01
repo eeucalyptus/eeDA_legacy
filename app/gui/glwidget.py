@@ -96,7 +96,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         #self.gl.glCullFace(self.gl.GL_BACK)
         #self.gl.glEnable(self.gl.GL_CULL_FACE)
         self.initGrid()
-
+        
     def paintGL(self):
         self.gl.glClear(
                 self.gl.GL_COLOR_BUFFER_BIT | self.gl.GL_DEPTH_BUFFER_BIT)
@@ -104,7 +104,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glTranslated(self.cameraposition.x, self.cameraposition.y, -10.0)
         self.zoomGL()
         self.gl.glEnable(self.gl.GL_MULTISAMPLE)
-        #self.gl.glEnable(self.gl.GL_BLEND)
+        # self.gl.glEnable(self.gl.GL_BLEND)
         self.gl.glCallList(self.object1)
         self.gl.glCallList(self.object2)
         if self.injectedList != None:
@@ -173,22 +173,35 @@ class GLWidget(QtWidgets.QOpenGLWidget):
     def makeQuad(self):
         genList = self.gl.glGenLists(1)
         self.gl.glNewList(genList, self.gl.GL_COMPILE)
+        
 
         self.gl.glMatrixMode(self.gl.GL_MODELVIEW)
         self.gl.glPushMatrix()
         self.gl.glTranslated(400.0, 400.0, 0)
         
-        self.gl.glColor4f(0.5, 0.5, 0.196, 1.0)
+        self.gl.glColor4f(1.0, 1.0, 1.0, 0.0)
         
+        self.texture = QtGui.QOpenGLTexture(QtGui.QImage('gui/side1.png'))
+        self.texture.bind()
+        
+        self.gl.glEnable(self.gl.GL_TEXTURE_2D)
         self.gl.glBegin(self.gl.GL_QUADS)
         
-        self.gl.glVertex2d(0, 0)
-        self.gl.glVertex2d(0, 100)
-        self.gl.glVertex2d(100, 100)
-        self.gl.glVertex2d(100, 0)
-
-        self.gl.glEnd()
+        self.gl.glTexCoord3d(0, 0, -1)
+        self.gl.glVertex3d(0, 0, -1)
         
+        self.gl.glTexCoord3d(0, 1, -1)
+        self.gl.glVertex3d(0, 100, -1)
+        
+        self.gl.glTexCoord3d(1, 1, -1)
+        self.gl.glVertex3d(100, 100, -1)
+        
+        self.gl.glTexCoord3d(1, 0, -1)
+        self.gl.glVertex3d(100, 0, -1)
+        
+        self.gl.glEnd()
+        self.gl.glDisable(self.gl.GL_TEXTURE_2D)
+        self.texture.release()
         self.gl.glPopMatrix()
 
         self.gl.glEndList()
