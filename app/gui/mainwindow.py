@@ -8,7 +8,7 @@ from .treeview import TreeViewDock
 from data.schematics import Wire, Symbol, WireConnector, Junction
 from data.util import *
 from .shortcut import Shortcut
-from graphics import WireRenderer, SymbolRenderer, JunctionRenderer, RhinocerosRenderer
+from graphics import WireRenderer, SymbolRenderer, JunctionRenderer, RhinocerosRenderer, TextRenderer
 #=====
 class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -203,6 +203,9 @@ class MyWindow(QtWidgets.QMainWindow):
         debugAct4 = self.menuBar().addAction('Rhino?')
         debugAct4.triggered.connect(lambda: self.debugRhino())
         
+        debugAct5 = self.menuBar().addAction('Text')
+        debugAct5.triggered.connect(lambda: self.debugText())
+        
     def debugWire(self, wire):
         wire.setRenderer(WireRenderer(wire, self.glWidget.gl))
         self.glWidget.setInject(wire.renderer.genSymbolCallList())
@@ -225,3 +228,9 @@ class MyWindow(QtWidgets.QMainWindow):
         renderer = RhinocerosRenderer(self.glWidget.gl)
         self.glWidget.setInject(renderer.genSymbolCallList())
         self.glWidget.repaint()
+        
+    def debugText(self):
+        self.textrenderer = TextRenderer(self.glWidget.gl, 'The quick brown fox jumps over the lazy dog.', Vector2i())
+        self.glWidget.setInject(self.textrenderer.genSymbolCallList())
+        self.glWidget.repaint()
+        

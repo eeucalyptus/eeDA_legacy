@@ -15,7 +15,17 @@ class TextRenderer(Renderer):
         super().__init__(gl)
         self.text = text
         self.pos = pos
-        self.fSize = size
+        
+        if size > 64:
+            self.MSFACTOR = 4
+        
+        if size > 128:
+            self.sizeAdjust = size / 128
+            self.fSize = 128
+        else:
+            self.fSize = size
+            self.sizeAdjust = 1
+            
         self.callList = self.genSymbolCallList()
         
     def genSymbolCallList(self):
@@ -23,9 +33,10 @@ class TextRenderer(Renderer):
         
         
         try:
-            font = ImageFont.truetype('resources/Roboto.ttf', self.fSize * self.MSFACTOR)
+            font = ImageFont.truetype('resources/interface/Roboto.ttf', self.fSize * self.MSFACTOR)
         except OSError:
-            font = ImageFont.truetype('OpenSans-Regular.ttf', self.fSize * self.MSFACTOR)
+            print("Font not found, loading failsafe.")
+            font = ImageFont.truetype('arial.ttf', self.fSize * self.MSFACTOR)
         
 
         textSize = font.getsize(self.text)
@@ -46,26 +57,27 @@ class TextRenderer(Renderer):
         
         self.gl.glMatrixMode(self.gl.GL_MODELVIEW)
         self.gl.glPushMatrix()
-        self.gl.glTranslated(self.pos.x - image.size[0] / (2 * self.MSFACTOR) - border, self.pos.y - image.size[1] / (2 * self.MSFACTOR) - border, 0)
+        self.gl.glTranslated(self.pos.x - self.sizeAdjust * (image.size[0] / (2 * self.MSFACTOR) - border), self.pos.y - image.size[1] / (2 * self.MSFACTOR), 0)
         
         self.text_texture.bind()
 
         self.gl.glEnable(self.gl.GL_TEXTURE_2D)
         self.gl.glBegin(self.gl.GL_QUADS)
 
-        imgWidth = image.size[0] / self.MSFACTOR
-        imgHeight = image.size[1] / self.MSFACTOR
-        self.gl.glTexCoord3d(0, 0, -1)
-        self.gl.glVertex3d(0, self.fSize - imgHeight, -1)
+        imgWidth = self.sizeAdjust * image.size[0] / self.MSFACTOR
+        imgHeight = self.sizeAdjust * image.size[1] / self.MSFACTOR
+        
+        self.gl.glTexCoord3d(0, 0, -0.01)
+        self.gl.glVertex3d(0, self.fSize - imgHeight, -0.01)
 
-        self.gl.glTexCoord3d(0, 1, -1)
-        self.gl.glVertex3d(0, self.fSize, -1)
+        self.gl.glTexCoord3d(0, 1, -0.01)
+        self.gl.glVertex3d(0, self.fSize, -0.01)
 
-        self.gl.glTexCoord3d(1, 1, -1)
-        self.gl.glVertex3d(imgWidth, self.fSize, -1)
+        self.gl.glTexCoord3d(1, 1, -0.01)
+        self.gl.glVertex3d(imgWidth, self.fSize, -0.01)
 
-        self.gl.glTexCoord3d(1, 0, -1)
-        self.gl.glVertex3d(imgWidth, self.fSize - imgHeight, -1)
+        self.gl.glTexCoord3d(1, 0, -0.01)
+        self.gl.glVertex3d(imgWidth, self.fSize - imgHeight, -0.01)
 
         self.gl.glEnd()
         self.gl.glDisable(self.gl.GL_TEXTURE_2D)

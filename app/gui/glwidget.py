@@ -92,7 +92,6 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glClearColor(*eeDAcolor.SCM_BACKGROUND)
         self.object1 = self.makeTriangle()
         self.object2 = self.makeQuad()
-        self.object3 = self.makeTestText()
         self.gl.glShadeModel(self.gl.GL_FLAT)
         self.gl.glEnable(self.gl.GL_DEPTH_TEST)
         self.gl.glEnable(self.gl.GL_BLEND)
@@ -100,8 +99,6 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         #self.gl.glCullFace(self.gl.GL_BACK)
         #self.gl.glEnable(self.gl.GL_CULL_FACE)
         self.initGrid()
-        self.exampleText = TextRenderer(self.gl, 'Example text.', Vector2i())
-        self.exampleTextList = self.exampleText.genSymbolCallList()
 
     def paintGL(self):
         self.gl.glClear(
@@ -114,28 +111,15 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glBlendFunc(self.gl.GL_ONE,self.gl.GL_ONE_MINUS_SRC_ALPHA)
         self.gl.glCallList(self.object1)
         self.gl.glCallList(self.object2)
-        self.gl.glCallList(self.object3)
-        if self.exampleTextList != None:
-            self.gl.glCallList(self.exampleTextList)
-        if self.injectedList != None:
-            self.gl.glCallList(self.injectedList)
         if (self.zoomLevel * max(self.grid.xRes, self.grid.yRes)) > 10: # make grid invisible if it'd render too small.
                                                                         # 10 is an empiric value, may not apply to all resolutions.
             self.gl.glCallList(self.gridRenderer.callList)
         if self.pointList != None:
             self.gl.glCallList(self.pointList)
+        if self.injectedList != None:
+            self.gl.glCallList(self.injectedList)
         self.gl.glDisable(self.gl.GL_BLEND)
         self.gl.glDisable(self.gl.GL_MULTISAMPLE)
-
-        p = QtGui.QPainter(self)
-        p.setPen(QtGui.QColor(210, 210, 210))
-        p.setFont(QtGui.QFont('Comic Sans MS', int(32*self.zoomLevel)))
-        p.setRenderHints(QtGui.QPainter.Antialiasing | QtGui.QPainter.TextAntialiasing)
-        textPos = self.worldCoordsToWidget(300, 300)
-        p.drawText(textPos.x, textPos.y, 'Who this reads is dumb')
-
-        # self.gl.glDeleteLists(self.object3, 1)
-        # self.object3 = self.makeTestText()
 
     def resizeGL(self, width, height):
         side = min(width, height)
@@ -220,68 +204,6 @@ class GLWidget(QtWidgets.QOpenGLWidget):
 
         self.gl.glEndList()
         
-        return genList
-
-    def makeTestText(self):
-
-        genList = self.gl.glGenLists(1)
-        self.gl.glNewList(genList, self.gl.GL_COMPILE)
-
-
-        self.gl.glMatrixMode(self.gl.GL_MODELVIEW)
-        self.gl.glPushMatrix()
-        self.gl.glTranslated(200.0, 200.0, 0)
-
-        self.gl.glColor4f(1.0, 1.0, 1.0, 0.0)
-
-        text = 'This is a very long string.'
-        fSize = 512
-        xPos = 0
-        try:
-            font = ImageFont.truetype('resources/Roboto.ttf', fSize)
-        except OSError:
-            font = ImageFont.truetype('OpenSans-Regular.ttf', fSize)
-        
-
-        textSize = font.getsize(text)
-
-        border = 5
-
-        image = Image.new("RGBA", (textSize[0] + 2*border, textSize[1] + 2*border), None)
-        draw = ImageDraw.Draw(image)
-        draw.text((border, border), text, font=font, fill="white")
-        del draw
-
-        self.text_texture = QtGui.QOpenGLTexture(ImageQt.ImageQt(image), True)
-        self.text_texture.setMinMagFilters(QtGui.QOpenGLTexture.LinearMipMapLinear, QtGui.QOpenGLTexture.Linear)
-
-        self.text_texture.bind()
-
-        self.gl.glEnable(self.gl.GL_TEXTURE_2D)
-        self.gl.glBegin(self.gl.GL_QUADS)
-
-        imgWidth = image.size[0] / 8
-        imgHeight = image.size[1] / 8
-        self.gl.glTexCoord3d(0, 0, -1)
-        self.gl.glVertex3d(xPos, 64 - imgHeight, -1)
-
-        self.gl.glTexCoord3d(0, 1, -1)
-        self.gl.glVertex3d(xPos, 64, -1)
-
-        self.gl.glTexCoord3d(1, 1, -1)
-        self.gl.glVertex3d(xPos + imgWidth, 64, -1)
-
-        self.gl.glTexCoord3d(1, 0, -1)
-        self.gl.glVertex3d(xPos + imgWidth, 64 - imgHeight, -1)
-
-        self.gl.glEnd()
-        self.gl.glDisable(self.gl.GL_TEXTURE_2D)
-        self.text_texture.release()
-
-        self.gl.glPopMatrix()
-
-        self.gl.glEndList()
-
         return genList
 
     def initContextMenu(self):
