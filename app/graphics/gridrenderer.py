@@ -35,12 +35,12 @@ class GridRenderer(Renderer):
     
     def renderVerticalLine(self, x):
         self.gl.glBegin(self.gl.GL_LINES)
-        self.gl.glVertex3d(x, -1000000, 1.1)
-        self.gl.glVertex3d(x, 1000000, 1.1)
+        self.gl.glVertex3d(x, -1000000, -0.02)
+        self.gl.glVertex3d(x, 1000000, -0.02)
         self.gl.glEnd()
     
     def renderHorizontalLine(self, y):
         self.gl.glBegin(self.gl.GL_LINES)
-        self.gl.glVertex3d(-1000000, y, 1.1)
-        self.gl.glVertex3d(1000000, y, 1.1)
+        self.gl.glVertex3d(-1000000, y, -0.02)
+        self.gl.glVertex3d(1000000, y, -0.02)
         self.gl.glEnd()
