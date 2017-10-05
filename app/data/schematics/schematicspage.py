@@ -18,3 +18,6 @@ class SchematicsPage:
 
     def addElem(self, elem):
         self.elements.append(elem)
+
+    def __repr__(self):
+        return "SchematicsPage (uuid=%s)" % [self.uuid]

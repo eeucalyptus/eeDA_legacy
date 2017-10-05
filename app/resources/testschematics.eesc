@@ -8,13 +8,21 @@ schematic:
           uuid: asdf-123456-3
           pos: [0.0, 0.0]
           parts:
+            - type: connector
+              uuid: asdf-123456-4
+              other: asdf-123456-7
             - type: polygon
+              uuid: asdf-123456-5
               verticies: [[0.0, 0.0], [0.0, 1.0], [1.0, 1.0], [1.0, 0.0]]
             - type: text
+              uuid: asdf-123456-6
               pos: [0.0, -1.0]
               height: 1.0
               text: All animals are equal, but some animals are more equal than others
         - type: junction
+          uuid: asdf-123456-7
+          others: [asdf-123456-4]
         - type: wire
-    - uuid: asdf-123456-4
-    - uuid: asdf-123456-5
+          uuid: asdf-123456-8
+    - uuid: asdf-123456-9
+    - uuid: asdf-123456-10

@@ -12,10 +12,10 @@ from .schematicspage import SchematicsPage
 class Schematic:
     def __init__(self):
         self.uuid = uuid.uuid1();
-        
+
         self.pages = []
         self.fields = {}
-        
+
     def addPage(self, page = None):
         if page == None:
             page = SchematicsPage(self)
@@ -23,3 +23,6 @@ class Schematic:
         else:
             self.pages.append(page)
         return page
+
+    def __repr__(self):
+        return "Schematics (uuid=%s)" % [self.uuid]

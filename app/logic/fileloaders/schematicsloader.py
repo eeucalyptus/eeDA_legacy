@@ -2,15 +2,19 @@ import data.schematics as schematics
 import data.util as util
 import yaml
 
-class NoSchematicsFileError(Exception):
+class SchematicsLoaderError(Exception):
     pass
 
 class SchematicsLoader:
     def __init__(self, path):
-        self.loadSchematic(path)
+        self.path = path
         pass
-    def _loadSchematic(self, path):
-        filestream = open(path, 'r')
+    def loadSchematic(self):
+        self._openSchematicsFile()
+        return self._parseSchematic()
+
+    def _openSchematicsFile(self):
+        filestream = open(self.path, 'r')
         filenode = yaml.safe_load(filestream)
 
         # TODO Implement error handling (not found, no schematics, corrupted, etc)
@@ -22,16 +26,15 @@ class SchematicsLoader:
             raise NoSchematicsFileError()
         schematic = schematics.Schematic()
 
-        schematic.uuid = node.get('uuid', '')
+        schematic.uuid = self.schematicnode.get('uuid', '')
 
-        for pagenode in node.get('pages', []):
-            page = parsePage(pagenode, schematic)
+        for pagenode in self.schematicnode.get('pages', []):
+            page = self._parsePage(pagenode, schematic)
             schematic.addPage(page)
 
-        schematic.fields = node.get('fields', [])
+        schematic.fields = self.schematicnode.get('fields', [])
 
         return schematic
-
 
     def _parsePage(self, node, schematic):
         page = schematics.SchematicsPage(schematic)
@@ -39,29 +42,32 @@ class SchematicsLoader:
         page.uuid = node.get('uuid', '')
         page.schematic = schematic
 
+        self._pageConnectorsByUuid = {}
+
         for elementnode in node.get('elements', []):
-            element = parseElement(elementnode, page)
+            element = self._parseElement(elementnode, page)
             page.elements.append(element)
+
+        self._linkPageConnectors()
 
         return page
 
-
-    def parseElement(self, node, page):
+    def _parseElement(self, node, page):
         elementType = node.get('type', 'no_type')
         switch = {
-            'symbol': parseSymbolElement,
-            'wire': parseWireElement,
-            'decoration': parseDecorationElement,
-            'junction': parseJunctionElement,
-            'label': parseLabelElement
+            'symbol': self._parseSymbolElement,
+            'wire': self._parseWireElement,
+            'decoration': self._parseDecorationElement,
+            'junction': self._parseJunctionElement,
+            'label': self._parseLabelElement
         }
 
-        parse = switch.get(elementType, parseUnknownElement)
+        parse = switch.get(elementType, self._parseUnknownElement)
 
         return parse(node, page)
 
 
-    def parseSymbolElement(node, page):
+    def _parseSymbolElement(self, node, page):
         symbol = schematics.Symbol(page, None)
         symbol.uuid = node.get('uuid', '')
         symbol.pos.x = node.get('pos', [])[0]
@@ -71,50 +77,50 @@ class SchematicsLoader:
             parttype = part.get('type', '')
 
             if parttype == 'polygon':
-                polygon = parsePolygon(part)
+                polygon = self._parsePolygon(part)
                 symbol.parts.append(polygon)
-
             elif parttype == 'text':
-                text = parseText(part)
-                symbol.append(text)
+                text = self._parseText(part, symbol)
+                symbol.parts.append(text)
             elif parttype == 'connector':
                 connector = schematics.SymbolConnector(symbol)
                 coonnector.uuid = part.get('uuid', '')
                 connector.parent = symbol
                 connector.pinname = part.get('pinname', '')
-                connector.pinnumber = part.get('pinnumber', '')
-                connectorself.otherUUID = ''
+                connector.pinnumber = part.get('pinnumber', -1)
                 connector.pinname = part.get('pinname', '')
+                self._pageConnectorsByUuid[connector.uuid] = connector
+                symbol.connectors.append(connector)
             else:
                 print("Part type not implemented!")
 
         print("Symbol!")
         return symbol
 
-
-    def parseWireElement(node, page):
+    def _parseWireElement(self, node, page):
+        #wire = schematics.Wire()
         print("Wire!")
 
 
-    def parseDecorationElement(node, page):
+    def _parseDecorationElement(self, node, page):
         print("Decoration!")
 
 
-    def parseJunctionElement(node, page):
+    def _parseJunctionElement(self, node, page):
         print("Junction!")
 
 
-    def parseLabelElement(node, page):
+    def _parseLabelElement(self, node, page):
         print("Label!")
 
 
-    def parseUnknownElement(node, page):
+    def _parseUnknownElement(self, node, page):
         print("Unknown!")
 
-    def parsePolygon(node):
+    def _parsePolygon(self, node):
         ptary = util.PointArray()
 
-        for vertex in part.get('verticies', []):
+        for vertex in node.get('verticies', []):
             vect = util.Vector2i()
             vect.x = vertex[0]
             vect.y = vertex[1]
@@ -123,15 +129,42 @@ class SchematicsLoader:
 
         return polygon
 
-    def parseText(node):
-        text = schematics.SchematicsText()
-        text.text = part.get('text', '')
-        pos = part.get('pos', [])
-        text.pos = Vector2i(pos[0], pos[1])
-        text.uuid = part.get('uuid', '')
-        text.font = part.get('font', '')
-        text.fontsize = part.get('fontsize', '')
+    def _parseText(self, node, parent):
+        text = schematics.SchematicsText(parent)
+        text.text = node.get('text', '')
+        pos = node.get('pos', [])
+        text.pos = util.Vector2i(pos[0], pos[1])
+        text.uuid = node.get('uuid', '')
+        text.font = node.get('font', '')
+        text.fontsize = node.get('fontsize', '')
+        return text
+
+    def _linkPageConnectors(self):
+        pass
 
 if __name__ == '__main__':
     loader = SchematicsLoader('resources/testschematics.eesc')
-    loader.parseSchematic
+    schematic = loader.loadSchematic()
+
+    print("schematic="+str(schematic))
+    print("schematic.field="+str(schematic.fields))
+    print("schematic.pages=")
+    for page in schematic.pages:
+        print("\t"+str(page))
+        print("\t\tschematic="+str(page.schematic))
+        print("\t\telements=")
+        for element in page.elements:
+            print("\t\t\t"+str(element))
+            if(type(element) is schematics.Symbol):
+                print("\t\t\t\tpos="+str(element.pos))
+                print("\t\t\t\tparts=")
+                for part in element.parts:
+                    print("\t\t\t\t\t"+str(part).replace('\n', ' '))
+                print("\t\t\t\tconnectors=")
+                for connector in element.connectors:
+                    print("\t\t\t\t\t"+str(connector).replace('\n', ' '))
+        if(type(element) is schematics.Wire):
+            print("\t\t\t\tpos="+str(element.pos))
+            print("\t\t\t\tparts=")
+            for part in element.parts:
+                print("\t\t\t\t\t"+str(part).replace('\n', ' '))

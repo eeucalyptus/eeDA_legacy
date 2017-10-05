@@ -16,3 +16,6 @@ class SchematicsText(SchematicsElement):
         self.pos = Vector2i()
         self.font = ''
         self.fontsize = 1
+
+    def __repr__(self):
+        return "SchematicsText (text=\"%s\", uuid=%s)" % (self.text, self.uuid)
