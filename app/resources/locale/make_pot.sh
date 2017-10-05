@@ -1,0 +1,1 @@
+xgettext -d eeDA -o eeDA.pot  ../../gui/*.py

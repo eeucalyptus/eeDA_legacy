@@ -7,11 +7,11 @@ class TreeViewWidget(QtWidgets.QTreeWidget):
     
     def initTree(self):
         
-        self.setHeaderLabel("Tree")
+        self.setHeaderLabel(_('Tree'))
         topItem = QtWidgets.QTreeWidgetItem()
-        topItem.setText(0, "Root")
+        topItem.setText(0, _('Root'))
         child = QtWidgets.QTreeWidgetItem()
-        child.setText(0, "Branch")
+        child.setText(0, _('Branch'))
         topItem.addChild(child)
         self.addTopLevelItem(topItem)
         
@@ -24,8 +24,8 @@ class TreeViewDock(QtWidgets.QDockWidget):
         
     def initTV(self):
         
-        self.setWindowTitle("Tree view")
+        self.setWindowTitle(_('Tree View'))
         treeWidget = TreeViewWidget()
         self.setWidget(treeWidget)
-        treeWidget.setWindowTitle("Tree view")
+        treeWidget.setWindowTitle(_('Tree View'))
         return treeWidget
