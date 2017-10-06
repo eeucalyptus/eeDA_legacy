@@ -1,5 +1,5 @@
 from . import Renderer
-from .common import pRenderCircle, pRenderPolygon, eeDAcolor
+from .common import pMakePolygonArray, eeDAcolor
 from data.util import Vector2i, Polygon
 '''
 
@@ -15,10 +15,6 @@ class RhinocerosRenderer(Renderer):
         self.callList = self.genSymbolCallList()
         
     def genSymbolCallList(self):
-        genList = self.gl.glGenLists(1)
-        self.gl.glNewList(genList, self.gl.GL_COMPILE)
-        #self.gl.glColor4f(0.75, 1.0, 0.93, 1.0) # the best color in the world
-        self.setColor(eeDAcolor.RHINO)
         
         
         rhinopoly = Polygon.fromPoints(\
@@ -39,12 +35,8 @@ class RhinocerosRenderer(Renderer):
         Vector2i(72, 240), #15\
         Vector2i(62, 211), #16\
         Vector2i(35, 188)) #17
-        pRenderPolygon(self, rhinopoly, Vector2i())
+        self.rhinoVertices = pMakePolygonArray(rhinopoly, Vector2i(), 1)
         
-
-        # -- some additional testing of the new primitive renderers
-        self.gl.glColor4f(0.0, 1.0, 0.0, 1.0)
-        pRenderCircle(self, Vector2i(-200, -200), 25)
         self.gl.glColor4f(0.0, 0.0, 1.0, 1.0)
         polly = Polygon.fromPoints(\
         Vector2i(0, 0),\
@@ -52,8 +44,21 @@ class RhinocerosRenderer(Renderer):
         Vector2i(35, 12),\
         Vector2i(25, 25),\
         Vector2i(0, 25))
-        pRenderPolygon(self, polly, Vector2i(-400, -400))
+        self.quadVertices = pMakePolygonArray(polly, Vector2i(-400, -400), 1)
+        # alright, it's not a quadrilateral. I never said I could count... - M
         # --
+        genList = self.gl.glGenLists(1)
+        self.gl.glNewList(genList, self.gl.GL_COMPILE)
+        self.gl.glEnableClientState(self.gl.GL_VERTEX_ARRAY)
+        
+        self.setColor(eeDAcolor.RHINO)
+        self.gl.glVertexPointer(3, self.gl.GL_INT, 0, self.rhinoVertices)
+        self.gl.glDrawArrays(self.gl.GL_TRIANGLES, 0, len(self.rhinoVertices) / 3)
+        
+        self.setColor(eeDAcolor.WIRE)
+        self.gl.glVertexPointer(3, self.gl.GL_INT, 0, self.quadVertices)
+        self.gl.glDrawArrays(self.gl.GL_TRIANGLES, 0, len(self.quadVertices) / 3)
+        
         self.gl.glEndList()
 
         return genList
