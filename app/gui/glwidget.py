@@ -168,9 +168,15 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         return genList
 
     def makeQuad(self):
+        self.quadVertices = (0, 0, -1, 0, 100, -1, 100, 100, -1, 100, 0, -1)
+        self.quadTexCoords = (0, 0, -1, 0, 1, -1, 1, 1, -1, 1, 0, -1)
+        self.texture = QtGui.QOpenGLTexture(QtGui.QImage('resources/side1.png'), True)
+        self.texture.setMinMagFilters(QtGui.QOpenGLTexture.LinearMipMapLinear, QtGui.QOpenGLTexture.Linear)
+        # if these lines can stay above the call to glGenLists(), performance should be better, right?
+        # every renderer should be able to store their own vertex and texture arrays (or tuples) and textures.
+        
         genList = self.gl.glGenLists(1)
         self.gl.glNewList(genList, self.gl.GL_COMPILE)
-
 
         self.gl.glMatrixMode(self.gl.GL_MODELVIEW)
         self.gl.glPushMatrix()
@@ -178,27 +184,20 @@ class GLWidget(QtWidgets.QOpenGLWidget):
 
         self.gl.glColor4f(1.0, 1.0, 1.0, 1.0)
 
-        self.texture = QtGui.QOpenGLTexture(QtGui.QImage('resources/side1.png'), True)
-        self.texture.setMinMagFilters(QtGui.QOpenGLTexture.LinearMipMapLinear, QtGui.QOpenGLTexture.Linear)
         self.texture.bind()
-
+        
+        self.gl.glEnableClientState(self.gl.GL_VERTEX_ARRAY)
+        self.gl.glEnableClientState(self.gl.GL_TEXTURE_COORD_ARRAY)
+        self.gl.glVertexPointer(3, self.gl.GL_INT, 0, self.quadVertices)
+        self.gl.glTexCoordPointer(3, self.gl.GL_INT, 0, self.quadTexCoords)
+        
         self.gl.glEnable(self.gl.GL_TEXTURE_2D)
-        self.gl.glBegin(self.gl.GL_QUADS)
-
-        self.gl.glTexCoord3d(0, 0, -1)
-        self.gl.glVertex3d(0, 0, -1)
-
-        self.gl.glTexCoord3d(0, 1, -1)
-        self.gl.glVertex3d(0, 100, -1)
-
-        self.gl.glTexCoord3d(1, 1, -1)
-        self.gl.glVertex3d(100, 100, -1)
-
-        self.gl.glTexCoord3d(1, 0, -1)
-        self.gl.glVertex3d(100, 0, -1)
-
-        self.gl.glEnd()
+        self.gl.glDrawArrays(self.gl.GL_QUADS, 0, 4)
         self.gl.glDisable(self.gl.GL_TEXTURE_2D)
+        
+        self.gl.glDisableClientState(self.gl.GL_VERTEX_ARRAY)
+        self.gl.glDisableClientState(self.gl.GL_TEXTURE_COORD_ARRAY)
+        
         self.texture.release()
         self.gl.glPopMatrix()
 
