@@ -19,7 +19,7 @@ from .schematicselement import SchematicsElement
 class Label(SchematicsElement, SchematicsConnector):
     def __init__(self, page):
         SchematicsElement.__init__(self, page)
-        self.uuid = uuid.uuid1()
+        self.uuid = str(uuid.uuid4())
         
         self.text = ''
         self.globalLabel = False

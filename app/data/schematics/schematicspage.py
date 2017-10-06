@@ -10,7 +10,7 @@ import uuid
 
 class SchematicsPage:
     def __init__(self, schematic = None):
-        self.uuid = uuid.uuid1();
+        self.uuid = str(uuid.uuid4());
 
         self.schematic = schematic
 

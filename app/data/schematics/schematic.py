@@ -11,7 +11,7 @@ from .schematicspage import SchematicsPage
 
 class Schematic:
     def __init__(self):
-        self.uuid = uuid.uuid1();
+        self.uuid = str(uuid.uuid4());
 
         self.pages = []
         self.fields = {}

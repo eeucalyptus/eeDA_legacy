@@ -16,9 +16,9 @@ from .schematicselement import SchematicsElement
 class Junction(SchematicsElement, SchematicsConnector):
     def __init__(self, page):
         SchematicsElement.__init__(self, page)
-        self.uuid = uuid.uuid1()
+        self.uuid = str(uuid.uuid4())
 
-        self.connections = []
+        self.others = []
         self.pos = Vector2i()
 
 
@@ -28,19 +28,19 @@ class Junction(SchematicsElement, SchematicsConnector):
         newJunction.connect(connector)
         return newJunction
 
-    def isConnected(self, connection):
-        if connection in self.connections:
+    def isConnected(self, other):
+        if other in self.others:
             return True
         else:
             return False
 
-    def connect(self, connector):
-        self.connections.append(connector)
+    def connect(self, other):
+        self.others.append(other)
 
 
-    def disconnect(self, connector):
-        if self.isConnected(connector):
-            self.connections.remove(connector)
+    def disconnect(self, other):
+        if self.isConnected(other):
+            self.others.remove(other)
 
     def isWireConnected(self, wire):
         for connector in wire.connectors:
@@ -59,3 +59,10 @@ class Junction(SchematicsElement, SchematicsConnector):
 
     def __isub__(self, connector):
         self.disconnect(connector)
+
+    def __repr__(self):
+        other_uuids = []
+        for other in self.others:
+            other_uuids.append(other.uuid)
+
+        return 'Junction (uuid=%s, pos=%s, others=%s)' % (self.uuid, self.pos, str(other_uuids))

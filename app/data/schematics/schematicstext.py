@@ -11,7 +11,7 @@ import uuid
 
 class SchematicsText(SchematicsElement):
     def __init__(self, parent):
-        self.uuid = uuid.uuid1()
+        self.uuid = str(uuid.uuid4())
         self.text = ''
         self.pos = Vector2i()
         self.font = ''

@@ -19,7 +19,7 @@ from data.util import Vector2i
 class Wire(SchematicsElement):
     def __init__(self, page):
         super().__init__(page)
-        self.uuid = uuid.uuid1()
+        self.uuid = str(uuid.uuid4())
         
         
         self.connectors = [WireConnector(self), WireConnector(self)]

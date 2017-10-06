@@ -14,7 +14,7 @@ from data.util import Vector2i
 class WireConnector(SchematicsConnector):
     def __init__(self, wire, pos = Vector2i()):
         super().__init__(wire)
-        self.uuid = uuid.uuid1()
+        self.uuid = str(uuid.uuid4())
 
         self.wire = wire
         self.pos = pos
