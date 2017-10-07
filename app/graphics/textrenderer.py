@@ -37,7 +37,7 @@ class TextRenderer(Renderer):
         except OSError:
             print("Font not found, loading failsafe.")
             font = ImageFont.truetype('arial.ttf', self.fSize * self.MSFACTOR)
-        
+            # works on Windows; may still fail on Linux and OSX. Documentation unclear.
 
         textSize = font.getsize(self.text)
 
@@ -48,9 +48,20 @@ class TextRenderer(Renderer):
         draw.text((border, border), self.text, font=font, fill="white")
         del draw
         
+        imgWidth = float(self.sizeAdjust * image.size[0] / self.MSFACTOR)
+        imgHeight = float(self.sizeAdjust * image.size[1] / self.MSFACTOR)
         
-        self.text_texture = QtGui.QOpenGLTexture(ImageQt.ImageQt(image), True)
-        self.text_texture.setMinMagFilters(QtGui.QOpenGLTexture.LinearMipMapLinear, QtGui.QOpenGLTexture.Linear)
+        self.vertices =[0.0, self.fSize - imgHeight, -0.01,
+                        0.0, float(self.fSize), -0.01,
+                        imgWidth, float(self.fSize), -0.01,
+                        imgWidth, self.fSize - imgHeight, -0.01]
+        self.texCoords=[0.0, 0.0, -0.01,
+                        0.0, 1.0, -0.01,
+                        1.0, 1.0, -0.01,
+                        1.0, 0.0, -0.01]
+        
+        self.texture = QtGui.QOpenGLTexture(ImageQt.ImageQt(image), True)
+        self.texture.setMinMagFilters(QtGui.QOpenGLTexture.LinearMipMapLinear, QtGui.QOpenGLTexture.Linear)
 
         self.gl.glNewList(genList, self.gl.GL_COMPILE)
         self.gl.glColor4f(1.0, 1.0, 1.0, 0.0)
@@ -59,29 +70,19 @@ class TextRenderer(Renderer):
         self.gl.glPushMatrix()
         self.gl.glTranslated(self.pos.x - self.sizeAdjust * (image.size[0] / (2 * self.MSFACTOR) - border), self.pos.y - image.size[1] / (2 * self.MSFACTOR), 0)
         
-        self.text_texture.bind()
+        self.texture.bind()
 
-        self.gl.glEnable(self.gl.GL_TEXTURE_2D)
-        self.gl.glBegin(self.gl.GL_QUADS)
-
-        imgWidth = self.sizeAdjust * image.size[0] / self.MSFACTOR
-        imgHeight = self.sizeAdjust * image.size[1] / self.MSFACTOR
         
-        self.gl.glTexCoord3d(0, 0, -0.01)
-        self.gl.glVertex3d(0, self.fSize - imgHeight, -0.01)
-
-        self.gl.glTexCoord3d(0, 1, -0.01)
-        self.gl.glVertex3d(0, self.fSize, -0.01)
-
-        self.gl.glTexCoord3d(1, 1, -0.01)
-        self.gl.glVertex3d(imgWidth, self.fSize, -0.01)
-
-        self.gl.glTexCoord3d(1, 0, -0.01)
-        self.gl.glVertex3d(imgWidth, self.fSize - imgHeight, -0.01)
-
-        self.gl.glEnd()
+        self.gl.glEnableClientState(self.gl.GL_VERTEX_ARRAY)
+        self.gl.glEnableClientState(self.gl.GL_TEXTURE_COORD_ARRAY)
+        self.gl.glVertexPointer(3, self.gl.GL_FLOAT, 0, self.vertices)
+        self.gl.glTexCoordPointer(3, self.gl.GL_FLOAT, 0, self.texCoords)
+        
+        self.gl.glEnable(self.gl.GL_TEXTURE_2D)
+        self.gl.glDrawArrays(self.gl.GL_QUADS, 0, 4)
         self.gl.glDisable(self.gl.GL_TEXTURE_2D)
-        self.text_texture.release()
+        
+        self.texture.release()
 
         self.gl.glPopMatrix()
 

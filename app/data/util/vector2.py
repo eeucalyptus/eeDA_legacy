@@ -1,3 +1,5 @@
+import math
+
 class Vector2d():
     def __init__(self, x = 0, y = 0):
         self.x = float(x)
@@ -5,6 +7,20 @@ class Vector2d():
     
     def fromVector2i(vector):
         return Vector2d(vector.x, vector.y)
+    
+    def euDist(self):
+        return math.sqrt(self.x ** 2 + self.y ** 2)
+    
+    def normalize(self):
+        return self / self.euDist()
+    
+    def normalCW(self):
+        unitVector = self.normalize()
+        return Vector2d(-unitVector.y, +unitVector.x)
+    
+    def normalCCW(self):
+        unitVector = self.normalize()
+        return Vector2d(+unitVector.y, -unitVector.x)
     
     def __add__(self, other):
         xSum = self.x + other.x
@@ -47,6 +63,10 @@ class Vector2i():
         
     def fromVector2d(vector):
         return Vector2i(vector.x, vector.y)
+    
+    def normalize(self):
+        newVec = Vector2d.fromVector2i(self)
+        return newVec / newVec.euDist()
     
     def __add__(self, other):
         xSum = self.x + other.x
