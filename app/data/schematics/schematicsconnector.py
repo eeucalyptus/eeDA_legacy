@@ -18,3 +18,6 @@ class SchematicsConnector:
         
     def connect(self, connection):
         self.connection = connection
+        
+    def isUnconnected(self):
+        return self.connection == None

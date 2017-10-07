@@ -175,7 +175,7 @@ class MyWindow(QtWidgets.QMainWindow):
         Vector2i(50, 100),\
         Vector2i(100, 200),\
         Vector2i(150, 0)])
-        testWire.setConnectors(WireConnector(None, Vector2i(-100, 0)), None)
+        testWire.setConnectors(WireConnector(testWire, Vector2i(-100, 0)), None)
         
         debugAct = self.menuBar().addAction('Wire')
         debugAct.triggered.connect(lambda: self.debugWire(testWire))
