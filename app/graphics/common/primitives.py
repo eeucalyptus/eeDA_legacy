@@ -1,10 +1,10 @@
-from data.util import Vector2i, Polygon
+from data.util import Vector2i, Vector2d, Polygon
 import math
 from graphics import Renderer
 from .eedacolors import eeDAcolor
 '''
 
-A collection of auxiliary functions capable of rendering a few primitives. Note that face color etc. must be configured by the calling renderer.
+A collection of auxiliary functions capable of producing vertex arrays for a few primitives.
 
 '''
 
@@ -19,19 +19,6 @@ def pMakeCircleArray(center = Vector2i(), radius = 10, depth = 1.0, resolution =
 
     return array
 
-def pRenderTriangle(renderer, triangle, pos, depth = 1.0):
-    renderer.gl.glBegin(renderer.gl.GL_TRIANGLES)
-    adjTri = triangle.translated(pos)
-    for point in adjTri.points:
-        renderer.gl.glVertex3d(point.x, point.y, depth)
-    renderer.gl.glEnd()
-    
-def pRenderPolygon(renderer, polygon, pos, depth = 1.0):
-    triAry = polygon.triangles()
-    for tri in triAry:
-        pRenderTriangle(renderer, tri, pos)
-        
-        
 def pMakePolygonArray(polygon, pos, depth = 1.0):
     triangles = polygon.triangles()
     array = []
@@ -42,6 +29,35 @@ def pMakePolygonArray(polygon, pos, depth = 1.0):
             array += [point.x, point.y, depth]
     
     return array
+
+def pMakeLineArray(pointArray, lineWidth, depth = 1.0):
+    vertices = []
+    for i in range(len(pointArray) - 1):
+        vertices += pSingleLineVertices(pointArray[i], pointArray[i+1], lineWidth, depth)
+    return vertices
+    
+def pSingleLineVertices(point1, point2, width, depth):
+    point1 = Vector2d.fromVector2i(point1)
+    point2 = Vector2d.fromVector2i(point2)
+    
+    vector = point2 - point1
+    unitVector = vector.normalize()
+    uvRotated = unitVector.normalCW()
+    
+    pointAry = []
+    
+    pointAry.append(point1 + uvRotated * width)
+    pointAry.append(point1 - uvRotated * width)
+    
+    pointAry.append(point2 + uvRotated * width)
+    pointAry.append(point2 - uvRotated * width)
+    
+    resAry = []
+    
+    for point in pointAry:
+        resAry += [point.x, point.y, depth]
+    
+    return resAry
 
 class PointRenderer(Renderer):  # kludged together for debug
     def __init__(self, gl, x, y):

@@ -1,34 +1,11 @@
 from . import Renderer
 from data.util import Vector2i, Vector2d
-from .common import eeDAcolor, pMakeCircleArray
+from .common import eeDAcolor, pMakeCircleArray, pMakeLineArray
 
 class WireRenderer(Renderer):
     
-    WIREWIDTH = 5.0
+    WIREWIDTH = 2.0 # actually half the width of the representation
     DEPTH = 1.0
-    
-    def singleLineVertices(self, point1, point2):
-        point1 = Vector2d.fromVector2i(point1)
-        point2 = Vector2d.fromVector2i(point2)
-        
-        vector = point2 - point1
-        unitVector = vector.normalize()
-        uvRotated = unitVector.normalCW()
-        
-        pointAry = []
-        
-        pointAry.append(point1 + uvRotated * self.WIREWIDTH)
-        pointAry.append(point1 - uvRotated * self.WIREWIDTH)
-        
-        pointAry.append(point2 + uvRotated * self.WIREWIDTH)
-        pointAry.append(point2 - uvRotated * self.WIREWIDTH)
-        
-        resAry = []
-        
-        for point in pointAry:
-            resAry += [point.x, point.y, self.DEPTH]
-        
-        return resAry
     
     def __init__(self, wire, gl):
         super().__init__(gl)
@@ -54,12 +31,7 @@ class WireRenderer(Renderer):
         else:
             self.unCon2 = True
         
-        self.vertices = []
-        
-        for i in range(len(self.pointAry) - 1):
-            self.vertices += WireRenderer.singleLineVertices(self, self.pointAry[i], self.pointAry[i+1])
-            
-        
+        self.vertices = pMakeLineArray(self.pointAry, self.WIREWIDTH, self.DEPTH)
         
         genList = self.gl.glGenLists(1)
         self.gl.glNewList(genList, self.gl.GL_COMPILE)
@@ -83,7 +55,7 @@ class WireRenderer(Renderer):
     def renderUnconnected(self, pos):
         
         self.gl.glEnableClientState(self.gl.GL_VERTEX_ARRAY)
-        circle = pMakeCircleArray(pos, self.WIREWIDTH, self.DEPTH, 30)
+        circle = pMakeCircleArray(pos, self.WIREWIDTH * 1.5, self.DEPTH, 30)
         self.gl.glVertexPointer(3, self.gl.GL_FLOAT, 0, circle)
         self.gl.glDrawArrays(self.gl.GL_TRIANGLE_FAN, 0, len(circle) / 3)
         self.gl.glDisableClientState(self.gl.GL_VERTEX_ARRAY)
