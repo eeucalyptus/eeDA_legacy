@@ -62,7 +62,7 @@ class WireRenderer(Renderer):
 
         print(self.vertices)
         
-        self.gl.glDrawArrays(self.gl.GL_TRIANGLE_STRIP, 0, len(self.vertices))
+        self.gl.glDrawArrays(self.gl.GL_TRIANGLE_STRIP, 0, len(self.vertices) / 3)
         
         self.gl.glDisableClientState(self.gl.GL_VERTEX_ARRAY)
         
