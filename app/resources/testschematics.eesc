@@ -24,5 +24,8 @@ schematic:
           others: [asdf-123456-4]
         - type: wire
           uuid: asdf-123456-8
-    - uuid: asdf-123456-9
+        - type: Label
+          uuid: asdf-123456-9
+          text: VDD
     - uuid: asdf-123456-10
+    - uuid: asdf-123456-11

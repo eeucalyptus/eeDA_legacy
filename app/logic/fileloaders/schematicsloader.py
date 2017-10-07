@@ -125,7 +125,15 @@ class SchematicsLoader:
         return junction
 
 
-    def _parseLabelElement(self, node, page):
+    def _parseLabelElement(self, node):
+        label = schematics.Label(self._currentPage)
+        label.uuid = node.get('uuid', '')
+        label.pos = node.get('pos', util.Vector2i())
+        label.text = _parseText(node, label)
+
+        self._pageConnectorsByUuid[label.uuid] = label
+        self._pageConnectorOtherUuids[label] = node.get('other', 'NONE')
+
         print('Label!')
 
 
