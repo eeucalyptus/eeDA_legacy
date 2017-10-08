@@ -30,6 +30,7 @@ class PointArray(list):
 class Polygon():
     def __init__(self, pointAry):
         self.points = pointAry
+        self.color = None   # eeDAcolor
     
     def fromArray(ary):
         pAry = PointArray()
@@ -46,7 +47,10 @@ class Polygon():
         
     def containsPoint(self, point):
         pass
-        
+    
+    def changeColor(self, color):
+        self.color = color
+    
     def centroid(self): # this isn't really a centroid. But if the polygon is convex, the point is inside the polygon.
         if len(self.points) == 0:
             return Vector2i()
@@ -76,6 +80,9 @@ class Polygon():
         botRight = Vector2i(minMax[1].x, minMax[1].y)
         box = Polygon.fromPoints(topLeft, topRight, botLeft, botRight)
         return box
+        
+    def scale(self, factor):
+        self.points = [point * factor for point in self.points]
         
     def __repr__(self):
         string = "Polygon:"

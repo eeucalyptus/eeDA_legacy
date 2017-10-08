@@ -30,8 +30,9 @@ def pMakePolygonArray(polygon, pos, depth = 1.0):
     
     return array
 
-def pMakeLineArray(pointArray, lineWidth, depth = 1.0):
+def pMakeLineArray(pointArray, pos, lineWidth, depth = 1.0):
     vertices = []
+    pointArray = [point + pos for point in pointArray]
     for i in range(len(pointArray) - 1):
         vertices += pSingleLineVertices(pointArray[i], pointArray[i+1], lineWidth, depth)
     return vertices

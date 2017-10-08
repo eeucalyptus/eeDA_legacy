@@ -83,6 +83,11 @@ class Vector2i():
         y = self.y / scalar
         return Vector2i(x, y)
     
+    def __mul__(self, scalar):
+        x = self.x * scalar
+        y = self.y * scalar
+        return Vector2d(x, y)
+    
     def __div__(self, scalar):
         x = self.x / scalar
         y = self.y / scalar

@@ -31,7 +31,7 @@ class WireRenderer(Renderer):
         else:
             self.unCon2 = True
         
-        self.vertices = pMakeLineArray(self.pointAry, self.WIREWIDTH, self.DEPTH)
+        self.vertices = pMakeLineArray(self.pointAry, Vector2i(), self.WIREWIDTH, self.DEPTH)
         
         genList = self.gl.glGenLists(1)
         self.gl.glNewList(genList, self.gl.GL_COMPILE)

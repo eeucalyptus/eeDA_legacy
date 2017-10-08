@@ -27,9 +27,16 @@ class Symbol(SchematicsElement):
         
         # graphics
         self.polygons = []
+        self.linestrips = []
         
     def addPolygon(self, poly):
         self.polygons.append(poly)
         
+    def addLinestrip(self, strip):  # technically identical to polygons, only that it's rendered similar to a line strip
+        self.linestrips.append(strip)
+        
     def setRenderer(self, renderer):
         self.renderer = renderer
+        
+    def setPos(self, pos):
+        self.pos = pos
