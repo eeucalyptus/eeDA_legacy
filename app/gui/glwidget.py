@@ -3,6 +3,7 @@ from data.util import Vector2d, Vector2i
 from .shortcut import Shortcut
 from PyQt5 import QtWidgets, QtGui, QtCore
 from graphics.common import eeDAcolor
+import OpenGL.GL as gl
 
 from graphics import GridRenderer, TextRenderer # to be removed
 from data.util import Grid # to be removed
@@ -81,66 +82,64 @@ class GLWidget(QtWidgets.QOpenGLWidget):
             self.cameraposition += Vector2d(deltaX * 0.1, deltaY * 0.1)
         self.multZoom(1.0 + direction * 0.1)
 
-
-
     def initializeGL(self):
-        version = QtGui.QOpenGLVersionProfile()
-        version.setVersion(2, 1)
-        self.gl = self.context().versionFunctions(version)
-        self.gl.initializeOpenGLFunctions()
+        # version = QtGui.QOpenGLVersionProfile()
+        # version.setVersion(2, 1)
+        # self.gl = self.context().versionFunctions(version)
+        # gl.initializeOpenGLFunctions()
 
-        self.gl.glClearColor(*eeDAcolor.SCM_BACKGROUND)
+        gl.glClearColor(*eeDAcolor.SCM_BACKGROUND)
         self.object1 = self.makeTriangle()
         self.object2 = self.makeQuad()
-        self.gl.glShadeModel(self.gl.GL_FLAT)
-        self.gl.glEnable(self.gl.GL_DEPTH_TEST)
-        self.gl.glEnable(self.gl.GL_BLEND)
-        self.gl.glBlendFunc(self.gl.GL_ZERO, self.gl.GL_ONE)
-        #self.gl.glCullFace(self.gl.GL_BACK)
-        #self.gl.glEnable(self.gl.GL_CULL_FACE)
+        gl.glShadeModel(gl.GL_FLAT)
+        gl.glEnable(gl.GL_DEPTH_TEST)
+        gl.glEnable(gl.GL_BLEND)
+        gl.glBlendFunc(gl.GL_ZERO, gl.GL_ONE)
+        #gl.glCullFace(gl.GL_BACK)
+        #gl.glEnable(gl.GL_CULL_FACE)
         self.initGrid()
 
     def paintGL(self):
-        self.gl.glClear(
-                self.gl.GL_COLOR_BUFFER_BIT | self.gl.GL_DEPTH_BUFFER_BIT)
-        self.gl.glLoadIdentity()
-        self.gl.glTranslated(self.cameraposition.x, self.cameraposition.y, -10.0)
+        gl.glClear(
+                gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
+        gl.glLoadIdentity()
+        gl.glTranslated(self.cameraposition.x, self.cameraposition.y, -10.0)
         self.zoomGL()
-        self.gl.glEnable(self.gl.GL_MULTISAMPLE)
-        self.gl.glEnable(self.gl.GL_BLEND)
-        self.gl.glBlendFunc(self.gl.GL_ONE,self.gl.GL_ONE_MINUS_SRC_ALPHA)
-        self.gl.glCallList(self.object1)
-        self.gl.glCallList(self.object2)
+        gl.glEnable(gl.GL_MULTISAMPLE)
+        gl.glEnable(gl.GL_BLEND)
+        gl.glBlendFunc(gl.GL_ONE,gl.GL_ONE_MINUS_SRC_ALPHA)
+        gl.glCallList(self.object1)
+        gl.glCallList(self.object2)
         if (self.zoomLevel * max(self.grid.xRes, self.grid.yRes)) > 10: # make grid invisible if it'd render too small.
                                                                         # 10 is an empiric value, may not apply to all resolutions.
-            self.gl.glCallList(self.gridRenderer.callList)
+            gl.glCallList(self.gridRenderer.callList)
         if self.pointList != None:
-            self.gl.glCallList(self.pointList)
+            gl.glCallList(self.pointList)
         if self.injectedList != None:
-            self.gl.glCallList(self.injectedList)
-        self.gl.glDisable(self.gl.GL_BLEND)
-        self.gl.glDisable(self.gl.GL_MULTISAMPLE)
+            gl.glCallList(self.injectedList)
+        gl.glDisable(gl.GL_BLEND)
+        gl.glDisable(gl.GL_MULTISAMPLE)
 
     def resizeGL(self, width, height):
         side = min(width, height)
         if side < 0:
             return
 
-        self.gl.glViewport((width - side) // 2, (height - side) // 2, side, side)
+        gl.glViewport((width - side) // 2, (height - side) // 2, side, side)
 
-        self.gl.glMatrixMode(self.gl.GL_PROJECTION)
-        self.gl.glLoadIdentity()
-        self.gl.glOrtho(-0.5*width, +0.5*width, +0.5*height, -0.5*height, 4.0, 15.0)
-        self.gl.glMatrixMode(self.gl.GL_MODELVIEW)
+        gl.glMatrixMode(gl.GL_PROJECTION)
+        gl.glLoadIdentity()
+        gl.glOrtho(-0.5*width, +0.5*width, +0.5*height, -0.5*height, 4.0, 15.0)
+        gl.glMatrixMode(gl.GL_MODELVIEW)
 
     def zoomGL(self):
         width = self.frameGeometry().width() / self.zoomLevel
         height = self.frameGeometry().height() / self.zoomLevel
 
-        self.gl.glMatrixMode(self.gl.GL_PROJECTION)
-        self.gl.glLoadIdentity()
-        self.gl.glOrtho(-0.5*width, +0.5*width, +0.5*height, -0.5*height, 4.0, 15.0)
-        self.gl.glMatrixMode(self.gl.GL_MODELVIEW)
+        gl.glMatrixMode(gl.GL_PROJECTION)
+        gl.glLoadIdentity()
+        gl.glOrtho(-0.5*width, +0.5*width, +0.5*height, -0.5*height, 4.0, 15.0)
+        gl.glMatrixMode(gl.GL_MODELVIEW)
 
     def nudgeView(self, delta):
         self.cameraposition += delta/self.zoomLevel
@@ -149,11 +148,11 @@ class GLWidget(QtWidgets.QOpenGLWidget):
 
     def makeTriangle(self):
 
-        genList = self.gl.glGenLists(1)
-        self.gl.glNewList(genList, self.gl.GL_COMPILE)
-        self.gl.glBegin(self.gl.GL_TRIANGLES)
+        genList = gl.glGenLists(1)
+        gl.glNewList(genList, gl.GL_COMPILE)
+        gl.glBegin(gl.GL_TRIANGLES)
 
-        self.gl.glColor4f(0.282, 0.235, 0.196, 1.0)
+        gl.glColor4f(0.282, 0.235, 0.196, 1.0)
 
         vertices = []
         
@@ -164,12 +163,12 @@ class GLWidget(QtWidgets.QOpenGLWidget):
             vertices += [x, y, -0.2]
 
         
-        self.gl.glEnableClientState(self.gl.GL_VERTEX_ARRAY)
-        self.gl.glVertexPointer(3, self.gl.GL_INT, 0, vertices)
-        self.gl.glDrawArrays(self.gl.GL_TRIANGLES, 0, 3)
-        self.gl.glDisableClientState(self.gl.GL_VERTEX_ARRAY)
+        gl.glEnableClientState(gl.GL_VERTEX_ARRAY)
+        gl.glVertexPointer(3, gl.GL_FLOAT, 0, vertices)
+        gl.glDrawArrays(gl.GL_TRIANGLES, 0, 3)
+        gl.glDisableClientState(gl.GL_VERTEX_ARRAY)
 
-        self.gl.glEndList()
+        gl.glEndList()
 
         return genList
 
@@ -181,33 +180,33 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         # if these lines can stay above the call to glGenLists(), performance should be better, right?
         # every renderer should be able to store their own vertex and texture arrays (or tuples) and textures.
         
-        genList = self.gl.glGenLists(1)
-        self.gl.glNewList(genList, self.gl.GL_COMPILE)
+        genList = gl.glGenLists(1)
+        gl.glNewList(genList, gl.GL_COMPILE)
 
-        self.gl.glMatrixMode(self.gl.GL_MODELVIEW)
-        self.gl.glPushMatrix()
-        self.gl.glTranslated(400.0, 400.0, 0)
+        gl.glMatrixMode(gl.GL_MODELVIEW)
+        gl.glPushMatrix()
+        gl.glTranslated(400.0, 400.0, 0)
 
-        self.gl.glColor4f(1.0, 1.0, 1.0, 1.0)
+        gl.glColor4f(1.0, 1.0, 1.0, 1.0)
 
         self.texture.bind()
         
-        self.gl.glEnableClientState(self.gl.GL_VERTEX_ARRAY)
-        self.gl.glEnableClientState(self.gl.GL_TEXTURE_COORD_ARRAY)
-        self.gl.glVertexPointer(3, self.gl.GL_INT, 0, self.quadVertices)
-        self.gl.glTexCoordPointer(3, self.gl.GL_INT, 0, self.quadTexCoords)
+        gl.glEnableClientState(gl.GL_VERTEX_ARRAY)
+        gl.glEnableClientState(gl.GL_TEXTURE_COORD_ARRAY)
+        gl.glVertexPointer(3, gl.GL_INT, 0, self.quadVertices)
+        gl.glTexCoordPointer(3, gl.GL_INT, 0, self.quadTexCoords)
         
-        self.gl.glEnable(self.gl.GL_TEXTURE_2D)
-        self.gl.glDrawArrays(self.gl.GL_QUADS, 0, 4)
-        self.gl.glDisable(self.gl.GL_TEXTURE_2D)
+        gl.glEnable(gl.GL_TEXTURE_2D)
+        gl.glDrawArrays(gl.GL_QUADS, 0, 4)
+        gl.glDisable(gl.GL_TEXTURE_2D)
         
-        self.gl.glDisableClientState(self.gl.GL_VERTEX_ARRAY)
-        self.gl.glDisableClientState(self.gl.GL_TEXTURE_COORD_ARRAY)
+        gl.glDisableClientState(gl.GL_VERTEX_ARRAY)
+        gl.glDisableClientState(gl.GL_TEXTURE_COORD_ARRAY)
         
         self.texture.release()
-        self.gl.glPopMatrix()
+        gl.glPopMatrix()
 
-        self.gl.glEndList()
+        gl.glEndList()
         
         return genList
 
@@ -267,7 +266,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         return Grid()
 
     def makeGridRenderer(self, grid):
-        return GridRenderer(grid, self.gl)
+        return GridRenderer(grid)
 
     def widgetCoordsToWorld(self, x, y):
         xAdj = (x - self.frameGeometry().width() / 2 ) / self.zoomLevel - self.cameraposition.x
@@ -281,5 +280,5 @@ class GLWidget(QtWidgets.QOpenGLWidget):
 
     def renderMouseSnap(self, pos):
         snapCoords = self.grid.nearestSnap(pos)
-        self.pointList = PointRenderer(self.gl, snapCoords.x, snapCoords.y).genSymbolCallList()
+        self.pointList = PointRenderer(snapCoords.x, snapCoords.y).genSymbolCallList()
         

@@ -1,21 +1,22 @@
 from . import Renderer
 from data.util import Vector2i, Grid
 from .common import eeDAcolor
+import OpenGL.GL as gl
 
 class GridRenderer(Renderer):
-    def __init__(self, grid, gl):
-        super().__init__(gl)
+    def __init__(self, grid):
+        super().__init__()
         self.grid = grid
         self.callList = self.genSymbolCallList()
         print("Grid Made")
         
     def genSymbolCallList(self):
-        genList = self.gl.glGenLists(1)
-        self.gl.glNewList(genList, self.gl.GL_COMPILE)
+        genList = gl.glGenLists(1)
+        gl.glNewList(genList, gl.GL_COMPILE)
         self.setColor(eeDAcolor.GRID)
-        self.gl.glDisable(self.gl.GL_MULTISAMPLE)
+        gl.glDisable(gl.GL_MULTISAMPLE)
         
-        self.gl.glLineWidth(1)
+        gl.glLineWidth(1)
         
         # call some drawing functions
         self.lines = []
@@ -28,14 +29,14 @@ class GridRenderer(Renderer):
             self.addHorizontalLine(self.grid.origin.y + self.grid.xRes * i)
             self.addHorizontalLine(self.grid.origin.y - self.grid.xRes * i)
         
-        self.gl.glEnableClientState(self.gl.GL_VERTEX_ARRAY)
-        self.gl.glVertexPointer(3, self.gl.GL_FLOAT, 0, self.lines)
-        self.gl.glDrawArrays(self.gl.GL_LINES, 0, len(self.lines) / 3)
+        gl.glEnableClientState(gl.GL_VERTEX_ARRAY)
+        gl.glVertexPointer(3, gl.GL_FLOAT, 0, self.lines)
+        gl.glDrawArrays(gl.GL_LINES, 0, int(len(self.lines) / 3))
         
-        self.gl.glEnable(self.gl.GL_MULTISAMPLE)
-        self.gl.glEndList()
+        gl.glEnable(gl.GL_MULTISAMPLE)
+        gl.glEndList()
         
-        self.gl.glDisableClientState(self.gl.GL_VERTEX_ARRAY)
+        gl.glDisableClientState(gl.GL_VERTEX_ARRAY)
         return genList
     
     def addVerticalLine(self, x):

@@ -1,6 +1,8 @@
 from . import Renderer
 from .common import pMakePolygonArray, eeDAcolor
 from data.util import Vector2i, Polygon
+
+import OpenGL.GL as gl
 '''
 
 The RhinocerosRenderer holds the gl display list for a single rhinoceros
@@ -10,8 +12,8 @@ and is able to update it, when the underlying biology changes.
 
 class RhinocerosRenderer(Renderer):
     
-    def __init__(self, gl):
-        super().__init__(gl)
+    def __init__(self):
+        super().__init__()
         self.callList = self.genSymbolCallList()
         
     def genSymbolCallList(self):
@@ -37,7 +39,7 @@ class RhinocerosRenderer(Renderer):
         Vector2i(35, 188)) #17
         self.rhinoVertices = pMakePolygonArray(rhinopoly, Vector2i(), 1)
         
-        self.gl.glColor4f(0.0, 0.0, 1.0, 1.0)
+        gl.glColor4f(0.0, 0.0, 1.0, 1.0)
         polly = Polygon.fromPoints(\
         Vector2i(0, 0),\
         Vector2i(25, 0),\
@@ -47,19 +49,19 @@ class RhinocerosRenderer(Renderer):
         self.quadVertices = pMakePolygonArray(polly, Vector2i(-400, -400), 1)
         # alright, it's not a quadrilateral. I never said I could count... - M
         # --
-        genList = self.gl.glGenLists(1)
-        self.gl.glNewList(genList, self.gl.GL_COMPILE)
-        self.gl.glEnableClientState(self.gl.GL_VERTEX_ARRAY)
+        genList = gl.glGenLists(1)
+        gl.glNewList(genList, gl.GL_COMPILE)
+        gl.glEnableClientState(gl.GL_VERTEX_ARRAY)
         
         self.setColor(eeDAcolor.RHINO)
-        self.gl.glVertexPointer(3, self.gl.GL_INT, 0, self.rhinoVertices)
-        self.gl.glDrawArrays(self.gl.GL_TRIANGLES, 0, len(self.rhinoVertices) / 3)
+        gl.glVertexPointer(3, gl.GL_INT, 0, self.rhinoVertices)
+        gl.glDrawArrays(gl.GL_TRIANGLES, 0, len(self.rhinoVertices) / 3)
         
         self.setColor(eeDAcolor.WIRE)
-        self.gl.glVertexPointer(3, self.gl.GL_INT, 0, self.quadVertices)
-        self.gl.glDrawArrays(self.gl.GL_TRIANGLES, 0, len(self.quadVertices) / 3)
+        gl.glVertexPointer(3, gl.GL_INT, 0, self.quadVertices)
+        gl.glDrawArrays(gl.GL_TRIANGLES, 0, len(self.quadVertices) / 3)
         
-        self.gl.glEndList()
+        gl.glEndList()
 
         return genList
         

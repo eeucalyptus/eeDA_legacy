@@ -23,6 +23,8 @@ eeDA depends on the following libraries:
 
 - PyQt5
 - PyYAML
+- PIL (Pillow)
+- PyOpenGL
 
 You need to install them manually or using pip, in order to run eeDA.
 

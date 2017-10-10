@@ -212,30 +212,30 @@ class MyWindow(QtWidgets.QMainWindow):
         debugAct5.triggered.connect(lambda: self.debugText())
         
     def debugWire(self, wire):
-        wire.setRenderer(WireRenderer(wire, self.glWidget.gl))
+        wire.setRenderer(WireRenderer(wire))
         self.glWidget.setInject(wire.renderer.genSymbolCallList())
         self.glWidget.repaint()
         print("Success: wire rendering")
         
     def debugSymbol(self, symbol):
-        symbol.setRenderer(SymbolRenderer(symbol, self.glWidget.gl))
+        symbol.setRenderer(SymbolRenderer(symbol))
         self.glWidget.setInject(symbol.renderer.genSymbolCallList())
         self.glWidget.repaint()
         print("Success: symbol rendering")
         
     def debugJunction(self, junction):
-        junction.setRenderer(JunctionRenderer(junction, self.glWidget.gl))
+        junction.setRenderer(JunctionRenderer(junction))
         self.glWidget.setInject(junction.renderer.genSymbolCallList())
         self.glWidget.repaint()
         print("Success: junction rendering")
         
     def debugRhino(self):
-        renderer = RhinocerosRenderer(self.glWidget.gl)
+        renderer = RhinocerosRenderer()
         self.glWidget.setInject(renderer.genSymbolCallList())
         self.glWidget.repaint()
         
     def debugText(self):
-        self.textrenderer = TextRenderer(self.glWidget.gl, 'The quick brown fox jumps over the lazy dog.', Vector2i())
+        self.textrenderer = TextRenderer('The quick brown fox jumps over the lazy dog.', Vector2i())
         self.glWidget.setInject(self.textrenderer.genSymbolCallList())
         self.glWidget.repaint()
         

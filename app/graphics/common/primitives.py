@@ -2,6 +2,7 @@ from data.util import Vector2i, Vector2d, Polygon
 import math
 from graphics import Renderer
 from .eedacolors import eeDAcolor
+import OpenGL.GL as gl
 '''
 
 A collection of auxiliary functions capable of producing vertex arrays for a few primitives.
@@ -61,27 +62,26 @@ def pSingleLineVertices(point1, point2, width, depth):
     return resAry
 
 class PointRenderer(Renderer):  # kludged together for debug
-    def __init__(self, gl, x, y):
-        super().__init__(gl)
+    def __init__(self, x, y):
+        super().__init__()
         self.x = x
         self.y = y
         self.callList = self.genSymbolCallList()
         
     def genSymbolCallList(self):
-        genList = self.gl.glGenLists(1)
-        self.gl.glNewList(genList, self.gl.GL_COMPILE)
+        genList = gl.glGenLists(1)
+        gl.glNewList(genList, gl.GL_COMPILE)
         self.setColor(eeDAcolor.RHINO)
         
-        self.gl.glPointSize(20)
-        self.gl.glBegin(self.gl.GL_POINTS)
+        gl.glPointSize(20)
+        gl.glBegin(gl.GL_POINTS)
         point = [self.x, self.y, 1.0]
-        self.gl.glEnableClientState(self.gl.GL_VERTEX_ARRAY)
-        self.gl.glVertexPointer(3, self.gl.GL_FLOAT, 0, point)
-        self.gl.glDrawArrays(self.gl.GL_POINTS, 0, 1)
-        self.gl.glDisableClientState(self.gl.GL_VERTEX_ARRAY)
-        self.gl.glEnd()
+        gl.glEnableClientState(gl.GL_VERTEX_ARRAY)
+        gl.glVertexPointer(3, gl.GL_FLOAT, 0, point)
+        gl.glDrawArrays(gl.GL_POINTS, 0, 1)
+        gl.glDisableClientState(gl.GL_VERTEX_ARRAY)
         
-        self.gl.glEndList()
+        gl.glEndList()
         
         
         return genList

@@ -1,7 +1,7 @@
+import OpenGL.GL as gl
 from data import schematics
 
 def RenderSchematicsContext(glWidget, schmaticsContext):
-    gl = glWidget.gl
         
     # for(symbol in schematicsContext.page[schematicsContext].elements):    # I'm still unsure what page[schematicsContext] is supposed to mean :) - M
     #     gl.glCallList(symbol.renderer.callList)

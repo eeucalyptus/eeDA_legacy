@@ -1,6 +1,7 @@
 from . import Renderer
 from PIL import Image, ImageFont, ImageQt, ImageDraw
 from PyQt5 import QtGui
+import OpenGL.GL as gl
 '''
 
 Renders a single line of text at a given position.
@@ -11,8 +12,8 @@ class TextRenderer(Renderer):
     
     MSFACTOR = 8
     
-    def __init__(self, gl, text, pos, size = 64):
-        super().__init__(gl)
+    def __init__(self, text, pos, size = 64):
+        super().__init__()
         self.text = text
         self.pos = pos
         
@@ -29,7 +30,7 @@ class TextRenderer(Renderer):
         self.callList = self.genSymbolCallList()
         
     def genSymbolCallList(self):
-        genList = self.gl.glGenLists(1)
+        genList = gl.glGenLists(1)
         
         
         try:
@@ -63,29 +64,29 @@ class TextRenderer(Renderer):
         self.texture = QtGui.QOpenGLTexture(ImageQt.ImageQt(image), True)
         self.texture.setMinMagFilters(QtGui.QOpenGLTexture.LinearMipMapLinear, QtGui.QOpenGLTexture.Linear)
 
-        self.gl.glNewList(genList, self.gl.GL_COMPILE)
-        self.gl.glColor4f(1.0, 1.0, 1.0, 0.0)
+        gl.glNewList(genList, gl.GL_COMPILE)
+        gl.glColor4f(1.0, 1.0, 1.0, 0.0)
         
-        self.gl.glMatrixMode(self.gl.GL_MODELVIEW)
-        self.gl.glPushMatrix()
-        self.gl.glTranslated(self.pos.x - self.sizeAdjust * (image.size[0] / (2 * self.MSFACTOR) - border), self.pos.y - image.size[1] / (2 * self.MSFACTOR), 0)
+        gl.glMatrixMode(gl.GL_MODELVIEW)
+        gl.glPushMatrix()
+        gl.glTranslated(self.pos.x - self.sizeAdjust * (image.size[0] / (2 * self.MSFACTOR) - border), self.pos.y - image.size[1] / (2 * self.MSFACTOR), 0)
         
         self.texture.bind()
 
         
-        self.gl.glEnableClientState(self.gl.GL_VERTEX_ARRAY)
-        self.gl.glEnableClientState(self.gl.GL_TEXTURE_COORD_ARRAY)
-        self.gl.glVertexPointer(3, self.gl.GL_FLOAT, 0, self.vertices)
-        self.gl.glTexCoordPointer(3, self.gl.GL_FLOAT, 0, self.texCoords)
+        gl.glEnableClientState(gl.GL_VERTEX_ARRAY)
+        gl.glEnableClientState(gl.GL_TEXTURE_COORD_ARRAY)
+        gl.glVertexPointer(3, gl.GL_FLOAT, 0, self.vertices)
+        gl.glTexCoordPointer(3, gl.GL_FLOAT, 0, self.texCoords)
         
-        self.gl.glEnable(self.gl.GL_TEXTURE_2D)
-        self.gl.glDrawArrays(self.gl.GL_QUADS, 0, 4)
-        self.gl.glDisable(self.gl.GL_TEXTURE_2D)
+        gl.glEnable(gl.GL_TEXTURE_2D)
+        gl.glDrawArrays(gl.GL_QUADS, 0, 4)
+        gl.glDisable(gl.GL_TEXTURE_2D)
         
         self.texture.release()
 
-        self.gl.glPopMatrix()
+        gl.glPopMatrix()
 
-        self.gl.glEndList()
+        gl.glEndList()
 
         return genList
