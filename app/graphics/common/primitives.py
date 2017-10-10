@@ -74,7 +74,11 @@ class PointRenderer(Renderer):  # kludged together for debug
         
         self.gl.glPointSize(20)
         self.gl.glBegin(self.gl.GL_POINTS)
-        self.gl.glVertex3d(self.x, self.y, 1.0)
+        point = [self.x, self.y, 1.0]
+        self.gl.glEnableClientState(self.gl.GL_VERTEX_ARRAY)
+        self.gl.glVertexPointer(3, self.gl.GL_FLOAT, 0, point)
+        self.gl.glDrawArrays(self.gl.GL_POINTS, 0, 1)
+        self.gl.glDisableClientState(self.gl.GL_VERTEX_ARRAY)
         self.gl.glEnd()
         
         self.gl.glEndList()

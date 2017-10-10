@@ -51,14 +51,14 @@ class TextRenderer(Renderer):
         imgWidth = float(self.sizeAdjust * image.size[0] / self.MSFACTOR)
         imgHeight = float(self.sizeAdjust * image.size[1] / self.MSFACTOR)
         
-        self.vertices =[0.0, self.fSize - imgHeight, -0.01,
-                        0.0, float(self.fSize), -0.01,
-                        imgWidth, float(self.fSize), -0.01,
-                        imgWidth, self.fSize - imgHeight, -0.01]
-        self.texCoords=[0.0, 0.0, -0.01,
-                        0.0, 1.0, -0.01,
-                        1.0, 1.0, -0.01,
-                        1.0, 0.0, -0.01]
+        self.vertices =[0.0, self.fSize - imgHeight, 2.0,
+                        0.0, float(self.fSize), 2.0,
+                        imgWidth, float(self.fSize), 2.0,
+                        imgWidth, self.fSize - imgHeight, 2.0]
+        self.texCoords=[0.0, 0.0, 2.0,
+                        0.0, 1.0, 2.0,
+                        1.0, 1.0, 2.0,
+                        1.0, 0.0, 2.0]
         
         self.texture = QtGui.QOpenGLTexture(ImageQt.ImageQt(image), True)
         self.texture.setMinMagFilters(QtGui.QOpenGLTexture.LinearMipMapLinear, QtGui.QOpenGLTexture.Linear)

@@ -155,13 +155,19 @@ class GLWidget(QtWidgets.QOpenGLWidget):
 
         self.gl.glColor4f(0.282, 0.235, 0.196, 1.0)
 
+        vertices = []
+        
         for i in range(3):
             angle = 80.0 - i*120.0
             x = 200 * math.cos(math.radians(angle))
             y = 200 * math.sin(math.radians(angle))
-            self.gl.glVertex3d(x, y, -0.05)
+            vertices += [x, y, -0.2]
 
-        self.gl.glEnd()
+        
+        self.gl.glEnableClientState(self.gl.GL_VERTEX_ARRAY)
+        self.gl.glVertexPointer(3, self.gl.GL_INT, 0, vertices)
+        self.gl.glDrawArrays(self.gl.GL_TRIANGLES, 0, 3)
+        self.gl.glDisableClientState(self.gl.GL_VERTEX_ARRAY)
 
         self.gl.glEndList()
 
