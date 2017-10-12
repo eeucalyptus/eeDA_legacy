@@ -11,7 +11,32 @@ class SchematicsLoader:
         pass
     def loadSchematic(self):
         self._openSchematicsFile()
-        return self._parseSchematic()
+        schematic = self._parseSchematic()
+
+        print('schematic='+str(schematic))
+        print('schematic.field='+str(schematic.fields))
+        print('schematic.pages=')
+        for page in schematic.pages:
+            print('\t'+str(page))
+            print('\t\tschematic='+str(page.schematic))
+            print('\t\telements=')
+            for element in page.elements:
+                print('\t\t\t'+str(element))
+                if(type(element) is schematics.Symbol):
+                    print('\t\t\t\tpos='+str(element.pos))
+                    print('\t\t\t\tparts=')
+                    for part in element.parts:
+                        print('\t\t\t\t\t'+str(part).replace('\n', ' '))
+                    print('\t\t\t\tconnectors=')
+                    for connector in element.connectors:
+                        print('\t\t\t\t\t'+str(connector).replace('\n', ' '))
+            if(type(element) is schematics.Wire):
+                print('\t\t\t\tpos='+str(element.pos))
+                print('\t\t\t\tparts=')
+                for part in element.parts:
+                    print('\t\t\t\t\t'+str(part).replace('\n', ' '))
+
+        return schematic
 
     def _openSchematicsFile(self):
         filestream = open(self.path, 'r')
@@ -19,7 +44,27 @@ class SchematicsLoader:
 
         # TODO Implement error handling (not found, no schematics, corrupted, etc)
 
+
         self.schematicnode = filenode.get('schematic', {})
+
+        #if self._checkFileInfo(filenode.get('info', {})):
+        #    self.schematicnode = filenode.get('schematic', {})
+        #else:
+        #    pass
+
+    def _checkFileInfo(self, node):
+        if not node:
+            return False
+        if node.get('type', '') != 'schematics':
+            return False
+        if not self._isVersionCompatible(node.get('version', 0)):
+            return False
+
+        return True
+
+
+    def _isVersionCompatible(self, version):
+        return True
 
     def _parseSchematic(self):
         if not self.schematicnode:
@@ -137,7 +182,7 @@ class SchematicsLoader:
         print('Label!')
 
 
-    def _parseUnknownElement(self, node, page):
+    def _parseUnknownElement(self, node):
         print('Unknown!')
 
     def _parsePolygon(self, node):
@@ -181,26 +226,3 @@ class SchematicsLoader:
 if __name__ == '__main__':
     loader = SchematicsLoader('resources/testschematics.eesc')
     schematic = loader.loadSchematic()
-
-    print('schematic='+str(schematic))
-    print('schematic.field='+str(schematic.fields))
-    print('schematic.pages=')
-    for page in schematic.pages:
-        print('\t'+str(page))
-        print('\t\tschematic='+str(page.schematic))
-        print('\t\telements=')
-        for element in page.elements:
-            print('\t\t\t'+str(element))
-            if(type(element) is schematics.Symbol):
-                print('\t\t\t\tpos='+str(element.pos))
-                print('\t\t\t\tparts=')
-                for part in element.parts:
-                    print('\t\t\t\t\t'+str(part).replace('\n', ' '))
-                print('\t\t\t\tconnectors=')
-                for connector in element.connectors:
-                    print('\t\t\t\t\t'+str(connector).replace('\n', ' '))
-        if(type(element) is schematics.Wire):
-            print('\t\t\t\tpos='+str(element.pos))
-            print('\t\t\t\tparts=')
-            for part in element.parts:
-                print('\t\t\t\t\t'+str(part).replace('\n', ' '))
