@@ -5,4 +5,3 @@ from .schematicscontext import *
 from .junction import *
 from .vector2 import *
 from .polygon import *
-from .pointintriangle import *
