@@ -45,9 +45,21 @@ class Polygon():
             ary.append(i)
         return Polygon(ary)
         
-    def containsPoint(self, point):
-        pass
-    
+    def pointInTriangle(point, triangle):
+        last = 0
+        for i in range(3):
+            p1 = triangle.points[i]
+            p2 = triangle.points[(i + 1) % 3]
+            edge = p2 - p1
+            current = edge.convexityDeterminant(point - p1)
+            if current * last < 0:
+                return False
+            if current * last == 0 and i > 0:   # if the vectors are collinear, check whether the point is between the two triangle vertices
+                if not ((p1.x < point.x < p2.x or p1.x > point.x > p2.x) and (p1.y < point.y < p2.y or p1.y > point.y > p2.y)):
+                    return False
+            last = current
+        return True
+        
     def changeColor(self, color):
         self.color = color
     
@@ -83,6 +95,24 @@ class Polygon():
         
     def scale(self, factor):
         self.points = [point * factor for point in self.points]
+        
+    def isConvex(self):
+        n = len(self.points)
+        lastVertexConvex = None   # stores convexity of last vertex
+        for i in range(n):
+            edge1 = self.points[(i + 1) % n] - self.points[i % n]
+            edge2 = self.points[(i + 2) % n] - self.points[(i + 1) % n]
+            currentVertexConvex = edge1.convexVertex(edge2)
+            if lastVertexConvex != None and currentVertexConvex != lastVertexConvex:
+                return False
+            lastVertexConvex = currentVertexConvex
+        return True
+        
+    def containsPoint(self, point):
+        for tri in self.triangles():
+            if Polygon.pointInTriangle(point, tri):
+                return True
+        return False
         
     def __repr__(self):
         string = "Polygon:"

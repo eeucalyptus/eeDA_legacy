@@ -55,7 +55,33 @@ class Vector2d():
     
     def __repr__(self):
         return "(" + str(self.x) + ", " + str(self.y) + ")"
-
+    
+    def dot(self, other):
+        return self.x * other.x + self.y * other.y
+    
+    def convexVertex(self, other):
+        
+        if self == Vector2d() or other == Vector2d():    # a vertex with a zero-length edge attached should be considered convex
+            return True
+        
+        det = self.x * other.y - self.y * other.x       #  z - component of self cross other, not a determinant in the algebraic sense
+        
+        # if det == 0:                # angle = 0 | Pi
+            # if self.dot(other) > 0: # 0: convex
+            #     return True
+            # else:                   # Pi: concave (for our purposes, at least)
+            #     return False
+        
+        print(det)
+        
+        if det > 0:     # 0 < angle < Pi    : convex
+            return True
+        else:           # Pi < angle < 2Pi  : concave
+            return False
+        
+    def convexityDeterminant(self, other):
+        return self.x * other.y - self.y * other.x
+    
 class Vector2i():
     def __init__(self, x = 0, y = 0):
         self.x = int(x)
@@ -101,3 +127,24 @@ class Vector2i():
     
     def __repr__(self):
         return "(" + str(self.x) + ", " + str(self.y) + ")"
+
+    def convexVertex(self, other):
+        return Vector2d.fromVector2i(self).convexVertex(Vector2d.fromVector2i(other))
+    
+    def convexityDeterminant(self, other):
+        return Vector2d.fromVector2i(self).convexityDeterminant(Vector2d.fromVector2i(other))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

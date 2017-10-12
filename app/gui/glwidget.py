@@ -5,7 +5,7 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 from graphics.common import eeDAcolor
 
 from graphics import GridRenderer, TextRenderer # to be removed
-from data.util import Grid # to be removed
+from data.util import Grid, Polygon # to be removed
 from graphics.common.primitives import PointRenderer
 from PIL import Image, ImageFont, ImageQt, ImageDraw
 
@@ -62,6 +62,11 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.repaint()
         if(event.buttons() == QtCore.Qt.LeftButton):
             pass
+        
+        if self.quadPoly.translated(Vector2d(400, 400)).containsPoint(worldCoords):
+            print("In!")
+        else:
+            print("Out!")
 
     def leaveEvent(self, event):
             self.parent().positionWidget.setText("x= , y=")
@@ -174,6 +179,8 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         return genList
 
     def makeQuad(self):
+        self.quadPoly = Polygon.fromPoints(Vector2d(0, 0), Vector2d(0, 100),
+            Vector2d(100, 100), Vector2d(100, 0))
         self.quadVertices = (0, 0, -1, 0, 100, -1, 100, 100, -1, 100, 0, -1)
         self.quadTexCoords = (0, 0, -1, 0, 1, -1, 1, 1, -1, 1, 0, -1)
         self.texture = QtGui.QOpenGLTexture(QtGui.QImage('resources/side1.png'), True)
