@@ -4,7 +4,6 @@ from .common import eeDAcolor, pMakeCircleArray, pMakeLineArray
 
 class WireRenderer(Renderer):
     
-    WIREWIDTH = 2.0 # actually half the width of the representation
     DEPTH = 1.0
     
     def __init__(self, wire, gl):
@@ -13,6 +12,10 @@ class WireRenderer(Renderer):
         self.callList = self.genSymbolCallList()
         
     def genSymbolCallList(self):
+        
+        self.width = self.wire.style['width'] / 2
+        self.color = self.wire.style['color']
+        
         self.unCon1 = False
         self.unCon2 = False
         
@@ -31,7 +34,7 @@ class WireRenderer(Renderer):
         else:
             self.unCon2 = True
         
-        self.vertices = pMakeLineArray(self.pointAry, Vector2i(), self.WIREWIDTH, self.DEPTH)
+        self.vertices = pMakeLineArray(self.pointAry, Vector2i(), self.width, self.DEPTH)
         
         genList = self.gl.glGenLists(1)
         self.gl.glNewList(genList, self.gl.GL_COMPILE)
@@ -41,7 +44,7 @@ class WireRenderer(Renderer):
             self.renderUnconnected(self.pointAry[0])
         if self.unCon2:
             self.renderUnconnected(self.pointAry[-1])
-        self.setColor(eeDAcolor.WIRE)
+        self.setColor(self.color)
         
         self.gl.glEnableClientState(self.gl.GL_VERTEX_ARRAY)
         self.gl.glVertexPointer(3, self.gl.GL_FLOAT, 0, self.vertices)
@@ -55,7 +58,7 @@ class WireRenderer(Renderer):
     def renderUnconnected(self, pos):
         
         self.gl.glEnableClientState(self.gl.GL_VERTEX_ARRAY)
-        circle = pMakeCircleArray(pos, self.WIREWIDTH * 1.5, self.DEPTH, 30)
+        circle = pMakeCircleArray(pos, self.width * 1.5, self.DEPTH, 30)
         self.gl.glVertexPointer(3, self.gl.GL_FLOAT, 0, circle)
         self.gl.glDrawArrays(self.gl.GL_TRIANGLE_FAN, 0, len(circle) / 3)
         self.gl.glDisableClientState(self.gl.GL_VERTEX_ARRAY)

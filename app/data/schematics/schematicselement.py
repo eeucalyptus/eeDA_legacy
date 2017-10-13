@@ -5,3 +5,6 @@ class SchematicsElement:
         
     def createRenderer(self):
         return None # abstract, to be re-implemented in every subclass that has a renderer.
+    
+    def selected(self, pos):    # re-implement in subclasses
+        return False

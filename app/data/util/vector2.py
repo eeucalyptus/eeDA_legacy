@@ -66,12 +66,6 @@ class Vector2d():
         
         det = self.convexityDeterminant(other)           #  z - component of self cross other, not a determinant in the algebraic sense
         
-        # if det == 0:                # angle = 0 | Pi
-            # if self.dot(other) > 0: # 0: convex
-            #     return True
-            # else:                   # Pi: concave (for our purposes, at least)
-            #     return False
-        
         if det > 0:     # 0 < angle < Pi    : convex
             return True
         else:           # Pi < angle < 2Pi  : concave
@@ -131,7 +125,10 @@ class Vector2i():
     
     def convexityDeterminant(self, other):
         return Vector2d.fromVector2i(self).convexityDeterminant(Vector2d.fromVector2i(other))
-
+    
+    def euDist(self):
+        return Vector2d.fromVector2i(self).euDist()
+    
 
 
 

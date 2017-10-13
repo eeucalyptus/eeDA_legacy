@@ -52,9 +52,10 @@ class Polygon():
             p2 = triangle.points[(i + 1) % 3]
             edge = p2 - p1
             current = edge.convexityDeterminant(point - p1)
+            
             if current * last < 0:
                 return False
-            if current * last == 0 and i > 0:   # if the vectors are collinear, check whether the point is between the two triangle vertices
+            if  i > 0 and current * last == 0:   # if the vectors are collinear, check whether the point is between the two triangle vertices
                 if not ((p1.x < point.x < p2.x or p1.x > point.x > p2.x) and (p1.y < point.y < p2.y or p1.y > point.y > p2.y)):
                     return False
             last = current

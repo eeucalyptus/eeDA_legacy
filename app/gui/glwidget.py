@@ -8,6 +8,8 @@ from graphics import GridRenderer, TextRenderer # to be removed
 from data.util import Grid, Polygon # to be removed
 from graphics.common.primitives import PointRenderer
 from PIL import Image, ImageFont, ImageQt, ImageDraw
+from data.schematics import Wire
+from graphics import WireRenderer
 
 # Be aware that calls to parent() may fail because the parent is now an EditFrame, not the main window -- M
 
@@ -63,7 +65,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         if(event.buttons() == QtCore.Qt.LeftButton):
             pass
         
-        if self.quadPoly.translated(Vector2d(400, 400)).containsPoint(worldCoords):
+        if self.testWire.selected(worldCoords):
             print("In!")
         else:
             print("Out!")
@@ -104,6 +106,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         #self.gl.glCullFace(self.gl.GL_BACK)
         #self.gl.glEnable(self.gl.GL_CULL_FACE)
         self.initGrid()
+        self.initTestWire()
 
     def paintGL(self):
         self.gl.glClear(
@@ -116,6 +119,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glBlendFunc(self.gl.GL_ONE,self.gl.GL_ONE_MINUS_SRC_ALPHA)
         self.gl.glCallList(self.object1)
         self.gl.glCallList(self.object2)
+        self.gl.glCallList(self.testWireList)
         if (self.zoomLevel * max(self.grid.xRes, self.grid.yRes)) > 10: # make grid invisible if it'd render too small.
                                                                         # 10 is an empiric value, may not apply to all resolutions.
             self.gl.glCallList(self.gridRenderer.callList)
@@ -290,3 +294,10 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         snapCoords = self.grid.nearestSnap(pos)
         self.pointList = PointRenderer(self.gl, snapCoords.x, snapCoords.y).genSymbolCallList()
         
+    def initTestWire(self):
+        self.testWire = Wire(None)
+        self.testWire.setPoints([Vector2d(-500, -500),
+            Vector2d(-450, -500), Vector2d(-200, -200), Vector2d(-400, -350)])
+        self.testWire.setConnectors(None, None)
+        self.testWire.setRenderer(WireRenderer(self.testWire, self.gl))
+        self.testWireList = self.testWire.renderer.genSymbolCallList()
