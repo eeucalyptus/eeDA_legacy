@@ -18,29 +18,28 @@ class GridRenderer(Renderer):
         self.gl.glLineWidth(1)
         
         # call some drawing functions
-        
-        self.renderVerticalLine(self.grid.origin.x)
-        self.renderHorizontalLine(self.grid.origin.y)
+        self.lines = []
+        self.addVerticalLine(self.grid.origin.x)
+        self.addHorizontalLine(self.grid.origin.y)
         
         for i in range(5000):
-            self.renderVerticalLine(self.grid.origin.x + self.grid.xRes * i)
-            self.renderVerticalLine(self.grid.origin.x - self.grid.xRes * i)
-            self.renderHorizontalLine(self.grid.origin.y + self.grid.xRes * i)
-            self.renderHorizontalLine(self.grid.origin.y - self.grid.xRes * i)
+            self.addVerticalLine(self.grid.origin.x + self.grid.xRes * i)
+            self.addVerticalLine(self.grid.origin.x - self.grid.xRes * i)
+            self.addHorizontalLine(self.grid.origin.y + self.grid.xRes * i)
+            self.addHorizontalLine(self.grid.origin.y - self.grid.xRes * i)
+        
+        self.gl.glEnableClientState(self.gl.GL_VERTEX_ARRAY)
+        self.gl.glVertexPointer(3, self.gl.GL_FLOAT, 0, self.lines)
+        self.gl.glDrawArrays(self.gl.GL_LINES, 0, len(self.lines) / 3)
+        
         self.gl.glEnable(self.gl.GL_MULTISAMPLE)
         self.gl.glEndList()
         
-        
+        self.gl.glDisableClientState(self.gl.GL_VERTEX_ARRAY)
         return genList
     
-    def renderVerticalLine(self, x):
-        self.gl.glBegin(self.gl.GL_LINES)
-        self.gl.glVertex3d(x, -1000000, -0.02)
-        self.gl.glVertex3d(x, 1000000, -0.02)
-        self.gl.glEnd()
+    def addVerticalLine(self, x):
+        self.lines += [x, -1000000, 1.0, x, 1000000, 1.0]
     
-    def renderHorizontalLine(self, y):
-        self.gl.glBegin(self.gl.GL_LINES)
-        self.gl.glVertex3d(-1000000, y, -0.02)
-        self.gl.glVertex3d(1000000, y, -0.02)
-        self.gl.glEnd()
+    def addHorizontalLine(self, y):
+        self.lines += [-1000000, y, 1.0, 1000000, y, 1.0]

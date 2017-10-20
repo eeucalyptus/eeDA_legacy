@@ -1,8 +1,11 @@
 from . import Renderer
-from data.util import Vector2i
-from .common import eeDAcolor
+from data.util import Vector2i, Vector2d
+from .common import eeDAcolor, pMakeCircleArray, pMakeLineArray
 
 class WireRenderer(Renderer):
+
+    DEPTH = 1.0
+
     def __init__(self, wire, gl):
         super().__init__(gl)
         self.wire = wire
@@ -12,28 +15,31 @@ class WireRenderer(Renderer):
         genList = self.gl.glGenLists(1)
         self.gl.glNewList(genList, self.gl.GL_COMPILE)
 
-        self.gl.glLineWidth(5)
-        self.setColor(eeDAcolor.WIRE)
+        self.width = self.wire.style['width'] / 2
+        self.color = self.wire.style['color']
 
-        self.gl.glBegin(self.gl.GL_LINE_STRIP)
-
+        self.pointAry = []
 
         con0_pos = self.wire.connectors[0].pos
         con1_pos = self.wire.connectors[1].pos
 
-        self.gl.glVertex3i(con0_pos.x, con0_pos.y, 1) # Start point
-
+        self.pointAry.append(self.wire.connectors[0].pos) # Start point
         for point in self.wire.points:
-            self.gl.glVertex3i(point.x, point.y, 1) # Intermediate points
+            self.pointAry.append(point) # Intermediate points
+        self.pointAry.append(self.wire.connectors[1].pos) # End point
 
-        self.gl.glVertex3i(con1_pos.x, con1_pos.y, 1) # End point
-
-        self.gl.glEnd()
+        self.vertices = pMakeLineArray(self.pointAry, Vector2i(), self.width, self.DEPTH)
 
         if not self.wire.connectors[0].other:
-            self.renderUnconnected(con0_pos)
-        if not self.wire.connectors[1].other:
-            self.renderUnconnected(con1_pos)
+            self.renderUnconnected(self.pointAry[0])
+        if not self.wire.connectors[0].other:
+            self.renderUnconnected(self.pointAry[-1])
+        self.setColor(self.color)
+
+        self.gl.glEnableClientState(self.gl.GL_VERTEX_ARRAY)
+        self.gl.glVertexPointer(3, self.gl.GL_FLOAT, 0, self.vertices)
+        self.gl.glDrawArrays(self.gl.GL_TRIANGLE_STRIP, 0, len(self.vertices) / 3)
+        self.gl.glDisableClientState(self.gl.GL_VERTEX_ARRAY)
 
         self.gl.glEndList()
 
@@ -42,10 +48,8 @@ class WireRenderer(Renderer):
     def renderUnconnected(self, pos):
         self.setColor(eeDAcolor.WIRE_UNCONNECTED)
 
-
-        self.gl.glBegin(self.gl.GL_LINES)
-        self.gl.glVertex3i(pos.x - 10, pos.y - 10, 2)
-        self.gl.glVertex3i(pos.x + 10, pos.y + 10, 2)
-        self.gl.glVertex3i(pos.x + 10, pos.y - 10, 2)
-        self.gl.glVertex3i(pos.x - 10, pos.y + 10, 2)
-        self.gl.glEnd()
+        self.gl.glEnableClientState(self.gl.GL_VERTEX_ARRAY)
+        circle = pMakeCircleArray(pos, self.width * 1.5, self.DEPTH, 30)
+        self.gl.glVertexPointer(3, self.gl.GL_FLOAT, 0, circle)
+        self.gl.glDrawArrays(self.gl.GL_TRIANGLE_FAN, 0, len(circle) / 3)
+        self.gl.glDisableClientState(self.gl.GL_VERTEX_ARRAY)

@@ -5,9 +5,11 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 from graphics.common import eeDAcolor
 
 from graphics import GridRenderer, TextRenderer # to be removed
-from data.util import Grid # to be removed
+from data.util import Grid, Polygon # to be removed
 from graphics.common.primitives import PointRenderer
 from PIL import Image, ImageFont, ImageQt, ImageDraw
+from data.schematics import Wire
+from graphics import WireRenderer
 
 # Be aware that calls to parent() may fail because the parent is now an EditFrame, not the main window -- M
 
@@ -65,6 +67,11 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         if(event.buttons() == QtCore.Qt.LeftButton):
             pass
 
+        if self.testWire.selected(worldCoords):
+            print("In!")
+        else:
+            print("Out!")
+
     def leaveEvent(self, event):
             self.parent().positionWidget.setText("x= , y=")
             self.pointList = None
@@ -101,6 +108,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         #self.gl.glCullFace(self.gl.GL_BACK)
         #self.gl.glEnable(self.gl.GL_CULL_FACE)
         self.initGrid()
+        self.initTestWire()
 
     def paintGL(self):
         self.gl.glClear(
@@ -161,22 +169,36 @@ class GLWidget(QtWidgets.QOpenGLWidget):
 
         self.gl.glColor4f(0.282, 0.235, 0.196, 1.0)
 
+        vertices = []
+
         for i in range(3):
             angle = 80.0 - i*120.0
             x = 200 * math.cos(math.radians(angle))
             y = 200 * math.sin(math.radians(angle))
-            self.gl.glVertex3d(x, y, -0.05)
+            vertices += [x, y, -0.2]
 
-        self.gl.glEnd()
+
+        self.gl.glEnableClientState(self.gl.GL_VERTEX_ARRAY)
+        self.gl.glVertexPointer(3, self.gl.GL_INT, 0, vertices)
+        self.gl.glDrawArrays(self.gl.GL_TRIANGLES, 0, 3)
+        self.gl.glDisableClientState(self.gl.GL_VERTEX_ARRAY)
 
         self.gl.glEndList()
 
         return genList
 
     def makeQuad(self):
+        self.quadPoly = Polygon.fromPoints(Vector2d(0, 0), Vector2d(0, 100),
+            Vector2d(100, 100), Vector2d(100, 0))
+        self.quadVertices = (0, 0, -1, 0, 100, -1, 100, 100, -1, 100, 0, -1)
+        self.quadTexCoords = (0, 0, -1, 0, 1, -1, 1, 1, -1, 1, 0, -1)
+        self.texture = QtGui.QOpenGLTexture(QtGui.QImage('resources/side1.png'), True)
+        self.texture.setMinMagFilters(QtGui.QOpenGLTexture.LinearMipMapLinear, QtGui.QOpenGLTexture.Linear)
+        # if these lines can stay above the call to glGenLists(), performance should be better, right?
+        # every renderer should be able to store their own vertex and texture arrays (or tuples) and textures.
+
         genList = self.gl.glGenLists(1)
         self.gl.glNewList(genList, self.gl.GL_COMPILE)
-
 
         self.gl.glMatrixMode(self.gl.GL_MODELVIEW)
         self.gl.glPushMatrix()
@@ -184,27 +206,20 @@ class GLWidget(QtWidgets.QOpenGLWidget):
 
         self.gl.glColor4f(1.0, 1.0, 1.0, 1.0)
 
-        self.texture = QtGui.QOpenGLTexture(QtGui.QImage('resources/side1.png'), True)
-        self.texture.setMinMagFilters(QtGui.QOpenGLTexture.LinearMipMapLinear, QtGui.QOpenGLTexture.Linear)
         self.texture.bind()
 
+        self.gl.glEnableClientState(self.gl.GL_VERTEX_ARRAY)
+        self.gl.glEnableClientState(self.gl.GL_TEXTURE_COORD_ARRAY)
+        self.gl.glVertexPointer(3, self.gl.GL_INT, 0, self.quadVertices)
+        self.gl.glTexCoordPointer(3, self.gl.GL_INT, 0, self.quadTexCoords)
+
         self.gl.glEnable(self.gl.GL_TEXTURE_2D)
-        self.gl.glBegin(self.gl.GL_QUADS)
-
-        self.gl.glTexCoord3d(0, 0, -1)
-        self.gl.glVertex3d(0, 0, -1)
-
-        self.gl.glTexCoord3d(0, 1, -1)
-        self.gl.glVertex3d(0, 100, -1)
-
-        self.gl.glTexCoord3d(1, 1, -1)
-        self.gl.glVertex3d(100, 100, -1)
-
-        self.gl.glTexCoord3d(1, 0, -1)
-        self.gl.glVertex3d(100, 0, -1)
-
-        self.gl.glEnd()
+        self.gl.glDrawArrays(self.gl.GL_QUADS, 0, 4)
         self.gl.glDisable(self.gl.GL_TEXTURE_2D)
+
+        self.gl.glDisableClientState(self.gl.GL_VERTEX_ARRAY)
+        self.gl.glDisableClientState(self.gl.GL_TEXTURE_COORD_ARRAY)
+
         self.texture.release()
         self.gl.glPopMatrix()
 
@@ -283,3 +298,10 @@ class GLWidget(QtWidgets.QOpenGLWidget):
     def renderMouseSnap(self, pos):
         snapCoords = self.grid.nearestSnap(pos)
         self.pointList = PointRenderer(self.gl, snapCoords.x, snapCoords.y).genSymbolCallList()
+
+    def initTestWire(self):
+        self.testWire = Wire(None)
+        self.testWire.setPoints([Vector2d(-500, -500),
+            Vector2d(-450, -500), Vector2d(-200, -200), Vector2d(-400, -350)])
+        self.testWire.initRenderer(self.gl)
+        self.testWireList = self.testWire.renderer.callList

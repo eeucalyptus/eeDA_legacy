@@ -188,8 +188,13 @@ class MyWindow(QtWidgets.QMainWindow):
         Vector2i(50, 100),\
         Vector2i(100, 200),\
         Vector2i(150, 0)])
-        testWire.setConnectors(WireConnector(None, Vector2i(-100, 0)), None)
-
+# <<<<<<< HEAD
+#         testWire.setConnectors(WireConnector(None, Vector2i(-100, 0)), None)
+#
+# =======
+#         testWire.setConnectors(WireConnector(testWire, Vector2i(-100, 0)), None)
+#
+# >>>>>>> master
         debugAct = self.menuBar().addAction('Wire')
         debugAct.triggered.connect(lambda: self.debugWire(testWire))
 
@@ -203,6 +208,11 @@ class MyWindow(QtWidgets.QMainWindow):
         Vector2i(0, -50),\
         Vector2i(-75, -150),\
         ))
+        lstrip = Polygon.fromPoints(Vector2i(0, 0),
+            Vector2i(0, 50), Vector2i(50, 0), Vector2i(0, 0), Vector2i(0, 50))
+        lstrip.scale(2)
+        testSymbol.addPolygon(lstrip)
+        testSymbol.pos = Vector2i(300, 200)
         debugAct2 = self.menuBar().addAction('Symbol')
         debugAct2.triggered.connect(lambda: self.debugSymbol(testSymbol))
 
