@@ -26,11 +26,8 @@ class Symbol(SchematicsElement):
 
         self.pos = Vector2i()
 
-        # graphics
-        self.polygons = []
-
     def initRenderer(self, gl):
         self.renderer = graphics.SymbolRenderer(self, gl)
 
     def addPolygon(self, poly):
-        self.polygons.append(poly)
+        self.parts.append(poly)

@@ -37,3 +37,6 @@ class Wire(SchematicsElement):
 
     def isConnected(self, connection):
         return self.connectors[0].isConnected(connection) | self.connectors[1].isConnected(connection)
+
+    def __repr__(self):
+        return 'Wire (uuid=%s, numPoints=%d, start=%s, end=%s)' % (self.uuid, len(self.points)+2, str(self.connectors[0].pos), str(self.connectors[1].pos))

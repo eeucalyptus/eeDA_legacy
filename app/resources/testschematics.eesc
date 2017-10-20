@@ -13,7 +13,7 @@ schematic:
               other: asdf-123456-7
             - type: polygon
               uuid: asdf-123456-5
-              verticies: [[0.0, 0.0], [0.0, 1.0], [1.0, 1.0], [1.0, 0.0]]
+              verticies: [[0.0, 0.0], [0.0, 100.0], [100.0, 100.0], [100.0, 0.0]]
             - type: text
               uuid: asdf-123456-6
               pos: [0.0, -1.0]
@@ -24,6 +24,14 @@ schematic:
           others: [asdf-123456-4]
         - type: wire
           uuid: asdf-123456-8
+          points: [[300.0, 100.0]]
+          connectors:
+            - uuid: asdf-123456-12
+              other:
+              pos: [300.0, 0.0]
+            - uuid: asdf-123456-13
+              other:
+              pos: [400.0, 0.0]
         - type: Label
           uuid: asdf-123456-9
           text: VDD

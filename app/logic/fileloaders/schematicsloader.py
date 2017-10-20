@@ -153,8 +153,29 @@ class SchematicsLoader:
         return connector
 
     def _parseWireElement(self, node):
-        #wire = schematics.Wire()
         print('Wire!')
+        if node:
+            wire = schematics.Wire(self._currentPage)
+            wire.uuid = node.get('uuid', '')
+            for point in node.get('points', []):
+                wire.points.append(util.Vector2i(int(point[0]), int(point[1])))
+            connectors_node = node.get('connectors', {})
+            if connectors_node:
+                wire.connectors[0] = self._parseWireConnector(connectors_node[0], wire)
+                wire.connectors[1] = self._parseWireConnector(connectors_node[1], wire)
+            return wire
+        else:
+            return None
+
+    def _parseWireConnector(self, node, wire):
+        connector = schematics.WireConnector(wire)
+        connector.uuid = node.get('uuid', '')
+        connector.pos = util.Vector2i(node.get('pos', [0, 0])[0],
+            node.get('pos', [0, 0])[1])
+        self._pageConnectorsByUuid[connector.uuid] = connector
+        self._pageConnectorOtherUuids[connector] = [node.get('other', 'NONE')]
+
+        return connector
 
 
     def _parseDecorationElement(self, node):
