@@ -12,6 +12,7 @@ import uuid
 from data.util import Vector2i
 from .schematicsconnector import SchematicsConnector
 from .schematicselement import SchematicsElement
+import graphics
 
 class Junction(SchematicsElement, SchematicsConnector):
     def __init__(self, page):
@@ -21,6 +22,8 @@ class Junction(SchematicsElement, SchematicsConnector):
         self.others = []
         self.pos = Vector2i()
 
+    def initRenderer(self, gl):
+        self.renderer = graphics.JunctionRenderer(self, gl)
 
     def fromConnector(connector):
         newJunction = Junction(connector.parent.page)

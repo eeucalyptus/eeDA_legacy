@@ -15,13 +15,18 @@ import uuid
 
 from .schematicsconnector import SchematicsConnector
 from .schematicselement import SchematicsElement
+import graphics
 
 class Label(SchematicsElement, SchematicsConnector):
     def __init__(self, page):
         SchematicsElement.__init__(self, page)
         self.uuid = str(uuid.uuid4())
-        
+
         self.text = ''
         self.globalLabel = False
-        
+
         self.pos = Vector2i()
+
+
+    def initRenderer(self, gl):
+        self.renderer = graphics.LabelRenderer(self, gl)

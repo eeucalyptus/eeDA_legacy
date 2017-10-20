@@ -2,6 +2,7 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 from .glwidget import GLWidget
 from .editframe import EditFrame
 from .treeview import TreeViewDock
+import logic
 
 #=====
 # debug only
@@ -22,9 +23,11 @@ class MyWindow(QtWidgets.QMainWindow):
 
         self.runDebug() # placeholder for misc debug scripts
 
-    def openInNewTab(self, path):
-        schematicsLoader = fileloaders.SchematicsLoader(path)
-        schematics = schematicsLoader.loadSchematic()
+    def openFile(self, path):
+        self.schematicscontext = logic.SchematicsContext(path)
+        self.schematicscontext.initRenderers(self.glWidget.gl)
+        self.glWidget.contextRenderer = self.schematicscontext.contextRenderer
+        self.glWidget.repaint()
 
     def initUI(self):
         # ----- Display format ----- #
@@ -173,6 +176,9 @@ class MyWindow(QtWidgets.QMainWindow):
     def toggleCentralWidget(self):
         pass
 
+    def renderSchematicsContext():
+        graphics.RenderSchematicsContext(self.glWidget, self.schematicsContext)
+
     def runDebug(self):
         # -- wire
         testWire = Wire(None)
@@ -214,19 +220,19 @@ class MyWindow(QtWidgets.QMainWindow):
         debugAct5.triggered.connect(lambda: self.debugText())
 
     def debugWire(self, wire):
-        wire.setRenderer(WireRenderer(wire, self.glWidget.gl))
+        wire.initRenderer(self.glWidget.gl)
         self.glWidget.setInject(wire.renderer.genSymbolCallList())
         self.glWidget.repaint()
         print("Success: wire rendering")
 
     def debugSymbol(self, symbol):
-        symbol.setRenderer(SymbolRenderer(symbol, self.glWidget.gl))
+        symbol.initRenderer(self.glWidget.gl)
         self.glWidget.setInject(symbol.renderer.genSymbolCallList())
         self.glWidget.repaint()
         print("Success: symbol rendering")
 
     def debugJunction(self, junction):
-        junction.setRenderer(JunctionRenderer(junction, self.glWidget.gl))
+        junction.initRenderer(self.glWidget.gl)
         self.glWidget.setInject(junction.renderer.genSymbolCallList())
         self.glWidget.repaint()
         print("Success: junction rendering")

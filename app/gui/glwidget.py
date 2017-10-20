@@ -31,6 +31,8 @@ class GLWidget(QtWidgets.QOpenGLWidget):
 
         self.pointList = None # debug
 
+        self.contextRenderer = None
+
 
     def mousePressEvent(self, event):
         if(event.buttons() == QtCore.Qt.RightButton):
@@ -101,25 +103,28 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.initGrid()
 
     def paintGL(self):
-        self.gl.glClear(
-                self.gl.GL_COLOR_BUFFER_BIT | self.gl.GL_DEPTH_BUFFER_BIT)
-        self.gl.glLoadIdentity()
-        self.gl.glTranslated(self.cameraposition.x, self.cameraposition.y, -10.0)
-        self.zoomGL()
-        self.gl.glEnable(self.gl.GL_MULTISAMPLE)
-        self.gl.glEnable(self.gl.GL_BLEND)
-        self.gl.glBlendFunc(self.gl.GL_ONE,self.gl.GL_ONE_MINUS_SRC_ALPHA)
-        self.gl.glCallList(self.object1)
-        self.gl.glCallList(self.object2)
-        if (self.zoomLevel * max(self.grid.xRes, self.grid.yRes)) > 10: # make grid invisible if it'd render too small.
-                                                                        # 10 is an empiric value, may not apply to all resolutions.
-            self.gl.glCallList(self.gridRenderer.callList)
-        if self.pointList != None:
-            self.gl.glCallList(self.pointList)
-        if self.injectedList != None:
-            self.gl.glCallList(self.injectedList)
-        self.gl.glDisable(self.gl.GL_BLEND)
-        self.gl.glDisable(self.gl.GL_MULTISAMPLE)
+        if self.contextRenderer:
+            self.contextRenderer.render()
+        else:
+            self.gl.glClear(
+                    self.gl.GL_COLOR_BUFFER_BIT | self.gl.GL_DEPTH_BUFFER_BIT)
+            self.gl.glLoadIdentity()
+            self.gl.glTranslated(self.cameraposition.x, self.cameraposition.y, -10.0)
+            self.zoomGL()
+            self.gl.glEnable(self.gl.GL_MULTISAMPLE)
+            self.gl.glEnable(self.gl.GL_BLEND)
+            self.gl.glBlendFunc(self.gl.GL_ONE,self.gl.GL_ONE_MINUS_SRC_ALPHA)
+            self.gl.glCallList(self.object1)
+            self.gl.glCallList(self.object2)
+            if (self.zoomLevel * max(self.grid.xRes, self.grid.yRes)) > 10: # make grid invisible if it'd render too small.
+                                                                            # 10 is an empiric value, may not apply to all resolutions.
+                self.gl.glCallList(self.gridRenderer.callList)
+            if self.pointList != None:
+                self.gl.glCallList(self.pointList)
+            if self.injectedList != None:
+                self.gl.glCallList(self.injectedList)
+            self.gl.glDisable(self.gl.GL_BLEND)
+            self.gl.glDisable(self.gl.GL_MULTISAMPLE)
 
     def resizeGL(self, width, height):
         side = min(width, height)
@@ -203,7 +208,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.glPopMatrix()
 
         self.gl.glEndList()
-        
+
         return genList
 
     def initContextMenu(self):
@@ -277,4 +282,3 @@ class GLWidget(QtWidgets.QOpenGLWidget):
     def renderMouseSnap(self, pos):
         snapCoords = self.grid.nearestSnap(pos)
         self.pointList = PointRenderer(self.gl, snapCoords.x, snapCoords.y).genSymbolCallList()
-        

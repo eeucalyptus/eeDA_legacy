@@ -6,20 +6,20 @@ class WireRenderer(Renderer):
     def __init__(self, wire, gl):
         super().__init__(gl)
         self.wire = wire
-        self.callList = self.genSymbolCallList()
-        
-    def genSymbolCallList(self):
+        self.callList = self.genCallList()
+
+    def _genCallList(self):
         genList = self.gl.glGenLists(1)
         self.gl.glNewList(genList, self.gl.GL_COMPILE)
         self.setColor(eeDAcolor.WIRE)
-        
+
         # TODO: Implement wire rendering
         # Let's try and do this, shall we?
         # It's gonna be a bumpy ride -- M
         self.gl.glLineWidth(5)
-        
+
         self.gl.glBegin(self.gl.GL_LINES)
-        
+
         # ----- begin drawing
         if self.wire.connectors[0] != None:                 # check whether there is a connector 1
             point1 = self.wire.connectors[0].pos            # true: set it as point 1
@@ -32,10 +32,10 @@ class WireRenderer(Renderer):
                                                                 # in this branch, the wire is a straight line
                 self.gl.glVertex3i(point1.x, point1.y, 1)
                 self.gl.glVertex3i(point2.x, point2.y, 1)
-                
+
                 self.gl.glEnd()
                 self.gl.glEndList()
-                
+
                 return genList
             else:                                               # if there is only one connector at all, only render unconnected symbol; return an empty genList
                 self.renderUnconnected(self.wire.connectors[0].pos)
@@ -53,14 +53,14 @@ class WireRenderer(Renderer):
                 self.gl.glEnd()                             # at this point, the work is done and the genList can be returned
                 self.gl.glEndList()
                 return genList
-        
-        
+
+
         for i in range(0, len(self.wire.points)-1):         # draw all the intermediate lines
             point1 = self.wire.points[i]
             point2 = self.wire.points[i+1]
             self.gl.glVertex3i(point1.x, point1.y, 1)
             self.gl.glVertex3i(point2.x, point2.y, 1)
-        
+
         if self.wire.connectors[1] != None:                 # if there is a second connector, do draw a connection
                                                             # note that if there are no intermediate points, this branch will not be reached
             point1 = self.wire.points[-1]
@@ -69,12 +69,12 @@ class WireRenderer(Renderer):
             self.gl.glVertex3i(point2.x, point2.y, 1)
         else:
             self.renderUnconnected(self.wire.points[-1])         # this branch should only be reached if there are intermediate points. I hope.
-        
+
         self.gl.glEnd()
         self.gl.glEndList()
 
         return genList
-    
+
     def renderUnconnected(self, pos):
         self.setColor(eeDAcolor.WIRE_UNCONNECTED)
         self.gl.glVertex3i(pos.x - 10, pos.y - 10, 1.5)

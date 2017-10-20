@@ -6,16 +6,16 @@ class SymbolRenderer(Renderer):
     def __init__(self, symbol, gl):
         super().__init__(gl)
         self.symbol = symbol
-        self.callList = self.genSymbolCallList()
-        
-    def genSymbolCallList(self):
+        self.callList = self._genCallList()
+
+    def _genCallList(self):
         genList = self.gl.glGenLists(1)
         self.gl.glNewList(genList, self.gl.GL_COMPILE)
-        
+
         self.setColor(eeDAcolor.SYMBOL)
-        
+
         # TODO: Replace dummy renderer
-        
+
         # DUMMY
         self.gl.glLineWidth(2.5)
         for polygon in self.symbol.polygons:
@@ -24,8 +24,8 @@ class SymbolRenderer(Renderer):
                 self.gl.glVertex3d(vertex.x, vertex.y, 0)
             self.gl.glEnd()
         # DUMMY END
-        
-        
+
+
         self.gl.glEndList()
 
         return genList
