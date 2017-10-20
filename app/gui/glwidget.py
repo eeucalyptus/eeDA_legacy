@@ -68,9 +68,9 @@ class GLWidget(QtWidgets.QOpenGLWidget):
             pass
 
         if self.testWire.selected(worldCoords):
-            print("In!")
+            print(str(worldCoords) + " In!")
         else:
-            print("Out!")
+            print(str(worldCoords) + " Out!")
 
     def leaveEvent(self, event):
             self.parent().positionWidget.setText("x= , y=")
@@ -125,6 +125,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         else:
             self.gl.glCallList(self.object1)
             self.gl.glCallList(self.object2)
+            self.gl.glCallList(self.testWireList)
             if (self.zoomLevel * max(self.grid.xRes, self.grid.yRes)) > 10: # make grid invisible if it'd render too small.
                                                                             # 10 is an empiric value, may not apply to all resolutions.
                 self.gl.glCallList(self.gridRenderer.callList)
@@ -301,7 +302,8 @@ class GLWidget(QtWidgets.QOpenGLWidget):
 
     def initTestWire(self):
         self.testWire = Wire(None)
-        self.testWire.setPoints([Vector2d(-500, -500),
-            Vector2d(-450, -500), Vector2d(-200, -200), Vector2d(-400, -350)])
+        self.testWire.connectors[0].pos = Vector2d(-500, -500)
+        self.testWire.connectors[1].pos = Vector2d(-400, -350)
+        self.testWire.setPoints([Vector2d(-450, -500), Vector2d(-200, -200)])
         self.testWire.initRenderer(self.gl)
         self.testWireList = self.testWire.renderer.callList

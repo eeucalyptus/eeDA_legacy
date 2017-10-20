@@ -183,11 +183,12 @@ class MyWindow(QtWidgets.QMainWindow):
         # -- wire
         testWire = Wire(None)
         testWire.setPoints([\
-        Vector2i(-50, 0),\
         Vector2i(0, 200),\
         Vector2i(50, 100),\
-        Vector2i(100, 200),\
-        Vector2i(150, 0)])
+        Vector2i(100, 200)])
+
+        testWire.connectors[0].pos = Vector2i(-50, 0)
+        testWire.connectors[1].pos = Vector2i(150, 0)
 # <<<<<<< HEAD
 #         testWire.setConnectors(WireConnector(None, Vector2i(-100, 0)), None)
 #
@@ -208,10 +209,6 @@ class MyWindow(QtWidgets.QMainWindow):
         Vector2i(0, -50),\
         Vector2i(-75, -150),\
         ))
-        lstrip = Polygon.fromPoints(Vector2i(0, 0),
-            Vector2i(0, 50), Vector2i(50, 0), Vector2i(0, 0), Vector2i(0, 50))
-        lstrip.scale(2)
-        testSymbol.addPolygon(lstrip)
         testSymbol.pos = Vector2i(300, 200)
         debugAct2 = self.menuBar().addAction('Symbol')
         debugAct2.triggered.connect(lambda: self.debugSymbol(testSymbol))
@@ -231,25 +228,26 @@ class MyWindow(QtWidgets.QMainWindow):
 
     def debugWire(self, wire):
         wire.initRenderer(self.glWidget.gl)
-        self.glWidget.setInject(wire.renderer.genSymbolCallList())
+        self.glWidget.setInject(wire.renderer.callList)
         self.glWidget.repaint()
         print("Success: wire rendering")
 
     def debugSymbol(self, symbol):
+        print(symbol.parts)
         symbol.initRenderer(self.glWidget.gl)
-        self.glWidget.setInject(symbol.renderer.genSymbolCallList())
+        self.glWidget.setInject(symbol.renderer.callList)
         self.glWidget.repaint()
         print("Success: symbol rendering")
 
     def debugJunction(self, junction):
         junction.initRenderer(self.glWidget.gl)
-        self.glWidget.setInject(junction.renderer.genSymbolCallList())
+        self.glWidget.setInject(junction.renderer.callList)
         self.glWidget.repaint()
         print("Success: junction rendering")
 
     def debugRhino(self):
         renderer = RhinocerosRenderer(self.glWidget.gl)
-        self.glWidget.setInject(renderer.genSymbolCallList())
+        self.glWidget.setInject(renderer.callList)
         self.glWidget.repaint()
 
     def debugText(self):
