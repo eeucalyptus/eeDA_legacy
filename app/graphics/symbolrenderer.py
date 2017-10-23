@@ -24,7 +24,7 @@ class SymbolRenderer(Renderer):
                 self.gl.glDrawArrays(self.gl.GL_TRIANGLES, 0, len(vertices) / 3)
 
         self.gl.glDisableClientState(self.gl.GL_VERTEX_ARRAY)
-        
+
         self.gl.glEndList()
 
         return genList

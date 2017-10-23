@@ -180,42 +180,11 @@ class MyWindow(QtWidgets.QMainWindow):
         graphics.RenderSchematicsContext(self.glWidget, self.schematicsContext)
 
     def runDebug(self):
-        # -- wire
-        testWire = Wire(None)
-        testWire.setPoints([\
-        Vector2i(0, 200),\
-        Vector2i(50, 100),\
-        Vector2i(100, 200)])
-
-        testWire.connectors[0].pos = Vector2i(-50, 0)
-        testWire.connectors[1].pos = Vector2i(150, 0)
-# <<<<<<< HEAD
-#         testWire.setConnectors(WireConnector(None, Vector2i(-100, 0)), None)
-#
-# =======
-#         testWire.setConnectors(WireConnector(testWire, Vector2i(-100, 0)), None)
-#
-# >>>>>>> master
-        debugAct = self.menuBar().addAction('Wire')
+        showWire = self.debugMenu.addAction('Wire')
         debugAct.triggered.connect(lambda: self.debugWire(testWire))
 
-
-        # -- symbol
-        testSymbol = Symbol(None, None)
-        testSymbol.addPolygon(Polygon.fromPoints(\
-        Vector2i(-100, -100),\
-        Vector2i(-100, 0),\
-        Vector2i(0, 0),\
-        Vector2i(0, -50),\
-        Vector2i(-75, -150),\
-        ))
-        testSymbol.pos = Vector2i(300, 200)
         debugAct2 = self.menuBar().addAction('Symbol')
-        debugAct2.triggered.connect(lambda: self.debugSymbol(testSymbol))
-
-        # -- junction
-        testJunction = Junction(None)
-        testJunction.setPos(Vector2i(500, 500))
+        debugAct2.triggered.connect(lambda: self.debugSymbol())
 
         debugAct3 = self.menuBar().addAction('Junction')
         debugAct3.triggered.connect(lambda: self.debugJunction(testJunction))
@@ -232,13 +201,6 @@ class MyWindow(QtWidgets.QMainWindow):
         self.glWidget.repaint()
         print("Success: wire rendering")
 
-    def debugSymbol(self, symbol):
-        print(symbol.parts)
-        symbol.initRenderer(self.glWidget.gl)
-        self.glWidget.setInject(symbol.renderer.callList)
-        self.glWidget.repaint()
-        print("Success: symbol rendering")
-
     def debugJunction(self, junction):
         junction.initRenderer(self.glWidget.gl)
         self.glWidget.setInject(junction.renderer.callList)
@@ -246,7 +208,6 @@ class MyWindow(QtWidgets.QMainWindow):
         print("Success: junction rendering")
 
     def debugRhino(self):
-        renderer = RhinocerosRenderer(self.glWidget.gl)
         self.glWidget.setInject(renderer.callList)
         self.glWidget.repaint()
 
