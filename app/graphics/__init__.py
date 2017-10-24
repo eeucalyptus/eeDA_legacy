@@ -6,3 +6,4 @@ from .rhinocerosrenderer import *
 from .gridrenderer import *
 from .textrenderer import *
 from .schmaticscontextrenderer import *
+from .testcontextrenderer import *

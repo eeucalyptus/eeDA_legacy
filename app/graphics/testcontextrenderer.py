@@ -1,33 +1,39 @@
-from data import schematics
-
+import data
+from data.util import Vector2i
 from .contextrenderer import ContextRenderer
+import graphics
 import gui.util
 
 class TestContextRenderer(ContextRenderer):
+    def __init__(self, glWidget):
+        self.glWidget = glWidget
+        self.gl = glWidget.gl
+        self._symbol = self._makeSymbol()
+        self._symbolRenderer = self._symbol.renderer
+        self._showSymbol = False
 
-    def __init__(self, schematicsContext, gl):
-         self.gl = gl
+        self._wire = self._makeWire()
+        self._wireRenderer = self._wire.renderer
+        self._showWire = False
 
-         self._symbol = self._makeSymbol()
-         self._symbolRenderer = self._symbol.renderer
-         self.showSymbol = False
+        self._junction = self._makeJunction()
+        self._junctionRenderer = self._junction.renderer
+        self._showJunction = False
 
-         self._wire = self._makeWire()
-         self._wireRenderer = self._wire.renderer
-         self.showWire = False
+        self._rhinoRenderer = self._makeRhino()
+        self._showRhino = False
 
-         self._junction = self._makeJunction()
-         self._junctionRenderer = self._junction.renderer
-         self.showJunction = False
-
-         self._rhinoRenderer = self._makeRhino()
-         self.showRhino = False
+        self._showText = False
 
     def render(self):
-        self._symbolRenderer.render()
-        self._wireRenderer.render()
-        self._junctionRenderer.render()
-        self._rhinoRenderer.render()
+        if self._showSymbol:
+            self._symbolRenderer.render()
+        if self._showWire:
+            self._wireRenderer.render()
+        if self._showJunction:
+            self._junctionRenderer.render()
+        if self._showRhino:
+            self._rhinoRenderer.render()
 
     def _makeTriangle(self):
         genList = self.gl.glGenLists(1)
@@ -95,8 +101,8 @@ class TestContextRenderer(ContextRenderer):
 
     def _makeSymbol(self):
         # -- symbol
-        symbol = Symbol(None, None)
-        symbol.addPolygon(Polygon.fromPoints(\
+        symbol = data.schematics.Symbol(None, None)
+        symbol.addPolygon(data.util.Polygon.fromPoints(\
         Vector2i(-100, -100),\
         Vector2i(-100, 0),\
         Vector2i(0, 0),\
@@ -105,12 +111,12 @@ class TestContextRenderer(ContextRenderer):
         ))
         symbol.pos = Vector2i(300, 200)
 
-        symbol.initRenderer(self.glWidget.gl)
+        symbol.initRenderer(self.gl)
 
         return symbol
 
     def _makeWire(self):
-        testWire = Wire(None)
+        testWire = data.schematics.Wire(None)
         testWire.setPoints([\
         Vector2i(0, 200),\
         Vector2i(50, 100),\
@@ -119,15 +125,18 @@ class TestContextRenderer(ContextRenderer):
         testWire.connectors[0].pos = Vector2i(-50, 0)
         testWire.connectors[1].pos = Vector2i(150, 0)
 
+        testWire.initRenderer(self.gl)
+
         return testWire
 
     def _makeJunction(self):
-        testJunction = Junction(None)
+        testJunction = data.schematics.Junction(None)
         testJunction.setPos(Vector2i(500, 500))
+        testJunction.initRenderer(self.gl)
         return testJunction
 
     def _makeRhino(self):
-        renderer = RhinocerosRenderer(self.glWidget.gl)
+        renderer = graphics.RhinocerosRenderer(self.gl)
         return renderer
 
     def save_handler(self):
@@ -138,3 +147,49 @@ class TestContextRenderer(ContextRenderer):
 
     def fileInfo_handler(self):
             gui.util.UserMessage("This is a testing context")
+
+    def showWire(self):
+        self._showWire = True
+        self._showSymbol = False
+        self._showSymbol = False
+        self._showJunction = False
+        self._showRhino = False
+        self._showText = False
+
+        self.glWidget.repaint()
+
+    def showSymbol(self):
+        self._showWire = False
+        self._showSymbol = True
+        self._showJunction = False
+        self._showRhino = False
+        self._showText = False
+
+        self.glWidget.repaint()
+
+    def showJunction(self):
+        self._showWire = False
+        self._showSymbol = False
+        self._showJunction = True
+        self._showRhino = False
+        self._showText = False
+
+        self.glWidget.repaint()
+
+    def showRhino(self):
+        self._showWire = False
+        self._showSymbol = False
+        self._showJunction = False
+        self._showRhino = True
+        self._showText = False
+
+        self.glWidget.repaint()
+
+    def showText(self):
+        self._showWire = False
+        self._showSymbol = False
+        self._showJunction = False
+        self._showRhino = False
+        self._showText = True
+
+        self.glWidget.repaint()

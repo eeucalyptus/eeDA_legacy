@@ -99,8 +99,6 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         self.gl.initializeOpenGLFunctions()
 
         self.gl.glClearColor(*eeDAcolor.SCM_BACKGROUND)
-        self.object1 = self.makeTriangle()
-        self.object2 = self.makeQuad()
         self.gl.glShadeModel(self.gl.GL_FLAT)
         self.gl.glEnable(self.gl.GL_DEPTH_TEST)
         self.gl.glEnable(self.gl.GL_BLEND)
@@ -123,16 +121,9 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         if self.contextRenderer:
             self.contextRenderer.render()
         else:
-            self.gl.glCallList(self.object1)
-            self.gl.glCallList(self.object2)
-            self.gl.glCallList(self.testWireList)
             if (self.zoomLevel * max(self.grid.xRes, self.grid.yRes)) > 10: # make grid invisible if it'd render too small.
                                                                             # 10 is an empiric value, may not apply to all resolutions.
                 self.gl.glCallList(self.gridRenderer.callList)
-            if self.pointList != None:
-                self.gl.glCallList(self.pointList)
-            if self.injectedList != None:
-                self.gl.glCallList(self.injectedList)
         self.gl.glDisable(self.gl.GL_BLEND)
         self.gl.glDisable(self.gl.GL_MULTISAMPLE)
 

@@ -1,3 +1,3 @@
 class ContextRenderer:
-    def render(self, gl):
+    def render(self):
         pass

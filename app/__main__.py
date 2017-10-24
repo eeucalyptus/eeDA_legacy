@@ -28,7 +28,10 @@ if __name__=='__main__':
     w.showMaximized()
 
     if len(sys.argv) > 1:
-        w.openFile(sys.argv[1])
+        if '--debug' in sys.argv:
+            w.runDebug()
+        else:
+            w.openFile(sys.argv[1])
 
     if (sys.flags.interactive == False):
         sys.exit(app.exec_())
