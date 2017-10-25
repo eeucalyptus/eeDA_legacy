@@ -3,13 +3,10 @@ from data.util import Vector2d, Vector2i
 from .shortcut import Shortcut
 from PyQt5 import QtWidgets, QtGui, QtCore
 from graphics.common import eeDAcolor
-
-from graphics import GridRenderer, TextRenderer # to be removed
 from data.util import Grid, Polygon # to be removed
-from graphics.common.primitives import PointRenderer
+from graphics.drawables import GridDrawable
 from PIL import Image, ImageFont, ImageQt, ImageDraw
 from data.schematics import Wire
-from graphics import WireRenderer
 
 # Be aware that calls to parent() may fail because the parent is now an EditFrame, not the main window -- M
 
@@ -123,7 +120,7 @@ class GLWidget(QtWidgets.QOpenGLWidget):
         else:
             if (self.zoomLevel * max(self.grid.xRes, self.grid.yRes)) > 10: # make grid invisible if it'd render too small.
                                                                             # 10 is an empiric value, may not apply to all resolutions.
-                self.gl.glCallList(self.gridRenderer.callList)
+                self.gl.glCallList(self.GridDrawable.callList)
         self.gl.glDisable(self.gl.GL_BLEND)
         self.gl.glDisable(self.gl.GL_MULTISAMPLE)
 
@@ -203,13 +200,13 @@ class GLWidget(QtWidgets.QOpenGLWidget):
 
     def initGrid(self):
         self.grid = self.makeGrid()
-        self.gridRenderer = self.makeGridRenderer(self.grid)
+        self.GridDrawable = self.makeGridDrawable(self.grid)
 
     def makeGrid(self):
         return Grid()
 
-    def makeGridRenderer(self, grid):
-        return GridRenderer(grid, self.gl)
+    def makeGridDrawable(self, grid):
+        return GridDrawable(grid, self.gl)
 
     def widgetCoordsToWorld(self, x, y):
         xAdj = (x - self.frameGeometry().width() / 2 ) / self.zoomLevel - self.cameraposition.x
@@ -223,12 +220,12 @@ class GLWidget(QtWidgets.QOpenGLWidget):
 
     def renderMouseSnap(self, pos):
         snapCoords = self.grid.nearestSnap(pos)
-        self.pointList = PointRenderer(self.gl, snapCoords.x, snapCoords.y).genSymbolCallList()
+        #self.pointList = PointRenderer(self.gl, snapCoords.x, snapCoords.y).genSymbolCallList()
 
     def initTestWire(self):
         self.testWire = Wire(None)
         self.testWire.connectors[0].pos = Vector2d(-500, -500)
         self.testWire.connectors[1].pos = Vector2d(-400, -350)
         self.testWire.setPoints([Vector2d(-450, -500), Vector2d(-200, -200)])
-        self.testWire.initRenderer(self.gl)
-        self.testWireList = self.testWire.renderer.callList
+        self.testWire.initDrawable(self.gl)
+        self.testWireList = self.testWire.drawable.callList

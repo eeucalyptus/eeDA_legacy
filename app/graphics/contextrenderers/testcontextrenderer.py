@@ -9,19 +9,21 @@ class TestContextRenderer(ContextRenderer):
         self.glWidget = glWidget
         self.gl = glWidget.gl
         self._symbol = self._makeSymbol()
-        self._symbolRenderer = self._symbol.renderer
+        self._symbolRenderer = self._symbol.drawable
         self._showSymbol = False
 
         self._wire = self._makeWire()
-        self._wireRenderer = self._wire.renderer
+        self._wireRenderer = self._wire.drawable
         self._showWire = False
 
         self._junction = self._makeJunction()
-        self._junctionRenderer = self._junction.renderer
+        self._junctionRenderer = self._junction.drawable
         self._showJunction = False
 
         self._rhinoRenderer = self._makeRhino()
         self._showRhino = False
+
+
 
         self._showText = False
 
@@ -111,7 +113,7 @@ class TestContextRenderer(ContextRenderer):
         ))
         symbol.pos = Vector2i(300, 200)
 
-        symbol.initRenderer(self.gl)
+        symbol.initDrawable(self.gl)
 
         return symbol
 
@@ -125,18 +127,18 @@ class TestContextRenderer(ContextRenderer):
         testWire.connectors[0].pos = Vector2i(-50, 0)
         testWire.connectors[1].pos = Vector2i(150, 0)
 
-        testWire.initRenderer(self.gl)
+        testWire.initDrawable(self.gl)
 
         return testWire
 
     def _makeJunction(self):
         testJunction = data.schematics.Junction(None)
         testJunction.setPos(Vector2i(500, 500))
-        testJunction.initRenderer(self.gl)
+        testJunction.initDrawable(self.gl)
         return testJunction
 
     def _makeRhino(self):
-        renderer = graphics.RhinocerosRenderer(self.gl)
+        renderer = graphics.drawables.RhinocerosDrawable(self.gl)
         return renderer
 
     def save_handler(self):

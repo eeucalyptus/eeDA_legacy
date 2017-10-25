@@ -1,6 +1,8 @@
-from . import Renderer
-from .common import pMakePolygonArray, eeDAcolor
+from graphics.drawables import Drawable
+from graphics.common import eeDAcolor
 from data.util import Vector2i, Polygon
+from graphics.common import pMakePolygonArray
+
 '''
 
 The RhinocerosRenderer holds the gl display list for a single rhinoceros
@@ -8,15 +10,15 @@ and is able to update it, when the underlying biology changes.
 
 '''
 
-class RhinocerosRenderer(Renderer):
-    
+class RhinocerosDrawable(Drawable):
+
     def __init__(self, gl):
         super().__init__(gl)
         self.callList = self.genSymbolCallList()
-        
+
     def genSymbolCallList(self):
-        
-        
+
+
         rhinopoly = Polygon.fromPoints(\
         Vector2i(23, 146), #1\
         Vector2i(68, 183), #2\
@@ -36,7 +38,7 @@ class RhinocerosRenderer(Renderer):
         Vector2i(62, 211), #16\
         Vector2i(35, 188)) #17
         self.rhinoVertices = pMakePolygonArray(rhinopoly, Vector2i(), 1)
-        
+
         self.gl.glColor4f(0.0, 0.0, 1.0, 1.0)
         polly = Polygon.fromPoints(\
         Vector2i(0, 0),\
@@ -50,16 +52,15 @@ class RhinocerosRenderer(Renderer):
         genList = self.gl.glGenLists(1)
         self.gl.glNewList(genList, self.gl.GL_COMPILE)
         self.gl.glEnableClientState(self.gl.GL_VERTEX_ARRAY)
-        
+
         self.setColor(eeDAcolor.RHINO)
         self.gl.glVertexPointer(3, self.gl.GL_INT, 0, self.rhinoVertices)
         self.gl.glDrawArrays(self.gl.GL_TRIANGLES, 0, len(self.rhinoVertices) / 3)
-        
+
         self.setColor(eeDAcolor.WIRE)
         self.gl.glVertexPointer(3, self.gl.GL_INT, 0, self.quadVertices)
         self.gl.glDrawArrays(self.gl.GL_TRIANGLES, 0, len(self.quadVertices) / 3)
-        
+
         self.gl.glEndList()
 
         return genList
-        

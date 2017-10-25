@@ -1,4 +1,4 @@
-class Renderer:
+class Drawable:
     def __init__(self, gl):
         self.gl = gl
         self.callList = None

@@ -15,7 +15,7 @@ import uuid
 
 from .schematicsconnector import SchematicsConnector
 from .schematicselement import SchematicsElement
-import graphics
+import graphics.drawables.schematics
 
 class Label(SchematicsElement, SchematicsConnector):
     def __init__(self, page):
@@ -28,5 +28,5 @@ class Label(SchematicsElement, SchematicsConnector):
         self.pos = Vector2i()
 
 
-    def initRenderer(self, gl):
-        self.renderer = graphics.LabelRenderer(self, gl)
+    def initDrawable(self, gl):
+        self.drawable = graphics.drawables.schematics.LabelRenderer(self, gl)

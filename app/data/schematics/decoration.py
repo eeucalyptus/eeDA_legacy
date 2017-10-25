@@ -6,7 +6,7 @@ documentation purposes, notes and graphical.
 '''
 
 import uuid
-import graphics
+import graphics.drawables.schematics
 from .schematicselement import SchematicsElement
 
 class Decoration(SchematicsElement):
@@ -18,5 +18,5 @@ class Decoration(SchematicsElement):
 
         self.pos = Vector2i()
 
-    def initRenderer(self, gl):
-        self.renderer = graphics.DecorationRenderer(self, gl)
+    def initDrawable(self, gl):
+        self.drawable = graphics.drawables.schematics.DecorationRenderer(self, gl)

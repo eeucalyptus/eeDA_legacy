@@ -4,7 +4,7 @@ class SchematicsElement:
     def __init__(self, page = None):
         self.page = page
         self.pos = util.Vector2i()
-        self.renderer = None
+        self.drawable = None
 
-    def initRenderer(self, gl):
+    def initDrawable(self, gl):
         pass

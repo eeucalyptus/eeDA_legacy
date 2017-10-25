@@ -2,7 +2,7 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 from .glwidget import GLWidget
 from .editframe import EditFrame
 from .treeview import TreeViewDock
-import graphics
+import graphics.contextrenderers
 import logic
 import sys
 
@@ -16,7 +16,7 @@ class MyWindow(QtWidgets.QMainWindow):
 
     def openFile(self, path):
         self.schematicscontext = logic.SchematicsContext(path)
-        self.schematicscontext.initRenderers(self.glWidget.gl)
+        self.schematicscontext.initDrawables(self.glWidget.gl)
         self.glWidget.contextRenderer = self.schematicscontext.contextRenderer
         self.glWidget.repaint()
 
@@ -171,7 +171,7 @@ class MyWindow(QtWidgets.QMainWindow):
         graphics.RenderSchematicsContext(self.glWidget, self.schematicsContext)
 
     def runDebug(self):
-        self.debugContextRenderer = graphics.TestContextRenderer(self.glWidget)
+        self.debugContextRenderer = graphics.contextrenderers.TestContextRenderer(self.glWidget)
         self.glWidget.contextRenderer = self.debugContextRenderer
         self.glWidget.repaint()
 
@@ -193,14 +193,14 @@ class MyWindow(QtWidgets.QMainWindow):
         debugAct5.triggered.connect(lambda: self.debugContextRenderer.showText())
 
     def debugWire(self, wire):
-        wire.initRenderer(self.glWidget.gl)
-        self.glWidget.setInject(wire.renderer.callList)
+        wire.initDrawable(self.glWidget.gl)
+        self.glWidget.setInject(wire.drawable.callList)
         self.glWidget.repaint()
         print("Success: wire rendering")
 
     def debugJunction(self, junction):
-        junction.initRenderer(self.glWidget.gl)
-        self.glWidget.setInject(junction.renderer.callList)
+        junction.initDrawable(self.glWidget.gl)
+        self.glWidget.setInject(junction.drawable.callList)
         self.glWidget.repaint()
         print("Success: junction rendering")
 

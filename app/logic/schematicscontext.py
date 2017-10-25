@@ -1,7 +1,7 @@
 from logic import fileloaders
-import graphics
+import graphics.contextrenderers
 from data.util import Vector2i, Vector2d
-from .filecontext import FileContext
+from logic.filecontext import FileContext
 
 class SchematicsContext(FileContext):
     def __init__(self, filepath):
@@ -12,13 +12,13 @@ class SchematicsContext(FileContext):
         self._zoom = 1
         self._currentPageIndex = 0
 
-    def initRenderers(self, gl):
-        self.contextRenderer = graphics.SchematicsContextRenderer(self, gl)
+    def initDrawables(self, gl):
+        self.contextRenderer = graphics.contextrenderers.SchematicsContextRenderer(self, gl)
 
         for page in self._schematics.pages:
             for element in page.elements:
                 if element:
-                    element.initRenderer(gl)
+                    element.initDrawable(gl)
 
     def currentPage(self):
         i = self._currentPageIndex

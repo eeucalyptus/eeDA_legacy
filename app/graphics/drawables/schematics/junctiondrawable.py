@@ -1,15 +1,15 @@
-from . import Renderer
-from .common import pMakeCircleArray
+from graphics.drawables import Drawable
+from graphics.common import pMakeCircleArray
 from data.util import Vector2i
 import math
 
 '''
 
-The JunctionRenderer holds the gl display list for a single junction
+The JunctionDrawable holds the gl display list for a single junction
 and is able to update it, when the underlying junction changes.
 
 '''
-class JunctionRenderer(Renderer):
+class JunctionDrawable(Drawable):
 
     RESOLUTION = 60
 
