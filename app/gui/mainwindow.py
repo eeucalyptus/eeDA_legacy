@@ -191,24 +191,3 @@ class MyWindow(QtWidgets.QMainWindow):
 
         debugAct5 = self.debugMenu.addAction('Text')
         debugAct5.triggered.connect(lambda: self.debugContextRenderer.showText())
-
-    def debugWire(self, wire):
-        wire.initDrawable(self.glWidget.gl)
-        self.glWidget.setInject(wire.drawable.callList)
-        self.glWidget.repaint()
-        print("Success: wire rendering")
-
-    def debugJunction(self, junction):
-        junction.initDrawable(self.glWidget.gl)
-        self.glWidget.setInject(junction.drawable.callList)
-        self.glWidget.repaint()
-        print("Success: junction rendering")
-
-    def debugRhino(self):
-        self.glWidget.setInject(renderer.callList)
-        self.glWidget.repaint()
-
-    def debugText(self):
-        self.textrenderer = TextRenderer(self.glWidget.gl, 'The quick brown fox jumps over the lazy dog.', Vector2i())
-        self.glWidget.setInject(self.textrenderer.genSymbolCallList())
-        self.glWidget.repaint()

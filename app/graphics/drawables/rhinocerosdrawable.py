@@ -14,9 +14,9 @@ class RhinocerosDrawable(Drawable):
 
     def __init__(self, gl):
         super().__init__(gl)
-        self.callList = self.genSymbolCallList()
+        self.callList = self._genCallList()
 
-    def genSymbolCallList(self):
+    def _genCallList(self):
 
 
         rhinopoly = Polygon.fromPoints(\
