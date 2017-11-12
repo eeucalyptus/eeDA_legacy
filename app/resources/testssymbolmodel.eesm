@@ -1,0 +1,18 @@
+symbolmodel:
+  name: TestModel
+  description: This is a test model for a test symbol
+  referenceprefix: U
+  parts:
+    - type: connector
+      name: TestPin
+      num: 123
+      type: default
+    - type: polygon
+      verticies: [[0.0, 0.0], [0.0, 100.0], [100.0, 100.0], [100.0, 0.0]]
+    - type: text
+      pos: [0.0, -1.0]
+      height: 1.0
+      text: All animals are equal, but some animals are more equal than others
+  fields:
+    datasheet-link: http://example.com/datasheet.pdf
+    supplier-link: http://example.com/parts/test

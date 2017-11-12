@@ -1,4 +1,4 @@
-from logic import fileloaders
+from logic import filehandlers
 import graphics.contextrenderers
 from data.util import Vector2i, Vector2d
 from logic.filecontext import FileContext
@@ -6,8 +6,8 @@ from logic.filecontext import FileContext
 class SchematicsContext(FileContext):
     def __init__(self, filepath):
         self._filepath = filepath
-        schematicsloader = fileloaders.SchematicsLoader(filepath)
-        self._schematics = schematicsloader.loadSchematic()
+        schematicsfilehandler = filehandlers.SchematicsFileHandler(filepath)
+        self._schematics = schematicsfilehandler.loadSchematic()
         self._camera_center = Vector2d()
         self._zoom = 1
         self._currentPageIndex = 0

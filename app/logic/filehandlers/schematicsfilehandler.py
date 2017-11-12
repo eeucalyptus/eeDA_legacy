@@ -2,10 +2,10 @@ import data.schematics as schematics
 import data.util as util
 import yaml
 
-class SchematicsLoaderError(Exception):
+class SchematicsFileHandlerError(Exception):
     pass
 
-class SchematicsLoader:
+class SchematicsFileHandler:
     def __init__(self, path):
         self.path = path
         pass
@@ -245,5 +245,5 @@ class SchematicsLoader:
                 connector.other = other
 
 if __name__ == '__main__':
-    loader = SchematicsLoader('resources/testschematics.eesc')
+    loader = SchematicsFileHandler('resources/testschematics.eesc')
     schematic = loader.loadSchematic()
