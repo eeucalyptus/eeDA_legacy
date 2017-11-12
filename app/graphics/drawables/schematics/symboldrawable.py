@@ -1,9 +1,9 @@
 from PyQt5 import QtWidgets, QtGui
-from .renderer import Renderer
+from graphics.drawables import Drawable
 from data import util
-from .common import eeDAcolor, pMakePolygonArray, pMakeLineArray
+from graphics.common import eeDAcolor, pMakePolygonArray, pMakeLineArray
 
-class SymbolRenderer(Renderer):
+class SymbolDrawable(Drawable):
     def __init__(self, symbol, gl):
         super().__init__(gl)
         self.symbol = symbol
@@ -24,7 +24,7 @@ class SymbolRenderer(Renderer):
                 self.gl.glDrawArrays(self.gl.GL_TRIANGLES, 0, len(vertices) / 3)
 
         self.gl.glDisableClientState(self.gl.GL_VERTEX_ARRAY)
-        
+
         self.gl.glEndList()
 
         return genList

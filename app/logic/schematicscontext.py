@@ -1,24 +1,24 @@
-from logic import fileloaders
-import graphics
+from logic import filehandlers
+import graphics.contextrenderers
 from data.util import Vector2i, Vector2d
-from .filecontext import FileContext
+from logic.filecontext import FileContext
 
 class SchematicsContext(FileContext):
     def __init__(self, filepath):
         self._filepath = filepath
-        schematicsloader = fileloaders.SchematicsLoader(filepath)
-        self._schematics = schematicsloader.loadSchematic()
+        schematicsfilehandler = filehandlers.SchematicsFileHandler(filepath)
+        self._schematics = schematicsfilehandler.loadSchematic()
         self._camera_center = Vector2d()
         self._zoom = 1
         self._currentPageIndex = 0
 
-    def initRenderers(self, gl):
-        self.contextRenderer = graphics.SchematicsContextRenderer(self, gl)
+    def initDrawables(self, gl):
+        self.contextRenderer = graphics.contextrenderers.SchematicsContextRenderer(self, gl)
 
         for page in self._schematics.pages:
             for element in page.elements:
                 if element:
-                    element.initRenderer(gl)
+                    element.initDrawable(gl)
 
     def currentPage(self):
         i = self._currentPageIndex

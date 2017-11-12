@@ -1,8 +1,8 @@
-from . import Renderer
+from graphics.drawables import Drawable
 from data.util import Vector2i, Vector2d
-from .common import eeDAcolor, pMakeCircleArray, pMakeLineArray
+from graphics.common import eeDAcolor, pMakeCircleArray, pMakeLineArray
 
-class WireRenderer(Renderer):
+class WireDrawable(Drawable):
 
     DEPTH = 1.0
 

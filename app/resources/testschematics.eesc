@@ -6,6 +6,7 @@ schematic:
       elements:
         - type: symbol
           uuid: asdf-123456-3
+          reference: U1
           pos: [0.0, 0.0]
           parts:
             - type: connector

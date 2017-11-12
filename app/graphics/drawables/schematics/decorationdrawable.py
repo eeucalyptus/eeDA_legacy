@@ -1,4 +1,6 @@
-class DecorationRenderer(Renderer):
+from graphics.drawables import Drawable
+
+class DecorationDrawable(Drawable):
     def __init__(self, decoration, gl):
         super(DecorationRenderer).__init__(self, gl)
         self.decoration = decoration

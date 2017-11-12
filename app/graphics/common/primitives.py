@@ -1,6 +1,5 @@
 from data.util import Vector2i, Vector2d, Polygon
 import math
-from graphics import Renderer
 from .eedacolors import eeDAcolor
 '''
 
@@ -22,12 +21,12 @@ def pMakeCircleArray(center = Vector2i(), radius = 10, depth = 1.0, resolution =
 def pMakePolygonArray(polygon, pos, depth = 1.0):
     triangles = polygon.triangles()
     array = []
-    
+
     for tri in triangles:
         for point in tri.points:
             point += pos
             array += [point.x, point.y, depth]
-    
+
     return array
 
 def pMakeLineArray(pointArray, pos, lineWidth, depth = 1.0):
@@ -36,52 +35,52 @@ def pMakeLineArray(pointArray, pos, lineWidth, depth = 1.0):
     for i in range(len(pointArray) - 1):
         vertices += pSingleLineVertices(pointArray[i], pointArray[i+1], lineWidth, depth)
     return vertices
-    
+
 def pSingleLineVertices(point1, point2, width, depth):
     point1 = Vector2d.fromVector2i(point1)
     point2 = Vector2d.fromVector2i(point2)
-    
+
     vector = point2 - point1
     unitVector = vector.normalize()
     uvRotated = unitVector.normalCW()
-    
+
     pointAry = []
-    
+
     pointAry.append(point1 + uvRotated * width)
     pointAry.append(point1 - uvRotated * width)
-    
+
     pointAry.append(point2 + uvRotated * width)
     pointAry.append(point2 - uvRotated * width)
-    
+
     resAry = []
-    
+
     for point in pointAry:
         resAry += [point.x, point.y, depth]
-    
+
     return resAry
 
-class PointRenderer(Renderer):  # kludged together for debug
-    def __init__(self, gl, x, y):
-        super().__init__(gl)
-        self.x = x
-        self.y = y
-        self.callList = self.genSymbolCallList()
-        
-    def genSymbolCallList(self):
-        genList = self.gl.glGenLists(1)
-        self.gl.glNewList(genList, self.gl.GL_COMPILE)
-        self.setColor(eeDAcolor.RHINO)
-        
-        self.gl.glPointSize(20)
-        self.gl.glBegin(self.gl.GL_POINTS)
-        point = [self.x, self.y, 1.0]
-        self.gl.glEnableClientState(self.gl.GL_VERTEX_ARRAY)
-        self.gl.glVertexPointer(3, self.gl.GL_FLOAT, 0, point)
-        self.gl.glDrawArrays(self.gl.GL_POINTS, 0, 1)
-        self.gl.glDisableClientState(self.gl.GL_VERTEX_ARRAY)
-        self.gl.glEnd()
-        
-        self.gl.glEndList()
-        
-        
-        return genList
+# class PointRenderer(Drawable):  # kludged together for debug
+#     def __init__(self, gl, x, y):
+#         super().__init__(gl)
+#         self.x = x
+#         self.y = y
+#         self.callList = self.genSymbolCallList()
+#
+#     def genSymbolCallList(self):
+#         genList = self.gl.glGenLists(1)
+#         self.gl.glNewList(genList, self.gl.GL_COMPILE)
+#         self.setColor(eeDAcolor.RHINO)
+#
+#         self.gl.glPointSize(20)
+#         self.gl.glBegin(self.gl.GL_POINTS)
+#         point = [self.x, self.y, 1.0]
+#         self.gl.glEnableClientState(self.gl.GL_VERTEX_ARRAY)
+#         self.gl.glVertexPointer(3, self.gl.GL_FLOAT, 0, point)
+#         self.gl.glDrawArrays(self.gl.GL_POINTS, 0, 1)
+#         self.gl.glDisableClientState(self.gl.GL_VERTEX_ARRAY)
+#         self.gl.glEnd()
+#
+#         self.gl.glEndList()
+#
+#
+#         return genList

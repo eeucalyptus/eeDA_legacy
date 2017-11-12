@@ -1,4 +1,6 @@
-class LabelRenderer(Renderer):
+from graphics.drawables import Drawable
+
+class LabelDrawable(Drawable):
     def __init__(self, label, gl):
         super(LabelRenderer).__init__(self, gl)
         self.label = label

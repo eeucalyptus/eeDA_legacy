@@ -10,7 +10,7 @@ be Polygons or texts or other graphical parts.
 
 import uuid
 
-import graphics
+import graphics.drawables.schematics
 from data.util import Vector2i, Polygon
 from .schematicselement import SchematicsElement
 
@@ -26,8 +26,8 @@ class Symbol(SchematicsElement):
 
         self.pos = Vector2i()
 
-    def initRenderer(self, gl):
-        self.renderer = graphics.SymbolRenderer(self, gl)
+    def initDrawable(self, gl):
+        self.drawable = graphics.drawables.schematics.SymbolDrawable(self, gl)
 
     def addPolygon(self, poly):
         self.parts.append(poly)

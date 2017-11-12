@@ -2,34 +2,25 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 from .glwidget import GLWidget
 from .editframe import EditFrame
 from .treeview import TreeViewDock
+import graphics.contextrenderers
 import logic
+import sys
 
-#=====
-# debug only
-from data.schematics import Wire, Symbol, WireConnector, Junction
-from data.util import *
-from .shortcut import Shortcut
-from graphics import WireRenderer, SymbolRenderer, JunctionRenderer, RhinocerosRenderer, TextRenderer
 
-from logic import fileloaders
-
-#=====
 class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
-        self.initUI()
-        self.initMenu()
-        self.initTreeView()
-
-        self.runDebug() # placeholder for misc debug scripts
+        self._initUI()
+        self._initMenu()
+        self._initTreeView()
 
     def openFile(self, path):
         self.schematicscontext = logic.SchematicsContext(path)
-        self.schematicscontext.initRenderers(self.glWidget.gl)
+        self.schematicscontext.initDrawables(self.glWidget.gl)
         self.glWidget.contextRenderer = self.schematicscontext.contextRenderer
         self.glWidget.repaint()
 
-    def initUI(self):
+    def _initUI(self):
         # ----- Display format ----- #
         fmt = QtGui.QSurfaceFormat.defaultFormat()
         fmt.setSamples(4)
@@ -96,14 +87,14 @@ class MyWindow(QtWidgets.QMainWindow):
         self.toolbarActionRight = QtWidgets.QAction(iconRight, _('Right'))
         self.toolbar.addAction(self.toolbarActionRight)
 
-    def initTreeView(self):
+    def _initTreeView(self):
         treeview = TreeViewDock()
         treeview.setWindowTitle(_('Tree View'))
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, treeview)
         treeview.tree().resize(200, 0)
 
 
-    def initMenu(self):
+    def _initMenu(self):
         exitAct = QtWidgets.QAction(_('Exit'), self)
         exitAct.setShortcut("Ctrl+Q")
         exitAct.setStatusTip(_('Exit the application.'))
@@ -180,77 +171,23 @@ class MyWindow(QtWidgets.QMainWindow):
         graphics.RenderSchematicsContext(self.glWidget, self.schematicsContext)
 
     def runDebug(self):
-        # -- wire
-        testWire = Wire(None)
-        testWire.setPoints([\
-        Vector2i(0, 200),\
-        Vector2i(50, 100),\
-        Vector2i(100, 200)])
-
-        testWire.connectors[0].pos = Vector2i(-50, 0)
-        testWire.connectors[1].pos = Vector2i(150, 0)
-# <<<<<<< HEAD
-#         testWire.setConnectors(WireConnector(None, Vector2i(-100, 0)), None)
-#
-# =======
-#         testWire.setConnectors(WireConnector(testWire, Vector2i(-100, 0)), None)
-#
-# >>>>>>> master
-        debugAct = self.menuBar().addAction('Wire')
-        debugAct.triggered.connect(lambda: self.debugWire(testWire))
-
-
-        # -- symbol
-        testSymbol = Symbol(None, None)
-        testSymbol.addPolygon(Polygon.fromPoints(\
-        Vector2i(-100, -100),\
-        Vector2i(-100, 0),\
-        Vector2i(0, 0),\
-        Vector2i(0, -50),\
-        Vector2i(-75, -150),\
-        ))
-        testSymbol.pos = Vector2i(300, 200)
-        debugAct2 = self.menuBar().addAction('Symbol')
-        debugAct2.triggered.connect(lambda: self.debugSymbol(testSymbol))
-
-        # -- junction
-        testJunction = Junction(None)
-        testJunction.setPos(Vector2i(500, 500))
-
-        debugAct3 = self.menuBar().addAction('Junction')
-        debugAct3.triggered.connect(lambda: self.debugJunction(testJunction))
-
-        debugAct4 = self.menuBar().addAction('Rhino?')
-        debugAct4.triggered.connect(lambda: self.debugRhino())
-
-        debugAct5 = self.menuBar().addAction('Text')
-        debugAct5.triggered.connect(lambda: self.debugText())
-
-    def debugWire(self, wire):
-        wire.initRenderer(self.glWidget.gl)
-        self.glWidget.setInject(wire.renderer.callList)
-        self.glWidget.repaint()
-        print("Success: wire rendering")
-
-    def debugSymbol(self, symbol):
-        print(symbol.parts)
-        symbol.initRenderer(self.glWidget.gl)
-        self.glWidget.setInject(symbol.renderer.callList)
-        self.glWidget.repaint()
-        print("Success: symbol rendering")
-
-    def debugJunction(self, junction):
-        junction.initRenderer(self.glWidget.gl)
-        self.glWidget.setInject(junction.renderer.callList)
-        self.glWidget.repaint()
-        print("Success: junction rendering")
-
-    def debugRhino(self):
-        renderer = RhinocerosRenderer(self.glWidget.gl)
-        self.glWidget.setInject(renderer.callList)
+        self.debugContextRenderer = graphics.contextrenderers.TestContextRenderer(self.glWidget)
+        self.glWidget.contextRenderer = self.debugContextRenderer
         self.glWidget.repaint()
 
-    def debugText(self):
-        self.textrenderer = TextRenderer(self.glWidget.gl, 'The quick brown fox jumps over the lazy dog.', Vector2i())
-        self.glWidget.setInject(self.textrenderer.genSymbolCallList())
-        self.glWidget.repaint()
+        self.debugMenu = self.menuBar().addMenu("Debug")
+
+        debugAct = self.debugMenu.addAction('Wire')
+        debugAct.triggered.connect(lambda: self.debugContextRenderer.showWire())
+
+        debugAct2 = self.debugMenu.addAction('Symbol')
+        debugAct2.triggered.connect(lambda: self.debugContextRenderer.showSymbol())
+
+        debugAct3 = self.debugMenu.addAction('Junction')
+        debugAct3.triggered.connect(lambda: self.debugContextRenderer.showJunction())
+
+        debugAct4 = self.debugMenu.addAction('Rhino?')
+        debugAct4.triggered.connect(lambda: self.debugContextRenderer.showRhino())
+
+        debugAct5 = self.debugMenu.addAction('Text')
+        debugAct5.triggered.connect(lambda: self.debugContextRenderer.showText())

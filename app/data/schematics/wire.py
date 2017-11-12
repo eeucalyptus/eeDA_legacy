@@ -15,7 +15,7 @@ from .schematicsconnector import SchematicsConnector
 from .schematicselement import SchematicsElement
 from .wireconnector import WireConnector
 from data.util import Vector2i
-import graphics
+import graphics.drawables.schematics
 from graphics.common import eeDAcolor
 
 class Wire(SchematicsElement):
@@ -26,8 +26,8 @@ class Wire(SchematicsElement):
         self.points = []
         self.style = {'width': 5, 'color': eeDAcolor.WIRE}
 
-    def initRenderer(self, gl):
-        self.renderer = graphics.WireRenderer(self, gl)
+    def initDrawable(self, gl):
+        self.drawable = graphics.drawables.schematics.WireDrawable(self, gl)
 
     def setPoints(self, ary):
         self.points = ary
@@ -44,7 +44,7 @@ class Wire(SchematicsElement):
             if Wire.lineSegmentDistance(pos, lastPoint, point) < self.style['width'] / 2.0:
                 return True
             lastPoint = point
-            
+
         return False
 
     def lineSegmentDistance(p, p1, p2):
