@@ -20,6 +20,7 @@ class Junction(SchematicsElement, SchematicsConnector):
         self.uuid = str(uuid.uuid4())
 
         self.others = []
+        self._otherUuids = None
         self.pos = Vector2i()
 
     def initDrawable(self, gl):
@@ -69,3 +70,33 @@ class Junction(SchematicsElement, SchematicsConnector):
             other_uuids.append(other.uuid)
 
         return 'Junction (uuid=%s, pos=%s, others=%s)' % (self.uuid, self.pos, str(other_uuids))
+
+    def associativeRepresentation(self):
+        asRepr =  {}
+
+        asRepr['type'] = 'junction'
+        asRepr['uuid'] = self.uuid
+        asRepr['pos'] = self.pos.associativeRepresentation()
+
+        if self.others:
+            asRepr['others'] = []
+            for other in self.others:
+                asRepr['others'].append(other.uuid)
+
+        return asRepr
+
+
+    def fromAssociativeRepresentation(asRepr, parent):
+        junction = Junction(parent)
+
+        junction.uuid = asRepr.get('uuid', None)
+        junction.pos = Vector2i.fromAssociativeRepresentation(asRepr.get('pos', None))
+
+        junction._otherUuids = []
+        for other in asRepr.get('others', []):
+            junction._otherUuids.append(other)
+
+        return junction
+
+
+        return junction

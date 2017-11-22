@@ -19,3 +19,26 @@ class SchematicsText(SchematicsElement):
 
     def __repr__(self):
         return "SchematicsText (text=\"%s\", uuid=%s)" % (self.text, self.uuid)
+
+    def associativeRepresentation(self):
+        asRepr =  {}
+
+        asRepr['type'] = 'schematicstext'
+        asRepr['uuid'] = self.uuid
+        asRepr['text'] = self.text
+        asRepr['pos'] = self.pos.associativeRepresentation()
+        asRepr['font'] = self.font
+        asRepr['fontsize'] = self.fontsize
+
+        return asRepr
+
+    def fromAssociativeRepresentation(asRepr, parent):
+        text = SchematicsText(parent)
+
+        text.uuid = asRepr.get('uuid', None)
+        text.text = asRepr.get('text', None)
+        text.pos = Vector2i.fromAssociativeRepresentation(asRepr.get('pos', None))
+        text.font = asRepr.get('font', None)
+        text.fontsize = asRepr.get('fontsize', None)
+
+        return text

@@ -22,6 +22,7 @@ schematic:
               text: All animals are equal, but some animals are more equal than others
         - type: junction
           uuid: asdf-123456-7
+          pos: [0.0, 0.0]
           others: [asdf-123456-4]
         - type: wire
           uuid: asdf-123456-8

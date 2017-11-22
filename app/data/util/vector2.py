@@ -74,6 +74,14 @@ class Vector2d():
     def convexityDeterminant(self, other):
         return self.x * other.y - self.y * other.x
 
+    def associativeRepresentation(self):
+        asRepr =  {}
+
+        asRepr['x'] = self.x
+        asRepr['y'] = self.y
+
+        return asRepr
+
 class Vector2i():
     def __init__(self, x = 0, y = 0):
         self.x = int(x)
@@ -131,3 +139,19 @@ class Vector2i():
 
     def dot(self, other):
         return self.x * other.x + self.y * other.y
+
+    def associativeRepresentation(self):
+        asRepr =  {}
+
+        asRepr[0] = self.x
+        asRepr[1] = self.y
+
+        return asRepr
+    def fromAssociativeRepresentation(asRepr):
+        if asRepr:
+            vec = Vector2i()
+
+            vec.x = asRepr[0]
+            vec.y = asRepr[1]
+
+            return vec

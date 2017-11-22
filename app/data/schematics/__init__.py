@@ -8,4 +8,5 @@ from .symbol import Symbol
 from .symbolconnector import *
 from .schematicstext import *
 from .wire import *
+from .decoration import *
 from .wireconnector import *

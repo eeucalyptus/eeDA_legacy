@@ -29,3 +29,19 @@ class SymbolConnector(SchematicsConnector):
         else:
             otheruuid = "NONE"
         return "SymbolConnector (uuid=%s, pos=%s, other_uuid=%s)" % (self.uuid, str(self.pos), otheruuid)
+
+    def associativeRepresentation(self):
+        asRepr =  {}
+
+        asRepr['type'] = 'connector'
+        asRepr['uuid'] = self.uuid
+        asRepr['pinnumber'] = self.pinnumber
+        asRepr['pinname'] = self.pinname
+        asRepr['pos'] = self.pos.associativeRepresentation()
+        asRepr['polygons'] = []
+        for poly in self.polygons:
+            asRepr['polygons'].append(poly.associativeRepresentation())
+        if self.other:
+            asRepr['other'] = self.other.uuid
+
+        return asRepr

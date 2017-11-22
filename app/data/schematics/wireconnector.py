@@ -18,3 +18,21 @@ class WireConnector(SchematicsConnector):
 
         self.wire = wire
         self.pos = pos
+
+    def associativeRepresentation(self):
+        asRepr =  {}
+
+        asRepr['uuid'] = self.uuid
+        if self.other:
+            asRepr['other'] = self.other.uuid
+        asRepr['pos'] = self.pos.associativeRepresentation()
+
+        return asRepr
+
+    def fromAssociativeRepresentation(asRepr, parent):
+        connector = WireConnector(parent)
+
+        connector.pos = Vector2i.fromAssociativeRepresentation(asRepr.get('pos', []))
+        connector.uuid = asRepr.get('uuid', None)
+
+        return connector

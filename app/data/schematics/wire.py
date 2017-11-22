@@ -59,3 +59,32 @@ class Wire(SchematicsElement):
         factor = dist1 / dist2
         projectionPoint = p1 + segment * factor
         return (p - projectionPoint).euDist()
+
+
+    def associativeRepresentation(self):
+        asRepr =  {}
+
+        asRepr['type'] = 'wire'
+        asRepr['uuid'] = self.uuid
+        asRepr['connectors'] = []
+        asRepr['connectors'].append(self.connectors[0].associativeRepresentation())
+        asRepr['connectors'].append(self.connectors[1].associativeRepresentation())
+
+        if self.points:
+            asRepr['points'] = []
+            for point in self.points:
+                asRepr['points'].append(point.associativeRepresentation())
+
+        return asRepr
+
+    def fromAssociativeRepresentation(asRepr, parent):
+        wire = Wire(parent)
+
+        wire.uuid = asRepr.get('uuid', None)
+        wire.points = []
+        for pointRepr in asRepr.get('points', []):
+            wire.points.append(Vector2i.fromAssociativeRepresentation(pointRepr))
+        wire.connectors[0] = WireConnector.fromAssociativeRepresentation(asRepr.get('connectors', [])[0], wire)
+        wire.connectors[1] = WireConnector.fromAssociativeRepresentation(asRepr.get('connectors', [])[1], wire)
+
+        return wire

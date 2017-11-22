@@ -1,0 +1,4 @@
+schematic:
+  pages: ['SchematicsPage (uuid=[''adsf-123456-2''])', 'SchematicsPage (uuid=[''asdf-123456-10''])',
+    'SchematicsPage (uuid=[''asdf-123456-11''])']
+serialized: Schematics (uuid=['asdf-123456-1'])

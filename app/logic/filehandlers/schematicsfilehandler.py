@@ -1,3 +1,4 @@
+
 import data.schematics as schematics
 import data.util as util
 import yaml
@@ -9,6 +10,30 @@ class SchematicsFileHandler:
     def __init__(self, path):
         self.path = path
         pass
+
+    def saveSchematic(self, schematic):
+        self.schematicsDict = {}
+
+        self._saveOverhead(schematic, self.schematicsDict)
+        self._saveSchematicsNode(schematic, self.schematicsDict)
+
+        with open(self.path, 'w') as filestream:
+            yaml.dump(self.schematicsDict, filestream)
+
+    def _saveOverhead(self, schematic, schematicDict):
+        schematicDict['serialized'] = str(schematic)
+
+    def _saveSchematicsNode(self, schematic, schematicDict):
+        schematicDict['schematic'] = {}
+        pagesNode = []
+        for page in schematic.pages:
+            self._savePage(page, pagesNode)
+
+        schematicDict['schematic']['pages'] = pagesNode
+
+    def _savePage(self, page, pagesNode):
+        pagesNode.append(str(page))
+
     def loadSchematic(self):
         self._openSchematicsFile()
         schematic = self._parseSchematic()
@@ -28,8 +53,6 @@ class SchematicsFileHandler:
                     for part in element.parts:
                         print('\t\t\t\t\t'+str(part).replace('\n', ' '))
                     print('\t\t\t\tconnectors=')
-                    for connector in element.connectors:
-                        print('\t\t\t\t\t'+str(connector).replace('\n', ' '))
             if(type(element) is schematics.Wire):
                 print('\t\t\t\tpos='+str(element.pos))
                 print('\t\t\t\tparts=')
@@ -39,8 +62,8 @@ class SchematicsFileHandler:
         return schematic
 
     def _openSchematicsFile(self):
-        filestream = open(self.path, 'r')
-        filenode = yaml.safe_load(filestream)
+        with open(self.path, 'r') as filestream:
+            filenode = yaml.safe_load(filestream)
 
         # TODO Implement error handling (not found, no schematics, corrupted, etc)
 
@@ -115,7 +138,7 @@ class SchematicsFileHandler:
 
 
     def _parseSymbolElement(self, node):
-        symbol = schematics.Symbol(self._currentPage, None)
+        symbol = schematics.Symbol(self._currentPage)
         self._currentSymbol = symbol
 
         symbol.uuid = node.get('uuid', '')
@@ -133,7 +156,7 @@ class SchematicsFileHandler:
                 symbol.parts.append(text)
             elif parttype == 'connector':
                 connector = self._parseSymbolConnector(part)
-                symbol.connectors.append(connector)
+                symbol.parts.append(connector)
             else:
                 print('Part type not implemented!')
 
@@ -245,5 +268,22 @@ class SchematicsFileHandler:
                 connector.other = other
 
 if __name__ == '__main__':
-    loader = SchematicsFileHandler('resources/testschematics.eesc')
-    schematic = loader.loadSchematic()
+    import sys
+
+    if len(sys.argv) < 2:
+        print("No command given!")
+    else:
+        cmd = sys.argv[1]
+        if cmd == 'load':
+            loader = SchematicsFileHandler('resources/testschematics.eesc')
+            schematic = loader.loadSchematic()
+        elif cmd == 'loadsave':
+            if len(sys.argv) < 4:
+                print("Not enough arguments for loadsave command")
+            else:
+                loadpath = sys.argv[2]
+                savepath = sys.argv[3]
+                loader = SchematicsFileHandler(loadpath)
+                loadedSchematic = loader.loadSchematic()
+                saver = SchematicsFileHandler(savepath)
+                saver.saveSchematic(loadedSchematic)

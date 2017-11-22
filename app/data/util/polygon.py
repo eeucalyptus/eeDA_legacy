@@ -29,7 +29,9 @@ class PointArray(list):
 class Polygon():
     def __init__(self, pointAry):
         self.points = pointAry
-        self.color = None   # eeDAcolor
+        self.fillColor = None
+        self.strokeColor = None
+        self.strokeWidth = 1
 
     def fromArray(ary):
         pAry = PointArray()
@@ -133,3 +135,30 @@ class Polygon():
             returnAry.append(Polygon.fromPoints(Vector2i(tri[0][0], tri[0][1]), Vector2i(tri[1][0], tri[1][1]), Vector2i(tri[2][0], tri[2][1])))
 
         return returnAry
+
+    def associativeRepresentation(self):
+        asRepr =  {}
+
+        asRepr['points'] = []
+        for point in self.points:
+            asRepr['points'].append(point.associativeRepresentation())
+        if self.fillColor:
+            asRepr['fillColor'] = list(self.fillColor)
+        if self.strokeColor:
+            asRepr['strokeColor'] = list(self.strokeColor)
+            asRepr['strokewidth'] = self.strokeWidth
+
+        return asRepr
+
+    def fromAssociativeRepresentation(asRepr, parent):
+        ptAry = PointArray()
+
+        for point in asRepr.get('points', []):
+            vec = Vector2i.fromAssociativeRepresentation(point)
+            ptAry.append(vec)
+
+        poly = Polygon(ptAry)
+
+        # TODO implement style stuff ('cause the exporter ain't got no style)
+
+        return poly
